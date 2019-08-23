@@ -13,8 +13,13 @@ const User = require('../../models/User');
 // @access   Public
 router.get('/', auth, async (req, res) => {
   try {
-    const user = await User.findById(req.user.id).select('-password');
-    res.json(user);
+    // check if the user has verified his account
+    if (User.active) {
+      const user = await User.findById(req.user.id).select('-password');
+      res.json(user);
+    }
+
+    res.redirect('/verification');
   } catch (err) {
     console.error(err.message);
     res.status(500).send('Server Error');

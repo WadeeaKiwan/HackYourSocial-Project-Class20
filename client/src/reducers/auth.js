@@ -6,14 +6,18 @@ import {
   LOGIN_SUCCESS,
   LOGIN_FAIL,
   LOGOUT,
-  ACCOUNT_DELETED
+  ACCOUNT_DELETED,
+  ACCOUNT_VERIFIED,
+  ACCOUNT_NOT_VERIFIED,
 } from '../actions/types';
 
 const initialState = {
   token: localStorage.getItem('token'),
   isAuthenticated: null,
   loading: true,
-  user: null
+  user: null,
+  active: false,
+  email: '',
 };
 
 export default function(state = initialState, action) {
@@ -23,9 +27,10 @@ export default function(state = initialState, action) {
     case USER_LOADED:
       return {
         ...state,
+        active: true,
         isAuthenticated: true,
         loading: false,
-        user: payload
+        user: payload,
       };
     case REGISTER_SUCCESS:
     case LOGIN_SUCCESS:
@@ -34,7 +39,7 @@ export default function(state = initialState, action) {
         ...state,
         ...payload,
         isAuthenticated: true,
-        loading: false
+        loading: false,
       };
     case REGISTER_FAIL:
     case AUTH_ERROR:
@@ -46,7 +51,20 @@ export default function(state = initialState, action) {
         ...state,
         token: null,
         isAuthenticated: false,
-        loading: false
+        loading: false,
+      };
+    case ACCOUNT_VERIFIED:
+      return {
+        ...state,
+        active: true,
+        loading: false,
+      };
+    case ACCOUNT_NOT_VERIFIED:
+      return {
+        ...state,
+        ...payload,
+        isAuthenticated: true,
+        loading: false,
       };
     default:
       return state;

@@ -80,7 +80,7 @@ router.post(
             Thanks for your registration!
             <br/><br/>
             Please verify your account by clicking the following link:
-            <a href="http://localhost:5000/api/users/verify/${token}">http://localhost:5000/api/users/verify</a>
+            <a href="http://localhost:3000/verify/${token}">http://localhost:3000/verify</a>
             <br/><br/>
             Thanks, Hack Your Social Team
             `;
@@ -108,10 +108,9 @@ router.post('/verify/:token', async (req, res) => {
   const { token } = req.params;
 
   try {
-    const decoded = await jwt.verify(token, config.get('jwtSecret'));
-    console.log('decoded', decoded);
+    const verifyToken = await jwt.verify(token, config.get('jwtSecret'));
 
-    let user = await User.findById({ _id: decoded.user.id }).select('-password');
+    let user = await User.findById({ _id: verifyToken.user.id }).select('-password');
     console.log(user);
 
     if (!user) {
