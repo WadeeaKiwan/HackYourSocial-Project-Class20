@@ -5,6 +5,7 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const config = require('config');
 const { check, validationResult } = require('express-validator/check');
+const { sendEmail } = require('../../middleware/mailer');
 
 const User = require('../../models/User');
 
@@ -18,10 +19,7 @@ router.post(
       .not()
       .isEmpty(),
     check('email', 'Please include a valid email').isEmail(),
-    check(
-      'password',
-      'Please enter a password with 6 or more characters'
-    ).isLength({ min: 6 })
+    check('password', 'Please enter a password with 6 or more characters').isLength({ min: 6 }),
   ],
   async (req, res) => {
     const errors = validationResult(req);
@@ -35,22 +33,20 @@ router.post(
       let user = await User.findOne({ email });
 
       if (user) {
-        return res
-          .status(400)
-          .json({ errors: [{ msg: 'User already exists' }] });
+        return res.status(400).json({ errors: [{ msg: 'User already exists' }] });
       }
 
       const avatar = gravatar.url(email, {
         s: '200',
         r: 'pg',
-        d: 'mm'
+        d: 'mm',
       });
 
       user = new User({
         name,
         email,
         avatar,
-        password
+        password,
       });
 
       const salt = await bcrypt.genSalt(10);
@@ -61,24 +57,97 @@ router.post(
 
       const payload = {
         user: {
-          id: user.id
-        }
+          id: user.id,
+        },
       };
 
-      jwt.sign(
-        payload,
-        config.get('jwtSecret'),
-        { expiresIn: 360000 },
-        (err, token) => {
-          if (err) throw err;
-          res.json({ token });
-        }
+      // jwt.sign(payload, config.get('jwtSecret'), { expiresIn: 360000 }, (err, token) => {
+      //   if (err) throw err;
+      //   res.json({ token });
+      // });
+
+      const token = await jwt.sign(payload, config.get('jwtSecret'), { expiresIn: '1h' });
+
+      // Check if not token
+      if (!token) {
+        return res.status(401).json({ msg: 'No token, authorization denied' });
+      }
+
+      // Email body
+      const html = `
+            Hi ${name},
+            <br/><br/>
+            Thanks for your registration!
+            <br/><br/>
+            Please verify your account by clicking the following link:
+            <a href="http://localhost:5000/api/users/verify/${token}">http://localhost:5000/api/users/verify</a>
+            <br/><br/>
+            Thanks, Hack Your Social Team
+            `;
+
+      // Send the email
+      await sendEmail(
+        '"HackYourSocial Activation 👻" <activate@hackyoursocial.com>',
+        email,
+        'Please verify your account',
+        html,
       );
+
+      res.json({ msg: 'You are registered! Please, visit your email to confirm your account' });
     } catch (err) {
       console.error(err.message);
       res.status(500).send('Server error');
     }
-  }
+  },
 );
+
+// @route    POST api/users/verify/:token
+// @desc     Email Confirmation
+// @access   Private
+router.post('/verify/:token', async (req, res) => {
+  const { token } = req.params;
+
+  try {
+    const decoded = await jwt.verify(token, config.get('jwtSecret'));
+    console.log('decoded', decoded);
+
+    let user = await User.findById({ _id: decoded.user.id }).select('-password');
+    console.log(user);
+
+    if (!user) {
+      return res.status(400).json({ errors: [{ msg: 'User not found' }] });
+    }
+
+    user.active = true;
+    await user.save();
+
+    // Email body
+    const html = `
+            Hi ${user.name},
+            <br/><br/>
+            Your account has been confirmed!
+            <br/><br/>
+            Thanks, Hack Your Social Team
+            `;
+
+    // Send the email
+    await sendEmail(
+      '"HackYourSocial Activation 👻" <activate@hackyoursocial.com>',
+      user.email,
+      'Account confirmed!',
+      html,
+    );
+
+    res.json({ token });
+
+    // res.json({ msg: 'Your account is verified!' });
+  } catch (err) {
+    console.error(err.message);
+    if (err.kind === 'ObjectId') {
+      return res.status(404).json({ msg: 'User not found' });
+    }
+    res.status(500).send('Server error');
+  }
+});
 
 module.exports = router;
