@@ -1,13 +1,13 @@
-const express = require('express');
-const router = express.Router();
-const gravatar = require('gravatar');
-const bcrypt = require('bcryptjs');
-const jwt = require('jsonwebtoken');
-const config = require('config');
-const { check, validationResult } = require('express-validator/check');
-const { sendEmail } = require('../../middleware/mailer');
+const express = require('express')
+const router = express.Router()
+const gravatar = require('gravatar')
+const bcrypt = require('bcryptjs')
+const jwt = require('jsonwebtoken')
+const config = require('config')
+const { check, validationResult } = require('express-validator/check')
+const { sendEmail } = require('../../middleware/mailer')
 
-const User = require('../../models/User');
+const User = require('../../models/User')
 
 // @route    POST api/users
 // @desc     Register user
@@ -22,55 +22,55 @@ router.post(
     check('password', 'Please enter a password with 6 or more characters').isLength({ min: 6 }),
   ],
   async (req, res) => {
-    const errors = validationResult(req);
+    const errors = validationResult(req)
     if (!errors.isEmpty()) {
-      return res.status(400).json({ errors: errors.array() });
+      return res.status(400).json({ errors: errors.array() })
     }
 
-    const { name, email, password } = req.body;
+    const { name, email, password } = req.body
 
     try {
-      let user = await User.findOne({ email });
+      let user = await User.findOne({ email })
 
       if (user) {
-        return res.status(400).json({ errors: [{ msg: 'User already exists' }] });
+        return res.status(400).json({ errors: [{ msg: 'User already exists' }] })
       }
 
       const avatar = gravatar.url(email, {
         s: '200',
         r: 'pg',
         d: 'mm',
-      });
+      })
 
       user = new User({
         name,
         email,
         avatar,
         password,
-      });
+      })
 
-      const salt = await bcrypt.genSalt(10);
+      const salt = await bcrypt.genSalt(10)
 
-      user.password = await bcrypt.hash(password, salt);
+      user.password = await bcrypt.hash(password, salt)
 
-      await user.save();
+      await user.save()
 
       const payload = {
         user: {
           id: user.id,
         },
-      };
+      }
 
       // jwt.sign(payload, config.get('jwtSecret'), { expiresIn: 360000 }, (err, token) => {
       //   if (err) throw err;
       //   res.json({ token });
       // });
 
-      const token = await jwt.sign(payload, config.get('jwtSecret'), { expiresIn: '1h' });
+      const token = await jwt.sign(payload, config.get('jwtSecret'), { expiresIn: '12h' })
 
       // Check if not token
       if (!token) {
-        return res.status(401).json({ msg: 'No token, authorization denied' });
+        return res.status(401).json({ msg: 'No token, authorization denied' })
       }
 
       // Email body
@@ -83,7 +83,7 @@ router.post(
             <a href="http://localhost:3000/verify/${token}">http://localhost:3000/verify</a>
             <br/><br/>
             Thanks, Hack Your Social Team
-            `;
+            `
 
       // Send the email
       await sendEmail(
@@ -91,34 +91,33 @@ router.post(
         email,
         'Please verify your account',
         html,
-      );
-
-      res.json({ msg: 'You are registered! Please, visit your email to confirm your account' });
+      )
+      res.json(user)
+      // res.json({ msg: 'You are registered! Please, visit your email to confirm your account' })
     } catch (err) {
-      console.error(err.message);
-      res.status(500).send('Server error');
+      console.error(err.message)
+      res.status(500).send('Server error')
     }
   },
-);
+)
 
 // @route    POST api/users/verify/:token
 // @desc     Email Confirmation
 // @access   Private
 router.post('/verify/:token', async (req, res) => {
-  const { token } = req.params;
+  const { token } = req.params
 
   try {
-    const verifyToken = await jwt.verify(token, config.get('jwtSecret'));
+    const verifyToken = await jwt.verify(token, config.get('jwtSecret'))
 
-    let user = await User.findById({ _id: verifyToken.user.id }).select('-password');
-    console.log(user);
+    let user = await User.findById({ _id: verifyToken.user.id }).select('-password')
 
     if (!user) {
-      return res.status(400).json({ errors: [{ msg: 'User not found' }] });
+      return res.status(400).json({ errors: [{ msg: 'User not found' }] })
     }
 
-    user.active = true;
-    await user.save();
+    user.active = true
+    await user.save()
 
     // Email body
     const html = `
@@ -127,7 +126,7 @@ router.post('/verify/:token', async (req, res) => {
             Your account has been confirmed!
             <br/><br/>
             Thanks, Hack Your Social Team
-            `;
+            `
 
     // Send the email
     await sendEmail(
@@ -135,18 +134,17 @@ router.post('/verify/:token', async (req, res) => {
       user.email,
       'Account confirmed!',
       html,
-    );
+    )
 
-    res.json({ token });
-
-    // res.json({ msg: 'Your account is verified!' });
+    res.json({ token })
+    // res.json({ msg: 'Your account is verified!' })
   } catch (err) {
-    console.error(err.message);
+    console.error(err.message)
     if (err.kind === 'ObjectId') {
-      return res.status(404).json({ msg: 'User not found' });
+      return res.status(404).json({ msg: 'User not found' })
     }
-    res.status(500).send('Server error');
+    res.status(500).send('Server error')
   }
-});
+})
 
-module.exports = router;
+module.exports = router
