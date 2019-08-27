@@ -87,8 +87,10 @@ router.post(
         'Please verify your account',
         html,
       )
-      res.json(user)
-      // res.json({ msg: 'You are registered! Please, visit your email to confirm your account' })
+      // res.json(user)
+      res
+        .status(200)
+        .json({ msg: 'You are registered! Please, visit your email to confirm your account' })
     } catch (err) {
       console.error(err.message)
       res.status(500).send('Server error')

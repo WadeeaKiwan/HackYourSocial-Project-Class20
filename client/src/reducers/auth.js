@@ -37,7 +37,7 @@ export default function(state = initialState, action) {
         ...state,
         // isAuthenticated: true,
         loading: false,
-        user: payload,
+        // user: payload,
       }
     case LOGIN_SUCCESS:
     case RESET_PASSWORD:
