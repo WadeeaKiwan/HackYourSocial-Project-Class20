@@ -1,5 +1,5 @@
-import axios from 'axios';
-import { setAlert } from './alert';
+import axios from 'axios'
+import { setAlert } from './alert'
 import {
   REGISTER_SUCCESS,
   REGISTER_FAIL,
@@ -10,30 +10,29 @@ import {
   LOGOUT,
   CLEAR_PROFILE,
   ACCOUNT_VERIFIED,
-  RESEND_EMAIL,
   RESET_PASSWORD,
-} from './types';
-import setAuthToken from '../utils/setAuthToken';
+} from './types'
+import setAuthToken from '../utils/setAuthToken'
 
 // Load User
 export const loadUser = () => async dispatch => {
   if (localStorage.token) {
-    setAuthToken(localStorage.token);
+    setAuthToken(localStorage.token)
   }
 
   try {
-    const res = await axios.get('/api/auth');
+    const res = await axios.get('/api/auth')
 
     dispatch({
       type: USER_LOADED,
       payload: res.data,
-    });
+    })
   } catch (err) {
     dispatch({
       type: AUTH_ERROR,
-    });
+    })
   }
-};
+}
 
 // Register User
 export const register = ({ name, email, password }) => async dispatch => {
@@ -41,31 +40,31 @@ export const register = ({ name, email, password }) => async dispatch => {
     headers: {
       'Content-Type': 'application/json',
     },
-  };
+  }
 
-  const body = JSON.stringify({ name, email, password });
+  const body = JSON.stringify({ name, email, password })
 
   try {
-    const res = await axios.post('/api/users', body, config);
+    const res = await axios.post('/api/users', body, config)
 
     dispatch({
       type: REGISTER_SUCCESS,
       payload: res.data,
-    });
+    })
 
     // dispatch(loadUser());
   } catch (err) {
-    const errors = err.response.data.errors;
+    const errors = err.response.data.errors
 
     if (errors) {
-      errors.forEach(error => dispatch(setAlert(error.msg, 'danger')));
+      errors.forEach(error => dispatch(setAlert(error.msg, 'danger')))
     }
 
     dispatch({
       type: REGISTER_FAIL,
-    });
+    })
   }
-};
+}
 
 // Login User
 export const login = (email, password) => async dispatch => {
@@ -73,37 +72,37 @@ export const login = (email, password) => async dispatch => {
     headers: {
       'Content-Type': 'application/json',
     },
-  };
+  }
 
-  const body = JSON.stringify({ email, password });
+  const body = JSON.stringify({ email, password })
 
   try {
-    const res = await axios.post('/api/auth', body, config);
+    const res = await axios.post('/api/auth', body, config)
 
     dispatch({
       type: LOGIN_SUCCESS,
       payload: res.data,
-    });
+    })
 
-    dispatch(loadUser());
+    dispatch(loadUser())
   } catch (err) {
-    const errors = err.response.data.errors;
+    const errors = err.response.data.errors
 
     if (errors) {
-      errors.forEach(error => dispatch(setAlert(error.msg, 'danger')));
+      errors.forEach(error => dispatch(setAlert(error.msg, 'danger')))
     }
 
     dispatch({
       type: LOGIN_FAIL,
-    });
+    })
   }
-};
+}
 
 // Logout / Clear Profile
 export const logout = () => dispatch => {
-  dispatch({ type: CLEAR_PROFILE });
-  dispatch({ type: LOGOUT });
-};
+  dispatch({ type: CLEAR_PROFILE })
+  dispatch({ type: LOGOUT })
+}
 
 // verifying user account
 export const verifyAccount = verifyToken => async dispatch => {
@@ -111,27 +110,27 @@ export const verifyAccount = verifyToken => async dispatch => {
     headers: {
       'Content-Type': 'application/json',
     },
-  };
-  const body = JSON.stringify({ verifyToken });
+  }
+  const body = JSON.stringify({ verifyToken })
 
   try {
-    const res = await axios.post(`/api/users/verify/${verifyToken}`, body, config);
+    const res = await axios.post(`/api/users/verify/${verifyToken}`, body, config)
 
     dispatch({
       type: ACCOUNT_VERIFIED,
       payload: res.data,
-    });
+    })
 
     // prevents the navbar to be logged in when account is verified
-    dispatch(logout());
+    dispatch(logout())
   } catch (err) {
-    const errors = err.response.data.errors;
+    const errors = err.response.data.errors
 
     if (errors) {
-      errors.forEach(error => dispatch(setAlert(error.msg, 'danger')));
+      errors.forEach(error => dispatch(setAlert(error.msg, 'danger')))
     }
   }
-};
+}
 
 //Resend email function
 
@@ -140,24 +139,18 @@ export const resendEmail = email => async dispatch => {
     headers: {
       'Content-Type': 'application/json',
     },
-  };
-  const body = JSON.stringify({ email });
+  }
+  const body = JSON.stringify({ email })
 
   try {
-    const res = await axios.put(`/api/users/verify/resend`, body, config);
+    const res = await axios.put(`/api/users/verify/resend`, body, config)
 
-    dispatch({
-      type: RESEND_EMAIL,
-      payload: res.data,
-    });
-
-    // prevents the navbar to be logged in when account is not verified
-    dispatch(logout());
+    dispatch(setAlert(res.data.msg, 'primary'))
   } catch (err) {
-    const errors = err.response.data.errors;
+    const errors = err.response.data.errors
 
     if (errors) {
-      errors.forEach(error => dispatch(setAlert(error.msg, 'danger')));
+      errors.forEach(error => dispatch(setAlert(error.msg, 'danger')))
     }
   }
-};
+}

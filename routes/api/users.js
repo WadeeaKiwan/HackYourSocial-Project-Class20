@@ -147,34 +147,33 @@ router.post('/verify/:token', async (req, res) => {
 // @access   Public
 router.put(
   '/verify/resend',
-  [
-    check('email', 'Please include a valid email').isEmail(),
-  ], async (req, res) => {
-    const errors = validationResult(req);
+  [check('email', 'Please include a valid email').isEmail()],
+  async (req, res) => {
+    const errors = validationResult(req)
     if (!errors.isEmpty()) {
-      return res.status(400).json({ errors: errors.array() });
+      return res.status(400).json({ errors: errors.array() })
     }
 
-    const { email } = req.body;
+    const { email } = req.body
 
     try {
-      let user = await User.findOne({ email });
+      let user = await User.findOne({ email })
 
       if (!user) {
-        return res.status(400).json({ errors: [{ msg: 'User not found' }] });
+        return res.status(400).json({ errors: [{ msg: 'User not found' }] })
       }
 
       const payload = {
         user: {
           id: user.id,
         },
-      };
+      }
 
-      const token = await jwt.sign(payload, config.get('jwtSecret'), { expiresIn: '1h' });
+      const token = await jwt.sign(payload, config.get('jwtSecret'), { expiresIn: '1h' })
 
       // Check if not token
       if (!token) {
-        return res.status(401).json({ msg: 'No token, authorization denied' });
+        return res.status(401).json({ msg: 'No token, authorization denied' })
       }
 
       // Email body
@@ -185,7 +184,7 @@ router.put(
             <a href="http://localhost:3000/verify/${token}">Here</a>
             <br/><br/>
             Thanks, Hack Your Social Team
-            `;
+            `
 
       // Send the email
       await sendEmail(
@@ -193,16 +192,17 @@ router.put(
         email,
         'Please verify your account',
         html,
-      );
+      )
 
-      res.json({ msg: 'Please, visit your email to confirm your account' });
+      res.status(200).json({ msg: 'Please, visit your email to confirm your account' })
     } catch (err) {
-      console.error(err.message);
+      console.error(err.message)
       if (err.kind === 'ObjectId') {
-        return res.status(404).json({ msg: 'User not found' });
+        return res.status(404).json({ msg: 'User not found' })
       }
-      res.status(500).json({ msg: err.message });
+      res.status(500).json({ msg: err.message })
     }
-  });
+  },
+)
 
 module.exports = router

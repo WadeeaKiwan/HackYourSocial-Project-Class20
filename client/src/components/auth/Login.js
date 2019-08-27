@@ -1,34 +1,33 @@
-import React, { Fragment, useState } from 'react';
-import { Link, Redirect } from 'react-router-dom';
-import { connect } from 'react-redux';
-import PropTypes from 'prop-types';
-import { login } from '../../actions/auth';
-import { resendEmail } from '../../actions/auth';
-import { setAlert } from '../../actions/alert';
+import React, { Fragment, useState } from 'react'
+import { Link, Redirect } from 'react-router-dom'
+import { connect } from 'react-redux'
+import PropTypes from 'prop-types'
+import { login } from '../../actions/auth'
+import { resendEmail } from '../../actions/auth'
 
 const Login = ({ login, active, resendEmail }) => {
   // add to state toggle button
-  const [displayEmailInput, toggleEmailInput] = useState(false);
+  const [displayEmailInput, toggleEmailInput] = useState(false)
   const [formData, setFormData] = useState({
     email: '',
+    email2: '',
     password: '',
-  });
+  })
 
-  const { email, password } = formData;
+  const { email, email2, password } = formData
 
-  const onChange = e => setFormData({ ...formData, [e.target.name]: e.target.value });
+  const onChange = e => setFormData({ ...formData, [e.target.name]: e.target.value })
 
   const onSubmit = async e => {
-    e.preventDefault();
-    login(email, password);
-  };
+    e.preventDefault()
+    login(email, password)
+  }
   const resendEmailSubmit = e => {
-    e.preventDefault();
-    resendEmail(email);
-    setAlert('Please, visit your email to confirm your account', 'primary');
-  };
+    e.preventDefault()
+    resendEmail(email2)
+  }
   if (active) {
-    return <Redirect to="/dashboard" />;
+    return <Redirect to="/dashboard" />
   }
 
   return (
@@ -72,9 +71,9 @@ const Login = ({ login, active, resendEmail }) => {
         <button
           onClick={() => toggleEmailInput(!displayEmailInput)}
           type="button"
-          className="btn btn-light"
+          className="btn btn-primary"
         >
-          resend confirmation code
+          Resend confirmation mail
         </button>
         {displayEmailInput ? (
           <form className="form" onSubmit={e => resendEmailSubmit(e)}>
@@ -82,8 +81,8 @@ const Login = ({ login, active, resendEmail }) => {
               <input
                 type="email"
                 placeholder="Email Address"
-                name="email"
-                value={email}
+                name="email2"
+                value={email2}
                 onChange={e => onChange(e)}
                 required
               />
@@ -92,28 +91,27 @@ const Login = ({ login, active, resendEmail }) => {
                 type="submit"
                 onSubmit={e => resendEmailSubmit(e)}
                 className="btn btn-primary my-1"
-                value="resend"
+                value="Resend"
               />
             </div>
           </form>
         ) : null}
       </div>
     </Fragment>
-  );
-};
+  )
+}
 
 Login.propTypes = {
   login: PropTypes.func.isRequired,
   active: PropTypes.bool,
   resendEmail: PropTypes.func,
-};
+}
 
 const mapStateToProps = state => ({
   active: state.auth.active,
-});
+})
 
 export default connect(
   mapStateToProps,
-
   { login, resendEmail },
-)(Login);
+)(Login)
