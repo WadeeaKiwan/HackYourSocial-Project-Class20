@@ -11,7 +11,6 @@ import {
   ACCOUNT_NOT_VERIFIED,
   RESEND_CONFIRMATION,
   RESEND_CONFIRMATION_FAIL,
-  RESET_PASSWORD,
 } from '../actions/types'
 
 const initialState = {
@@ -36,8 +35,6 @@ export default function (state = initialState, action) {
       }
     case REGISTER_SUCCESS:
     case RESEND_CONFIRMATION:
-    case ACCOUNT_NOT_VERIFIED:
-    case RESEND_CONFIRMATION_FAIL:
       return {
         ...state,
         payload,
@@ -59,6 +56,8 @@ export default function (state = initialState, action) {
     case LOGIN_FAIL:
     case LOGOUT:
     case ACCOUNT_DELETED:
+    case ACCOUNT_NOT_VERIFIED:
+    case RESEND_CONFIRMATION_FAIL:
       localStorage.removeItem('token')
       return {
         ...state,

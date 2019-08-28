@@ -13,7 +13,6 @@ import {
   ACCOUNT_NOT_VERIFIED,
   RESEND_CONFIRMATION,
   RESEND_CONFIRMATION_FAIL,
-  RESET_PASSWORD,
 } from './types'
 import setAuthToken from '../utils/setAuthToken'
 
