@@ -1,5 +1,7 @@
 import axios from 'axios';
-import { setAlert } from './alert';
+import {
+  setAlert
+} from './alert';
 import {
   GET_POSTS,
   POST_ERROR,
@@ -11,6 +13,8 @@ import {
   REMOVE_COMMENT,
   UPDATE_POST,
   SET_EDIT_POST,
+  UPDATE_COMMENT,
+  SET_EDIT_COMMENT
 } from './types';
 
 // Get posts
@@ -25,7 +29,10 @@ export const getPosts = () => async dispatch => {
   } catch (err) {
     dispatch({
       type: POST_ERROR,
-      payload: { msg: err.response.statusText, status: err.response.status },
+      payload: {
+        msg: err.response.statusText,
+        status: err.response.status
+      },
     });
   }
 };
@@ -37,12 +44,18 @@ export const addLike = id => async dispatch => {
 
     dispatch({
       type: UPDATE_LIKES,
-      payload: { id, likes: res.data },
+      payload: {
+        id,
+        likes: res.data
+      },
     });
   } catch (err) {
     dispatch({
       type: POST_ERROR,
-      payload: { msg: err.response.statusText, status: err.response.status },
+      payload: {
+        msg: err.response.statusText,
+        status: err.response.status
+      },
     });
   }
 };
@@ -54,12 +67,18 @@ export const removeLike = id => async dispatch => {
 
     dispatch({
       type: UPDATE_LIKES,
-      payload: { id, likes: res.data },
+      payload: {
+        id,
+        likes: res.data
+      },
     });
   } catch (err) {
     dispatch({
       type: POST_ERROR,
-      payload: { msg: err.response.statusText, status: err.response.status },
+      payload: {
+        msg: err.response.statusText,
+        status: err.response.status
+      },
     });
   }
 };
@@ -78,7 +97,10 @@ export const deletePost = id => async dispatch => {
   } catch (err) {
     dispatch({
       type: POST_ERROR,
-      payload: { msg: err.response.statusText, status: err.response.status },
+      payload: {
+        msg: err.response.statusText,
+        status: err.response.status
+      },
     });
   }
 };
@@ -103,7 +125,10 @@ export const addPost = formData => async dispatch => {
   } catch (err) {
     dispatch({
       type: POST_ERROR,
-      payload: { msg: err.response.statusText, status: err.response.status },
+      payload: {
+        msg: err.response.statusText,
+        status: err.response.status
+      },
     });
   }
 };
@@ -120,7 +145,10 @@ export const getPost = id => async dispatch => {
   } catch (err) {
     dispatch({
       type: POST_ERROR,
-      payload: { msg: err.response.statusText, status: err.response.status },
+      payload: {
+        msg: err.response.statusText,
+        status: err.response.status
+      },
     });
   }
 };
@@ -145,7 +173,10 @@ export const addComment = (postId, formData) => async dispatch => {
   } catch (err) {
     dispatch({
       type: POST_ERROR,
-      payload: { msg: err.response.statusText, status: err.response.status },
+      payload: {
+        msg: err.response.statusText,
+        status: err.response.status
+      },
     });
   }
 };
@@ -164,7 +195,10 @@ export const deleteComment = (postId, commentId) => async dispatch => {
   } catch (err) {
     dispatch({
       type: POST_ERROR,
-      payload: { msg: err.response.statusText, status: err.response.status },
+      payload: {
+        msg: err.response.statusText,
+        status: err.response.status
+      },
     });
   }
 };
@@ -197,6 +231,38 @@ export const updatePost = (id, newText) => async dispatch => {
 export const setEditPost = id => dispatch => {
   dispatch({
     type: SET_EDIT_POST,
+    payload: id,
+  });
+};
+
+// Update Comment
+export const updateComment = (id, newText) => async dispatch => {
+  try {
+    const config = {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    };
+
+    const res = await axios.post(`api/comment/update/${id}`, newText, config);
+    dispatch({
+      type: UPDATE_COMMENT,
+      payload: res.data,
+    });
+  } catch (err) {
+    const errors = err.response.data.errors;
+
+    if (errors) {
+      errors.forEach(error => dispatch(setAlert(error.msg, 'danger')));
+    }
+  }
+};
+
+// show Edit Comment
+
+export const setEditComment = id => dispatch => {
+  dispatch({
+    type: SET_EDIT_COMMENT,
     payload: id,
   });
 };
