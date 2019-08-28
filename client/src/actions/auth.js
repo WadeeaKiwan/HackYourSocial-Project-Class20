@@ -10,6 +10,9 @@ import {
   LOGOUT,
   CLEAR_PROFILE,
   ACCOUNT_VERIFIED,
+  ACCOUNT_NOT_VERIFIED,
+  RESEND_CONFIRMATION,
+  RESEND_CONFIRMATION_FAIL,
   RESET_PASSWORD,
 } from './types'
 import setAuthToken from '../utils/setAuthToken'
@@ -49,9 +52,10 @@ export const register = ({ name, email, password }) => async dispatch => {
 
     dispatch({
       type: REGISTER_SUCCESS,
+      payload: res.data,
     })
-    dispatch(setAlert(res.data.msg, 'primary'))
-    // dispatch(loadUser());
+
+    dispatch(setAlert(res.data.msg, 'success'))
   } catch (err) {
     const errors = err.response.data.errors
 
@@ -103,7 +107,7 @@ export const logout = () => dispatch => {
   dispatch({ type: LOGOUT })
 }
 
-// verifying user account
+// Verifying user account
 export const verifyAccount = verifyToken => async dispatch => {
   const config = {
     headers: {
@@ -119,20 +123,20 @@ export const verifyAccount = verifyToken => async dispatch => {
       type: ACCOUNT_VERIFIED,
       payload: res.data,
     })
-
-    // prevents the navbar to be logged in when account is verified
-    dispatch(logout())
   } catch (err) {
     const errors = err.response.data.errors
 
     if (errors) {
       errors.forEach(error => dispatch(setAlert(error.msg, 'danger')))
     }
+
+    dispatch({
+      type: ACCOUNT_NOT_VERIFIED,
+    });
   }
 }
 
-//Resend email function
-
+//Resend email confirmation
 export const resendEmail = email => async dispatch => {
   const config = {
     headers: {
@@ -144,12 +148,21 @@ export const resendEmail = email => async dispatch => {
   try {
     const res = await axios.put(`/api/users/verify/resend`, body, config)
 
-    dispatch(setAlert(res.data.msg, 'primary'))
+    dispatch({
+      type: RESEND_CONFIRMATION,
+      payload: res.data,
+    });
+
+    dispatch(setAlert(res.data.msg, 'success'))
   } catch (err) {
     const errors = err.response.data.errors
 
     if (errors) {
       errors.forEach(error => dispatch(setAlert(error.msg, 'danger')))
     }
+
+    dispatch({
+      type: RESEND_CONFIRMATION_FAIL,
+    });
   }
 }

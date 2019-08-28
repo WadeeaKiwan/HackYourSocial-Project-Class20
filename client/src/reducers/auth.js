@@ -8,6 +8,9 @@ import {
   LOGOUT,
   ACCOUNT_DELETED,
   ACCOUNT_VERIFIED,
+  ACCOUNT_NOT_VERIFIED,
+  RESEND_CONFIRMATION,
+  RESEND_CONFIRMATION_FAIL,
   RESET_PASSWORD,
 } from '../actions/types'
 
@@ -17,10 +20,9 @@ const initialState = {
   loading: true,
   user: null,
   active: false,
-  email: '',
 }
 
-export default function(state = initialState, action) {
+export default function (state = initialState, action) {
   const { type, payload } = action
 
   switch (type) {
@@ -33,15 +35,17 @@ export default function(state = initialState, action) {
         user: payload,
       }
     case REGISTER_SUCCESS:
+    case RESEND_CONFIRMATION:
+    case ACCOUNT_NOT_VERIFIED:
+    case RESEND_CONFIRMATION_FAIL:
       return {
         ...state,
-        // isAuthenticated: true,
+        payload,
+        isAuthenticated: false,
         loading: false,
-        // user: payload,
+        active: false,
       }
     case LOGIN_SUCCESS:
-    case RESET_PASSWORD:
-      // case ACCOUNT_VERIFIED:
       localStorage.setItem('token', payload.token)
       return {
         ...state,
@@ -67,7 +71,7 @@ export default function(state = initialState, action) {
       return {
         ...state,
         ...payload,
-        isAuthenticated: true,
+        isAuthenticated: false,
         loading: false,
         active: true,
       }
