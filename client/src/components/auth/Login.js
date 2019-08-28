@@ -1,34 +1,34 @@
-import React, { Fragment, useState } from 'react';
-import { Link, Redirect } from 'react-router-dom';
-import { connect } from 'react-redux';
-import PropTypes from 'prop-types';
-import { login } from '../../actions/auth';
-import { resendEmail } from '../../actions/auth';
-import { setAlert } from '../../actions/alert';
+import React, { Fragment, useState } from 'react'
+import { Link, Redirect } from 'react-router-dom'
+import { connect } from 'react-redux'
+import PropTypes from 'prop-types'
+import { login, resendEmail } from '../../actions/auth'
 
-const Login = ({ login, active, resendEmail }) => {
+const Login = ({ login, auth: { active, isAuthenticated }, resendEmail }) => {
   // add to state toggle button
-  const [displayEmailInput, toggleEmailInput] = useState(false);
+  const [displayResend, toggleResend] = useState(false)
+
   const [formData, setFormData] = useState({
     email: '',
+    emailResend: '',
     password: '',
-  });
+  })
 
-  const { email, password } = formData;
+  const { email, emailResend, password } = formData
 
-  const onChange = e => setFormData({ ...formData, [e.target.name]: e.target.value });
+  const onChange = e => setFormData({ ...formData, [e.target.name]: e.target.value })
 
   const onSubmit = async e => {
-    e.preventDefault();
-    login(email, password);
-  };
+    e.preventDefault()
+    login(email, password)
+  }
   const resendEmailSubmit = e => {
-    e.preventDefault();
-    resendEmail(email);
-    setAlert('Please, visit your email to confirm your account', 'primary');
-  };
-  if (active) {
-    return <Redirect to="/dashboard" />;
+    e.preventDefault()
+    resendEmail(emailResend)
+    setFormData({ ...formData, emailResend: '' })
+  }
+  if (active && isAuthenticated) {
+    return <Redirect to="/dashboard" />
   }
 
   return (
@@ -66,54 +66,48 @@ const Login = ({ login, active, resendEmail }) => {
       <p className="my-1">
         <Link to="/register">Forgot your password?</Link>
       </p>
-      <p className="my-1">Didn't receive Confirmation Code? </p>
+      <p className="my-1">Didn't receive a confirmation link?{' '}
+        {!displayResend && <Link onClick={() => toggleResend(!displayResend)}>Resend</Link>}
+      </p>
 
-      <div className="my-2">
-        <button
-          onClick={() => toggleEmailInput(!displayEmailInput)}
-          type="button"
-          className="btn btn-light"
+      {displayResend && (
+        <form
+          className='form my-1'
+          onSubmit={e => resendEmailSubmit(e)}
         >
-          resend confirmation code
-        </button>
-        {displayEmailInput ? (
-          <form className="form" onSubmit={e => resendEmailSubmit(e)}>
-            <div className="form-group">
-              <input
-                type="email"
-                placeholder="Email Address"
-                name="email"
-                value={email}
-                onChange={e => onChange(e)}
-                required
-              />
-
-              <input
-                type="submit"
-                onSubmit={e => resendEmailSubmit(e)}
-                className="btn btn-primary my-1"
-                value="resend"
-              />
-            </div>
-          </form>
-        ) : null}
-      </div>
-    </Fragment>
-  );
-};
+          <input
+            type="email"
+            placeholder="Email Address"
+            name="emailResend"
+            value={emailResend}
+            onChange={e => onChange(e)}
+            required
+          />
+          <input
+            type="submit"
+            className="btn btn-primary my-1"
+            value="Resend"
+          />
+          <button onClick={() => toggleResend(false)} className='btn btn-light my-1'>
+            Cancel
+          </button>
+        </form>
+      )}
+    </Fragment >
+  )
+}
 
 Login.propTypes = {
   login: PropTypes.func.isRequired,
-  active: PropTypes.bool,
-  resendEmail: PropTypes.func,
-};
+  auth: PropTypes.object.isRequired,
+  resendEmail: PropTypes.func.isRequired,
+}
 
 const mapStateToProps = state => ({
-  active: state.auth.active,
-});
+  auth: state.auth,
+})
 
 export default connect(
   mapStateToProps,
-
   { login, resendEmail },
-)(Login);
+)(Login)
