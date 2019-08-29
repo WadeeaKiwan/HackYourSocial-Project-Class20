@@ -14,7 +14,7 @@ import Posts from '../posts/Posts'
 import Post from '../post/Post'
 import NotFound from '../layout/NotFound'
 import PrivateRoute from '../routing/PrivateRoute'
-import AccountVerified from '../auth/AccountVerified'
+import AccountVerification from '../auth/AccountVerification'
 
 const Routes = () => {
   return (
@@ -25,7 +25,7 @@ const Routes = () => {
         <Route exact path="/login" component={Login} />
         <Route exact path="/profiles" component={Profiles} />
         <Route exact path="/profile/:id" component={Profile} />
-        <Route exact path="/verify/:token" component={AccountVerified} />
+        <Route exact path="/verify/:token" component={AccountVerification} />
         <PrivateRoute exact path="/dashboard" component={Dashboard} />
         <PrivateRoute exact path="/create-profile" component={CreateProfile} />
         <PrivateRoute exact path="/edit-profile" component={EditProfile} />

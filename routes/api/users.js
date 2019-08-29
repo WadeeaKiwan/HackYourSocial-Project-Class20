@@ -61,7 +61,7 @@ router.post(
         },
       }
 
-      const token = await jwt.sign(payload, config.get('jwtSecret'), { expiresIn: '15m' })
+      const token = await jwt.sign(payload, config.get('jwtSecret'), { expiresIn: '1h' })
 
       // Check if not token
       if (!token) {
@@ -70,7 +70,6 @@ router.post(
 
       // Email body
       const html = `
-
           <style>
             .container {
               margin: auto;
@@ -99,15 +98,21 @@ router.post(
           </style>
           <body class="container">
             <h1>
-            Hi ${name},
-            <br/><br/>
-            Thanks for your registration!
-            <br/><br/>
-            Please verify your account by clicking: 
-            <a href="http://localhost:3000/verify/${token}">Here</a>
-            <br/><br/>
-            Thanks, Hack Your Social Team
-            `
+              Hi ${name},
+            </h1>
+            <p class="p large">
+              Thanks for your registration!
+            </p>
+            <p class="p lead">Please verify your account by clicking: 
+              <a href="http://localhost:3000/verify/${token}">
+                Here
+              </a>
+            </p>
+            <p class="p lead">
+              Thanks, Hack Your Social Team
+            </p>
+          </body>
+          `
 
       // Send the email
       await sendEmail(
@@ -175,12 +180,16 @@ router.post('/verify/:token', async (req, res) => {
         </style>
         <body class="container">
           <h1>
-          Hi ${user.name},
-          <br/><br/>
-          Your account has been confirmed!
-          <br/><br/>
-          Thanks, Hack Your Social Team
-          `
+            Hi ${user.name},
+          </h1>
+          <p class="p large">
+            Your account has been confirmed!
+          </p>
+          <p class="p lead">
+            Thanks, Hack Your Social Team
+          </p>
+        </body>
+        `
 
     // Send the email
     await sendEmail(
@@ -273,13 +282,18 @@ router.put(
           </style>
           <body class="container">
             <h1>
-            Hi ${user.name},
-            <br/><br/>
-            Please verify your account by clicking: 
-            <a href="http://localhost:3000/verify/${token}">Here</a>
-            <br/><br/>
-            Thanks, Hack Your Social Team
-            `
+              Hi ${user.name},
+            </h1>
+            <p class="p lead">Please verify your account by clicking: 
+              <a href="http://localhost:3000/verify/${token}">
+                Here
+              </a>
+            </p>
+            <p class="p lead">
+              Thanks, Hack Your Social Team
+            </p>
+          </body>
+          `
 
       // Send the email
       await sendEmail(

@@ -3,8 +3,9 @@ import { Link, withRouter } from 'react-router-dom'
 import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
 import { verifyAccount, resendEmail } from '../../actions/auth'
+import './AccountVerification.css'
 
-const AccountVerified = ({ verifyAccount, resendEmail, match, auth: { verification: { msg, verify } } }) => {
+const AccountVerification = ({ verifyAccount, resendEmail, match, auth: { verification: { msg, verify } } }) => {
   useEffect(() => {
     verifyAccount(match.params.token)
   }, [match.params.token, verifyAccount])
@@ -23,19 +24,24 @@ const AccountVerified = ({ verifyAccount, resendEmail, match, auth: { verificati
 
   return (
     <Fragment>
-      {verify &&
+      {verify && (
         <Fragment>
           <h1 className="large text-primary">{msg}</h1>
+          <p className="lead my-1">Your are now an official member of Hack Your Social network </p>
           <Link to="/login" className="btn btn-primary">
             Sign in
           </Link>
-          <p className="my-1">Your are now an official member of hack your social network </p>
         </Fragment>
-      }
-      {!verify &&
+      )}
+
+      {!verify && (
         <Fragment>
-          <h1 className="large alert-danger">{msg}</h1>
-          {!displayResend && <button onClick={() => toggleResend(!displayResend)} className="btn btn-primary">Resend Confirmation Link</button>}
+          <h1 className="large text-danger">{msg}</h1>
+
+          {!displayResend && (
+            <button onClick={() => toggleResend(!displayResend)} className="btn btn-primary">Resend Confirmation Link</button>
+          )}
+
           {displayResend && (
             <form
               className='form my-1'
@@ -60,12 +66,12 @@ const AccountVerified = ({ verifyAccount, resendEmail, match, auth: { verificati
             </form>
           )}
         </Fragment>
-      }
+      )}
     </Fragment>
   )
 }
 
-AccountVerified.propTypes = {
+AccountVerification.propTypes = {
   verifyAccount: PropTypes.func.isRequired,
   resendEmail: PropTypes.func.isRequired,
   auth: PropTypes.object.isRequired,
@@ -78,4 +84,4 @@ const mapStateToProps = state => ({
 export default connect(
   mapStateToProps,
   { verifyAccount, resendEmail },
-)(withRouter(AccountVerified))
+)(withRouter(AccountVerification))
