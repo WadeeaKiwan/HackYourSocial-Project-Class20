@@ -1,9 +1,4 @@
 node_modules/
+config/default.json
 config/production.json
 client/node_modules
-<<<<<<< HEAD
-
-=======
-config/default.json
-client/debug.log
->>>>>>> 2db2467842917eaacb6fb52aba4aee8ed864e046

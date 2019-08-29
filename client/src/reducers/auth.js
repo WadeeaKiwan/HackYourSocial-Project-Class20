@@ -19,6 +19,7 @@ const initialState = {
   loading: true,
   user: null,
   active: false,
+  verification: {},
 }
 
 export default function (state = initialState, action) {
@@ -56,7 +57,6 @@ export default function (state = initialState, action) {
     case LOGIN_FAIL:
     case LOGOUT:
     case ACCOUNT_DELETED:
-    case ACCOUNT_NOT_VERIFIED:
     case RESEND_CONFIRMATION_FAIL:
       localStorage.removeItem('token')
       return {
@@ -69,10 +69,18 @@ export default function (state = initialState, action) {
     case ACCOUNT_VERIFIED:
       return {
         ...state,
-        ...payload,
+        verification: { msg: payload, verify: true },
         isAuthenticated: false,
         loading: false,
         active: true,
+      }
+    case ACCOUNT_NOT_VERIFIED:
+      return {
+        ...state,
+        verification: { msg: payload, verify: false },
+        isAuthenticated: false,
+        loading: false,
+        active: false,
       }
     default:
       return state

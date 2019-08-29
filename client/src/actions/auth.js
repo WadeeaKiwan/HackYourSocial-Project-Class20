@@ -120,17 +120,18 @@ export const verifyAccount = verifyToken => async dispatch => {
 
     dispatch({
       type: ACCOUNT_VERIFIED,
-      payload: res.data,
+      payload: res.data.msg,
     })
   } catch (err) {
-    const errors = err.response.data.errors
-
-    if (errors) {
-      errors.forEach(error => dispatch(setAlert(error.msg, 'danger')))
-    }
+    // const errors = err.response.data.errors
+    console.error(err);
+    // if (errors) {
+    //   errors.forEach(error => dispatch(setAlert(error.msg, 'danger')))
+    // }
 
     dispatch({
       type: ACCOUNT_NOT_VERIFIED,
+      payload: err.response.data.msg,
     });
   }
 }

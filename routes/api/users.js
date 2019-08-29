@@ -70,6 +70,35 @@ router.post(
 
       // Email body
       const html = `
+
+          <style>
+            .container {
+              margin: auto;
+              overflow: hidden;
+              padding: 0 2rem;
+              font-family: 'Georgia', sans-serif;
+              font-size: 1rem;
+              line-height: 1.6;
+            }
+            .large {
+              font-size: 2rem;
+              line-height: 1.2;
+              margin-bottom: 1rem;
+              color: blue;
+            }
+            .p {
+              padding: 0.5rem;
+            }
+            .my-1 {
+              margin: 1rem 0;
+            }
+            .lead {
+              font-size: 1.5rem;
+              margin-bottom: 1rem;
+            }
+          </style>
+          <body class="container">
+            <h1>
             Hi ${name},
             <br/><br/>
             Thanks for your registration!
@@ -118,12 +147,40 @@ router.post('/verify/:token', async (req, res) => {
 
     // Email body
     const html = `
-            Hi ${user.name},
-            <br/><br/>
-            Your account has been confirmed!
-            <br/><br/>
-            Thanks, Hack Your Social Team
-            `
+        <style>
+          .container {
+            margin: auto;
+            overflow: hidden;
+            padding: 0 2rem;
+            font-family: 'Georgia', sans-serif;
+            font-size: 1rem;
+            line-height: 1.6;
+          }
+          .large {
+            font-size: 2rem;
+            line-height: 1.2;
+            margin-bottom: 1rem;
+            color: blue;
+          }
+          .p {
+            padding: 0.5rem;
+          }
+          .my-1 {
+            margin: 1rem 0;
+          }
+          .lead {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+          }
+        </style>
+        <body class="container">
+          <h1>
+          Hi ${user.name},
+          <br/><br/>
+          Your account has been confirmed!
+          <br/><br/>
+          Thanks, Hack Your Social Team
+          `
 
     // Send the email
     await sendEmail(
@@ -188,6 +245,34 @@ router.put(
 
       // Email body
       const html = `
+          <style>
+            .container {
+              margin: auto;
+              overflow: hidden;
+              padding: 0 2rem;
+              font-family: 'Georgia', sans-serif;
+              font-size: 1rem;
+              line-height: 1.6;
+            }
+            .large {
+              font-size: 2rem;
+              line-height: 1.2;
+              margin-bottom: 1rem;
+              color: blue;
+            }
+            .p {
+              padding: 0.5rem;
+            }
+            .my-1 {
+              margin: 1rem 0;
+            }
+            .lead {
+              font-size: 1.5rem;
+              margin-bottom: 1rem;
+            }
+          </style>
+          <body class="container">
+            <h1>
             Hi ${user.name},
             <br/><br/>
             Please verify your account by clicking: 
