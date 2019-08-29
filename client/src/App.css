@@ -366,13 +366,32 @@ button {
   margin-right: 10px;
 }
 
-.search-bar-container input {
+.search-bar-container input,
+.search-bar-container select {
   padding: 5px;
-  margin: 0 5px;
+  margin: 5px;
 }
 
-.search-bar-container i {
-  padding: 0 5px;
+.filter-criteria-list {
+  margin: 5px;
+  display: flex;
+  flex-wrap: wrap;
+}
+.filter-criteria-list button {
+  margin: 0;
+  padding: 2px 5px;
+}
+.filter-criteria-list li {
+  padding: 0 2px;
+  margin: 0px 3px;
+  background: var(--light-color);
+  border-radius: 5px;
+  box-shadow: -2px 2px 20px 0px rgba(63, 63, 53, 0.5);
+}
+
+.search-bar-container i,
+.filter-criteria-list i {
+  padding: 0 0 0 10px;
   cursor: pointer;
 }
 

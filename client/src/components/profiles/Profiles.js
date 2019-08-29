@@ -3,15 +3,15 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import Spinner from '../layout/Spinner';
 import ProfileItem from './ProfileItem';
-import { getProfiles } from '../../actions/profile';
+import { getProfiles, handleFilter } from '../../actions/profile';
 import SearchBar from './SearchBar';
 
-const Profiles = ({ getProfiles, profile: { profiles, loading, filter } }) => {
+const Profiles = ({ getProfiles, profile: { profiles, loading, filter }, handleFilter }) => {
   useEffect(() => {
     getProfiles();
   }, [getProfiles]);
 
-  function satisfyFilter(property, profile) {
+  const satisfyFilter = (property, profile) => {
     if (filter[property] && property === 'name') {
       return profile.user[property].toUpperCase().includes(filter[property].toUpperCase());
     } else if (filter[property] && property === 'skills') {
@@ -19,9 +19,37 @@ const Profiles = ({ getProfiles, profile: { profiles, loading, filter } }) => {
     } else if (filter[property]) {
       return profile[property] === undefined
         ? false
+        : property === 'status'
+        ? profile[property].toUpperCase() === filter[property].toUpperCase()
         : profile[property].toUpperCase().includes(filter[property].toUpperCase());
     } else return true;
-  }
+  };
+
+  const filteredProfiles = profiles => {
+    const filtered = profiles.map(
+      profile =>
+        satisfyFilter('name', profile) &&
+        satisfyFilter('skills', profile) &&
+        satisfyFilter('location', profile) &&
+        satisfyFilter('company', profile) &&
+        satisfyFilter('status', profile) && <ProfileItem key={profile._id} profile={profile} />,
+    );
+    return filtered.filter(e => typeof e === 'object').length ? (
+      filtered
+    ) : (
+      <h4>No profiles found...</h4>
+    );
+  };
+
+  const removeFilterCriteria = criteria => {
+    if (criteria) {
+      let newFilter = filter;
+      delete newFilter[criteria];
+      Object.keys(newFilter).length ? handleFilter(newFilter) : handleFilter(null);
+    } else {
+      handleFilter(null);
+    }
+  };
 
   return (
     <Fragment>
@@ -36,19 +64,40 @@ const Profiles = ({ getProfiles, profile: { profiles, loading, filter } }) => {
             </p>
             <SearchBar />
           </div>
+          {filter && (
+            <ul className="filter-criteria-list">
+              {Object.keys(filter).map(elem => (
+                <li key={elem}>
+                  {elem}: <b> {filter[elem]}</b>
+                  <i
+                    className="fa fa-times"
+                    aria-hidden="true"
+                    onClick={e => {
+                      e.preventDefault();
+                      removeFilterCriteria(elem);
+                    }}
+                  ></i>
+                </li>
+              ))}
+              <li>
+                <button
+                  type="button"
+                  className="btn btn-dark"
+                  onClick={e => {
+                    e.preventDefault();
+                    removeFilterCriteria(null);
+                  }}
+                >
+                  Reset All
+                </button>
+              </li>
+            </ul>
+          )}
           <div className="profiles">
             {profiles.length > 0 && !filter ? (
               profiles.map(profile => <ProfileItem key={profile._id} profile={profile} />)
             ) : profiles.length > 0 && filter ? (
-              profiles.map(
-                profile =>
-                  satisfyFilter('name', profile) &&
-                  satisfyFilter('skills', profile) &&
-                  satisfyFilter('location', profile) &&
-                  satisfyFilter('company', profile) && (
-                    <ProfileItem key={profile._id} profile={profile} />
-                  ),
-              )
+              filteredProfiles(profiles)
             ) : (
               <h4>No profiles found...</h4>
             )}
@@ -70,5 +119,5 @@ const mapStateToProps = state => ({
 
 export default connect(
   mapStateToProps,
-  { getProfiles },
+  { getProfiles, handleFilter },
 )(Profiles);
