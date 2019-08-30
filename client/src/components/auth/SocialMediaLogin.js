@@ -22,13 +22,13 @@ const SocialMediaLogin = () => {
       // firebase.auth.EmailAuthProvider.PROVIDER_ID,
     ],
     callbacks: {
-      signInSuccess: () => false,
+      signInSuccessWithAuthResult: () => false,
     },
   };
 
   useEffect(() => {
     firebase.auth().onAuthStateChanged(user => {
-      setIsSignedIn(!!user);
+      setIsSignedIn(user);
     });
   }, []);
 
