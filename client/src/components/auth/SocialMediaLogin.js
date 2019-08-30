@@ -2,7 +2,6 @@ import React, { Fragment, useState, useEffect } from 'react';
 import firebase from 'firebase';
 import StyledFirebaseAuth from 'react-firebaseui/StyledFirebaseAuth';
 import SubmitLogIn from './SubmitLogIn';
-import LogOutSocial from './LogOutSocial';
 
 firebase.initializeApp({
   apiKey: 'AIzaSyBzJx-uHixKqIsA8h8Dp91OS4Fasjdi8kk',
@@ -17,9 +16,7 @@ const SocialMediaLogin = () => {
     signInOptions: [
       firebase.auth.GoogleAuthProvider.PROVIDER_ID,
       firebase.auth.FacebookAuthProvider.PROVIDER_ID,
-      firebase.auth.TwitterAuthProvider.PROVIDER_ID,
       firebase.auth.GithubAuthProvider.PROVIDER_ID,
-      // firebase.auth.EmailAuthProvider.PROVIDER_ID,
     ],
     callbacks: {
       signInSuccessWithAuthResult: () => false,
@@ -41,11 +38,10 @@ const SocialMediaLogin = () => {
             email={firebase.auth().currentUser.email}
             avatar={firebase.auth().currentUser.photoURL}
           />
-          <LogOutSocial />
         </Fragment>
       ) : (
-        <StyledFirebaseAuth uiConfig={uiConfig} firebaseAuth={firebase.auth()} />
-      )}
+          <StyledFirebaseAuth uiConfig={uiConfig} firebaseAuth={firebase.auth()} />
+        )}
     </div>
   );
 };
