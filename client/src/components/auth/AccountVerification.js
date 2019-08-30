@@ -4,7 +4,6 @@ import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
 import { verifyAccount, resendEmail } from '../../actions/auth'
 import Spinner from '../layout/Spinner'
-import './AccountVerification.css'
 
 const AccountVerification = ({ verifyAccount, resendEmail, match, auth: { loading, verification: { msg, verify } } }) => {
   useEffect(() => {
