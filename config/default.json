@@ -1,8 +1,8 @@
 {
-  "mongoURI": "",
+  "mongoURI": "mongodb+srv://wadeea85:JRJ3j6oVMZcf7o85@hackyoursocial-ozadm.mongodb.net/test?retryWrites=true&w=majority",
   "jwtSecret": "mysecrettoken",
-  "githubClientId": "",
-  "githubSecret": "",
+  "githubClientId": "c219f81b8b8d86cf33a3",
+  "githubSecret": "cab86a85e5e69c8ff1c1c1d16dee5b93587f68ee",
   "gmailEmail": "hys.class20@gmail.com",
   "gmailPassword": "HackYourSocial20"
 }
