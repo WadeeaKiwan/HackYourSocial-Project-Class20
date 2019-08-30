@@ -3,9 +3,10 @@ import { Link, withRouter } from 'react-router-dom'
 import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
 import { verifyAccount, resendEmail } from '../../actions/auth'
+import Spinner from '../layout/Spinner'
 import './AccountVerification.css'
 
-const AccountVerification = ({ verifyAccount, resendEmail, match, auth: { verification: { msg, verify } } }) => {
+const AccountVerification = ({ verifyAccount, resendEmail, match, auth: { loading, verification: { msg, verify } } }) => {
   useEffect(() => {
     verifyAccount(match.params.token)
   }, [match.params.token, verifyAccount])
@@ -22,7 +23,7 @@ const AccountVerification = ({ verifyAccount, resendEmail, match, auth: { verifi
     setEmailResend('')
   }
 
-  return (
+  return loading || msg === null ? (<Spinner />) : (
     <Fragment>
       {verify && (
         <Fragment>
