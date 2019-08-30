@@ -15,7 +15,11 @@ const Profiles = ({ getProfiles, profile: { profiles, loading, filter }, handleF
     if (filter[property] && property === 'name') {
       return profile.user[property].toUpperCase().includes(filter[property].toUpperCase());
     } else if (filter[property] && property === 'skills') {
-      return profile.skills.filter(e => e.toUpperCase() === filter[property].toUpperCase()).length;
+      let arrayOfFilteredSkills = filter[property]
+        .split(',')
+        .map(skill => skill.trim().toUpperCase());
+      let skillData = profile.skills.map(e => e.toUpperCase());
+      return arrayOfFilteredSkills.every(e => skillData.indexOf(e) > -1);
     } else if (filter[property]) {
       return profile[property] === undefined
         ? false
