@@ -7,7 +7,8 @@ import { updateComment, setEditComment } from '../../actions/post';
 const EditComment = ({
   setEditComment,
   updateComment,
-  comment: { id, text, name, avatar, user },
+  postId,
+  comment: { _id, text, name, avatar, user },
 }) => {
   const [newText, setText] = useState(text);
   const node = useRef();
@@ -27,8 +28,9 @@ const EditComment = ({
       document.removeEventListener('mousedown', handleClick);
     };
   }, [setEditComment]);
+  console.log(postId);
   return (
-    <div classNAme={'post bg-white p-1 edit-post-position'}>
+    <div className={'post bg-white p-1 edit-post-position'}>
       <div>
         <Link to={`/comment/${user}`}>
           <img className='round-img' src={avatar} alt='' />
@@ -43,7 +45,7 @@ const EditComment = ({
           className='form'
           onSubmit={e => {
             e.preventDefault();
-            updateComment(id, {
+            updateComment(postId, _id, {
               newText,
             });
             setText('');
@@ -61,7 +63,7 @@ const EditComment = ({
           <input type='submit' className='btn btn-success my-1' value='Save' />
           <input
             type='button'
-            classNAme='btn btn-dark my-1 cancel-button'
+            className='btn btn-dark my-1 cancel-button'
             value='Cancel'
             onClick={() => setEditComment(null)}
           />{' '}

@@ -4,17 +4,17 @@ import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import Spinner from '../layout/Spinner';
 import PostItem from '../posts/PostItem';
-import CommentForm from '../post/CommentForm';
-import CommentItem from '../post/CommentItem';
-import { getPost } from '../../actions/post';
-import EditPost from '../posts/EditPost';
+import CommentForm from './CommentForm';
+import CommentItem from './CommentItem';
+import { getPosts } from '../../actions/post';
+import EditComment from './EditComment';
 
-const Post = ({ getPost, post: { post, loading, editedPost }, match }) => {
+const Post = ({ getPosts, post: { post, loading, editedComment }, match }) => {
   useEffect(() => {
-    getPost(match.params.id);
-  }, [getPost, match.params.id]);
+    getPosts(match.params.id);
+  }, [getPosts, match.params.id]);
 
-  return loading || post === null ? (
+  return loading ? (
     <Spinner />
   ) : (
     <Fragment>
@@ -25,8 +25,8 @@ const Post = ({ getPost, post: { post, loading, editedPost }, match }) => {
       <div className='comments'>
         {' '}
         {post.comments.map(comment =>
-          editedPost === comment._id ? (
-            <EditPost comment={comment} key={comment._id} />
+          editedComment === comment._id ? (
+            <EditComment comment={comment} key={comment._id} postId={post._id} />
           ) : (
             <CommentItem key={comment._id} comment={comment} postId={post._id} />
           ),
@@ -37,7 +37,7 @@ const Post = ({ getPost, post: { post, loading, editedPost }, match }) => {
 };
 
 Post.propTypes = {
-  getPost: PropTypes.func.isRequired,
+  getPosts: PropTypes.func.isRequired,
   post: PropTypes.object.isRequired,
 };
 
@@ -48,6 +48,6 @@ const mapStateToProps = state => ({
 export default connect(
   mapStateToProps,
   {
-    getPost,
+    getPosts,
   },
 )(Post);

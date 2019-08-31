@@ -236,19 +236,24 @@ export const setEditPost = id => dispatch => {
 };
 
 // Update Comment
-export const updateComment = (id, newText) => async dispatch => {
+export const updateComment = (postId, commentId, newText) => async dispatch => {
   try {
+    console.log(postId, commentId, newText);
     const config = {
       headers: {
         'Content-Type': 'application/json',
       },
     };
 
-    const res = await axios.post(`api/comment/update/${id}`, newText, config);
+    const res = await axios.post(`/api/posts/comment/update/${postId}/${commentId}`, newText, config);
+    console.log(res);
+
     dispatch({
       type: UPDATE_COMMENT,
       payload: res.data,
     });
+    dispatch(setAlert('Comment Updated', 'Success'))
+
   } catch (err) {
     const errors = err.response.data.errors;
 

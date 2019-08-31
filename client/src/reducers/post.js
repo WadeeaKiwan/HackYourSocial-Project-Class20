@@ -10,7 +10,7 @@ import {
   UPDATE_POST,
   SET_EDIT_POST,
   UPDATE_COMMENT,
-  SET_EDIT_COMMENT
+  SET_EDIT_COMMENT,
 } from '../actions/types';
 
 const initialState = {
@@ -31,13 +31,13 @@ export default function (state = initialState, action) {
   switch (type) {
     case GET_POSTS:
     case UPDATE_POST:
-    case UPDATE_COMMENT:
       return {
         ...state,
         posts: payload,
           loading: false,
       };
     case GET_POST:
+    case UPDATE_COMMENT:
       return {
         ...state,
         post: payload,
@@ -91,12 +91,16 @@ export default function (state = initialState, action) {
           loading: false,
       };
     case SET_EDIT_POST:
-    case SET_EDIT_COMMENT:
       return {
         ...state,
         editedPost: payload,
       };
-    default:
-      return state;
+    case SET_EDIT_COMMENT:
+      return {
+        ...state,
+        editedComment: payload,
+      }
+      default:
+        return state;
   }
 }
