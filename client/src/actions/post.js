@@ -1,7 +1,5 @@
 import axios from 'axios';
-import {
-  setAlert
-} from './alert';
+import { setAlert } from './alert';
 import {
   GET_POSTS,
   POST_ERROR,
@@ -14,7 +12,7 @@ import {
   UPDATE_POST,
   SET_EDIT_POST,
   UPDATE_COMMENT,
-  SET_EDIT_COMMENT
+  SET_EDIT_COMMENT,
 } from './types';
 
 // Get posts
@@ -31,7 +29,7 @@ export const getPosts = () => async dispatch => {
       type: POST_ERROR,
       payload: {
         msg: err.response.statusText,
-        status: err.response.status
+        status: err.response.status,
       },
     });
   }
@@ -46,7 +44,7 @@ export const addLike = id => async dispatch => {
       type: UPDATE_LIKES,
       payload: {
         id,
-        likes: res.data
+        likes: res.data,
       },
     });
   } catch (err) {
@@ -54,7 +52,7 @@ export const addLike = id => async dispatch => {
       type: POST_ERROR,
       payload: {
         msg: err.response.statusText,
-        status: err.response.status
+        status: err.response.status,
       },
     });
   }
@@ -69,7 +67,7 @@ export const removeLike = id => async dispatch => {
       type: UPDATE_LIKES,
       payload: {
         id,
-        likes: res.data
+        likes: res.data,
       },
     });
   } catch (err) {
@@ -77,7 +75,7 @@ export const removeLike = id => async dispatch => {
       type: POST_ERROR,
       payload: {
         msg: err.response.statusText,
-        status: err.response.status
+        status: err.response.status,
       },
     });
   }
@@ -99,7 +97,7 @@ export const deletePost = id => async dispatch => {
       type: POST_ERROR,
       payload: {
         msg: err.response.statusText,
-        status: err.response.status
+        status: err.response.status,
       },
     });
   }
@@ -127,7 +125,7 @@ export const addPost = formData => async dispatch => {
       type: POST_ERROR,
       payload: {
         msg: err.response.statusText,
-        status: err.response.status
+        status: err.response.status,
       },
     });
   }
@@ -147,7 +145,7 @@ export const getPost = id => async dispatch => {
       type: POST_ERROR,
       payload: {
         msg: err.response.statusText,
-        status: err.response.status
+        status: err.response.status,
       },
     });
   }
@@ -175,7 +173,7 @@ export const addComment = (postId, formData) => async dispatch => {
       type: POST_ERROR,
       payload: {
         msg: err.response.statusText,
-        status: err.response.status
+        status: err.response.status,
       },
     });
   }
@@ -197,7 +195,7 @@ export const deleteComment = (postId, commentId) => async dispatch => {
       type: POST_ERROR,
       payload: {
         msg: err.response.statusText,
-        status: err.response.status
+        status: err.response.status,
       },
     });
   }
@@ -238,22 +236,25 @@ export const setEditPost = id => dispatch => {
 // Update Comment
 export const updateComment = (postId, commentId, newText) => async dispatch => {
   try {
-    console.log(postId, commentId, newText);
+    console.log('hello from update comment action', postId, commentId, newText);
     const config = {
       headers: {
         'Content-Type': 'application/json',
       },
     };
 
-    const res = await axios.post(`/api/posts/comment/update/${postId}/${commentId}`, newText, config);
+    const res = await axios.post(
+      `/api/posts/comment/update/${postId}/${commentId}`,
+      newText,
+      config,
+    );
     console.log(res);
 
     dispatch({
       type: UPDATE_COMMENT,
       payload: res.data,
     });
-    dispatch(setAlert('Comment Updated', 'Success'))
-
+    dispatch(setAlert('Comment Updated', 'Success'));
   } catch (err) {
     const errors = err.response.data.errors;
 

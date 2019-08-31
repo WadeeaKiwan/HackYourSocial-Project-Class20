@@ -1,9 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const {
-  check,
-  validationResult
-} = require('express-validator/check');
+const { check, validationResult } = require('express-validator/check');
 const auth = require('../../middleware/auth');
 
 const Post = require('../../models/Post');
@@ -19,8 +16,8 @@ router.post(
     auth,
     [
       check('text', 'Text is required')
-      .not()
-      .isEmpty(),
+        .not()
+        .isEmpty(),
     ],
   ],
   async (req, res) => {
@@ -191,8 +188,8 @@ router.post(
     auth,
     [
       check('text', 'Text is required')
-      .not()
-      .isEmpty(),
+        .not()
+        .isEmpty(),
     ],
   ],
   async (req, res) => {
@@ -274,8 +271,8 @@ router.post(
     auth,
     [
       check('newText', 'Text is required')
-      .not()
-      .isEmpty(),
+        .not()
+        .isEmpty(),
     ],
   ],
   async (req, res) => {
@@ -300,6 +297,7 @@ router.post(
         });
       }
       post.text = req.body.newText;
+      post.edited = true;
       await post.save();
       const posts = await Post.find().sort({
         date: -1,
@@ -322,8 +320,8 @@ router.post(
     auth,
     [
       check('newText', 'Text is required')
-      .not()
-      .isEmpty(),
+        .not()
+        .isEmpty(),
     ],
   ],
   async (req, res) => {
@@ -335,7 +333,7 @@ router.post(
     }
     try {
       const post = await Post.findById(req.params.id);
-      const comment = await post.comments.findById(req.params.comment_id);
+      const comment = post.comments.find(comment => comment.id === req.params.comment_id);
       // Check if comment exists
       if (!comment) {
         return res.status(404).json({
@@ -349,6 +347,7 @@ router.post(
         });
       }
       comment.text = req.body.newText;
+      comment.edited = true;
       await post.save();
       res.json(post);
     } catch (err) {
