@@ -1,8 +1,0 @@
-{
-  "mongoURI": "",
-  "jwtSecret": "mysecrettoken",
-  "githubClientId": "",
-  "githubSecret": "",
-  "gmailEmail": "hys.class20@gmail.com",
-  "gmailPassword": "HackYourSocial20"
-}

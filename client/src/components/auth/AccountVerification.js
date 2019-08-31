@@ -31,7 +31,7 @@ const AccountVerification = ({ verifyAccount, resendEmail, match, auth: { loadin
           <p className="lead my-1">Your are now an official member of Hack Your Social network </p>
           <Link to="/login" className="btn btn-primary">
             Sign in
-        </Link>
+          </Link>
         </Fragment>
       ) : (
           <Fragment>
@@ -61,7 +61,7 @@ const AccountVerification = ({ verifyAccount, resendEmail, match, auth: { loadin
                 />
                 <button onClick={() => toggleResend(false)} className='btn btn-light my-1'>
                   Cancel
-            </button>
+                </button>
               </form>
             )}
           </Fragment>

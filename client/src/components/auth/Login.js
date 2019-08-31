@@ -67,7 +67,7 @@ const Login = ({ login, auth: { active, isAuthenticated }, resendEmail }) => {
         <Link to="/register">Forgot your password?</Link>
       </p>
       <p className="my-1">Didn't receive a confirmation link?{' '}
-        {!displayResend && <a href="#" onClick={() => toggleResend(!displayResend)}>Resend</a>}
+        {!displayResend && <a href="#!" onClick={() => toggleResend(!displayResend)}>Resend</a>}
       </p>
 
       {displayResend && (
