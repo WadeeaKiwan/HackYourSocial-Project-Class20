@@ -16,7 +16,7 @@ router.post(
   '/registerWithSocialMedia',
 
   async (request, response) => {
-    // come from the body
+    // comes from the body
 
     const { name, email, avatar } = request.body;
 
