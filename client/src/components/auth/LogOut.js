@@ -5,7 +5,7 @@ import { logout } from '../../actions/auth';
 import Spinner from '../layout/Spinner';
 import firebase from 'firebase';
 
-const LogOutSocial = ({ logout }) => {
+const LogOut = ({ logout }) => {
   useEffect(() => {
     firebase.auth().onAuthStateChanged(() => {
       firebase.auth().signOut();
@@ -20,11 +20,11 @@ const LogOutSocial = ({ logout }) => {
   );
 };
 
-LogOutSocial.propTypes = {
+LogOut.propTypes = {
   logout: PropTypes.func.isRequired,
 };
 
 export default connect(
   null,
   { logout },
-)(LogOutSocial);
+)(LogOut);
