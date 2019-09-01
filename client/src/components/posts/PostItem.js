@@ -31,13 +31,9 @@ const PostItem = ({
             onClick={() => addOrRemoveLike(_id)}
             type="button"
             className={
-              likes.length <= 0
-                ? 'not-like'
-                : likes.map(item =>
-                    auth.user && item.user && item.user === auth.user._id
-                      ? 'btn btn-light'
-                      : 'not-like',
-                  )
+              !auth.loading && likes.filter(e => e.user === auth.user._id).length
+                ? 'btn btn-dark'
+                : 'btn btn-light btn-like'
             }
           >
             <i className="fas fa-thumbs-up" />{' '}
