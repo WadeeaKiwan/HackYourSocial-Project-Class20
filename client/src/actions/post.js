@@ -236,7 +236,6 @@ export const setEditPost = id => dispatch => {
 // Update Comment
 export const updateComment = (postId, commentId, newText) => async dispatch => {
   try {
-    console.log('hello from update comment action', postId, commentId, newText);
     const config = {
       headers: {
         'Content-Type': 'application/json',
@@ -248,7 +247,6 @@ export const updateComment = (postId, commentId, newText) => async dispatch => {
       newText,
       config,
     );
-    console.log(res);
 
     dispatch({
       type: UPDATE_COMMENT,
