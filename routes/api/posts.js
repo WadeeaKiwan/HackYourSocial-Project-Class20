@@ -125,7 +125,8 @@ router.put('/like/:id', auth, async (req, res) => {
     await post.save();
     res.json(post.likes);
   } catch (err) {
-    handleServerError(err, res);
+    console.error(err.message);
+    res.status(500).send('Server Error');
   }
 });
 // @route    PUT api/posts/unlike/:id
