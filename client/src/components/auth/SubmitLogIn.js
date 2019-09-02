@@ -1,18 +1,13 @@
-import React, { Fragment, useEffect } from 'react';
+import React, { useEffect, Fragment } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import Spinner from '../layout/Spinner';
 import { registerWithSocialMedia } from '../../actions/auth';
 
 const SubmitLogIn = ({ name, email, avatar, registerWithSocialMedia }) => {
   useEffect(() => {
     registerWithSocialMedia({ name, email, avatar });
-  }, []);
-  return (
-    <Fragment>
-      <Spinner />
-    </Fragment>
-  );
+  }, [avatar, email, name, registerWithSocialMedia]);
+  return <Fragment></Fragment>;
 };
 
 SubmitLogIn.propTypes = {

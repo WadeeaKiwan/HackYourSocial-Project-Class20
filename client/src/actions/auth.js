@@ -12,31 +12,23 @@ import {
   ACCOUNT_VERIFIED,
   ACCOUNT_NOT_VERIFIED,
   RESEND_CONFIRMATION,
-  RESEND_CONFIRMATION_FAIL
+  RESEND_CONFIRMATION_FAIL,
 } from './types';
 import setAuthToken from '../utils/setAuthToken';
 
 // Register with social network
-export const registerWithSocialMedia = ({
-  name,
-  email,
-  avatar
-}) => async dispatch => {
+export const registerWithSocialMedia = ({ name, email, avatar }) => async dispatch => {
   const config = {
     headers: {
-      'Content-Type': 'application/json'
-    }
+      'Content-Type': 'application/json',
+    },
   };
   const body = JSON.stringify({ name, email, avatar });
   try {
-    const res = await axios.post(
-      `/api/auth/registerWithSocialMedia`,
-      body,
-      config
-    );
+    const res = await axios.post(`/api/auth/registerWithSocialMedia`, body, config);
     dispatch({
-      type: REGISTER_SUCCESS,
-      payload: res.data // expect a user token from database
+      type: LOGIN_SUCCESS,
+      payload: res.data, // expect a user token from database
     });
     dispatch(loadUser());
   } catch (err) {
@@ -45,7 +37,7 @@ export const registerWithSocialMedia = ({
       errors.forEach(error => dispatch(setAlert(error.msg, 'danger')));
     }
     dispatch({
-      type: REGISTER_FAIL
+      type: LOGIN_FAIL,
     });
   }
 };
@@ -61,11 +53,11 @@ export const loadUser = () => async dispatch => {
 
     dispatch({
       type: USER_LOADED,
-      payload: res.data
+      payload: res.data,
     });
   } catch (err) {
     dispatch({
-      type: AUTH_ERROR
+      type: AUTH_ERROR,
     });
   }
 };
@@ -74,8 +66,8 @@ export const loadUser = () => async dispatch => {
 export const register = ({ name, email, password }) => async dispatch => {
   const config = {
     headers: {
-      'Content-Type': 'application/json'
-    }
+      'Content-Type': 'application/json',
+    },
   };
 
   const body = JSON.stringify({ name, email, password });
@@ -85,7 +77,7 @@ export const register = ({ name, email, password }) => async dispatch => {
 
     dispatch({
       type: REGISTER_SUCCESS,
-      payload: res.data
+      payload: res.data,
     });
 
     dispatch(setAlert(res.data.msg, 'success'));
@@ -97,7 +89,7 @@ export const register = ({ name, email, password }) => async dispatch => {
     }
 
     dispatch({
-      type: REGISTER_FAIL
+      type: REGISTER_FAIL,
     });
   }
 };
@@ -106,8 +98,8 @@ export const register = ({ name, email, password }) => async dispatch => {
 export const login = (email, password) => async dispatch => {
   const config = {
     headers: {
-      'Content-Type': 'application/json'
-    }
+      'Content-Type': 'application/json',
+    },
   };
 
   const body = JSON.stringify({ email, password });
@@ -117,7 +109,7 @@ export const login = (email, password) => async dispatch => {
 
     dispatch({
       type: LOGIN_SUCCESS,
-      payload: res.data
+      payload: res.data,
     });
 
     dispatch(loadUser());
@@ -129,7 +121,7 @@ export const login = (email, password) => async dispatch => {
     }
 
     dispatch({
-      type: LOGIN_FAIL
+      type: LOGIN_FAIL,
     });
   }
 };
@@ -144,21 +136,17 @@ export const logout = () => dispatch => {
 export const verifyAccount = verifyToken => async dispatch => {
   const config = {
     headers: {
-      'Content-Type': 'application/json'
-    }
+      'Content-Type': 'application/json',
+    },
   };
   const body = JSON.stringify({ verifyToken });
 
   try {
-    const res = await axios.post(
-      `/api/users/verify/${verifyToken}`,
-      body,
-      config
-    );
+    const res = await axios.post(`/api/users/verify/${verifyToken}`, body, config);
 
     dispatch({
       type: ACCOUNT_VERIFIED,
-      payload: res.data.msg
+      payload: res.data.msg,
     });
   } catch (err) {
     // const errors = err.response.data.errors
@@ -169,7 +157,7 @@ export const verifyAccount = verifyToken => async dispatch => {
 
     dispatch({
       type: ACCOUNT_NOT_VERIFIED,
-      payload: err.response.data.msg
+      payload: err.response.data.msg,
     });
   }
 };
@@ -178,8 +166,8 @@ export const verifyAccount = verifyToken => async dispatch => {
 export const resendEmail = email => async dispatch => {
   const config = {
     headers: {
-      'Content-Type': 'application/json'
-    }
+      'Content-Type': 'application/json',
+    },
   };
   const body = JSON.stringify({ email });
 
@@ -188,7 +176,7 @@ export const resendEmail = email => async dispatch => {
 
     dispatch({
       type: RESEND_CONFIRMATION,
-      payload: res.data
+      payload: res.data,
     });
 
     dispatch(setAlert(res.data.msg, 'success'));
@@ -200,7 +188,7 @@ export const resendEmail = email => async dispatch => {
     }
 
     dispatch({
-      type: RESEND_CONFIRMATION_FAIL
+      type: RESEND_CONFIRMATION_FAIL,
     });
   }
 };
