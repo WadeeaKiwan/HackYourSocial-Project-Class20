@@ -5,7 +5,7 @@ import SubmitLogIn from './SubmitLogIn';
 
 firebase.initializeApp({
   apiKey: 'AIzaSyBzJx-uHixKqIsA8h8Dp91OS4Fasjdi8kk',
-  authDomain: 'class20-b4669.firebaseapp.com',
+  authDomain: 'class20-b4669.firebaseapp.com'
 });
 
 const SocialMediaLogin = () => {
@@ -16,11 +16,11 @@ const SocialMediaLogin = () => {
     signInOptions: [
       firebase.auth.GoogleAuthProvider.PROVIDER_ID,
       firebase.auth.FacebookAuthProvider.PROVIDER_ID,
-      firebase.auth.GithubAuthProvider.PROVIDER_ID,
+      firebase.auth.GithubAuthProvider.PROVIDER_ID
     ],
     callbacks: {
-      signInSuccessWithAuthResult: () => false,
-    },
+      signInSuccessWithAuthResult: () => false
+    }
   };
 
   useEffect(() => {
@@ -38,10 +38,14 @@ const SocialMediaLogin = () => {
             email={firebase.auth().currentUser.email}
             avatar={firebase.auth().currentUser.photoURL}
           />
+          {console.log(firebase.auth().currentUser)}
         </Fragment>
       ) : (
-          <StyledFirebaseAuth uiConfig={uiConfig} firebaseAuth={firebase.auth()} />
-        )}
+        <StyledFirebaseAuth
+          uiConfig={uiConfig}
+          firebaseAuth={firebase.auth()}
+        />
+      )}
     </div>
   );
 };
