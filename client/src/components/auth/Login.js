@@ -75,8 +75,8 @@ const Login = ({ login, auth: { active, isAuthenticated }, resendEmail }) => {
           <input type="submit" className="btn btn-primary" value="Login" />
         </form>
       ) : (
-        <SocialMediaLogin />
-      )}
+          <SocialMediaLogin />
+        )}
 
       <button
         style={buttonStyle}
@@ -95,7 +95,7 @@ const Login = ({ login, auth: { active, isAuthenticated }, resendEmail }) => {
         <Link to="/register">Forgot your password?</Link>
       </p>
       <p className="my-1">
-        Didn't receive a confirmation link?
+        Didn't receive a confirmation link?{' '}
         {!displayResend && (
           <a href="#!" onClick={() => toggleResend(!displayResend)}>
             Resend
