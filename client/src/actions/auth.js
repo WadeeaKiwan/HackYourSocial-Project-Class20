@@ -28,7 +28,7 @@ export const registerWithSocialMedia = ({ name, email, avatar }) => async dispat
     const res = await axios.post(`/api/auth/registerWithSocialMedia`, body, config);
     dispatch({
       type: LOGIN_SUCCESS,
-      payload: res.data, // expect a user token from database
+      payload: res.data,
     });
     dispatch(loadUser());
   } catch (err) {

@@ -1,5 +1,5 @@
 {
-  "mongoURI": "mongodb+srv://muhannad:muhannad1989@devconnector-lc4wg.mongodb.net/test?retryWrites=true&w=majority",
+  "mongoURI": "mongodb+srv://hyfclass20:HackYourFuture!@cluster0-jpbm0.mongodb.net/test?retryWrites=true&w=majority",
   "jwtSecret": "mysecrettoken",
   "githubClientId": "26e42be2c45eb7db86b7",
   "githubSecret": "4a818bc6348a10d6c3c876465b9fb38bd5341289",

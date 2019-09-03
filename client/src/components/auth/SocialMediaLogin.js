@@ -40,7 +40,9 @@ const SocialMediaLogin = () => {
               email={firebase.auth().currentUser.email}
               avatar={firebase.auth().currentUser.photoURL}
             />
-          ) : null}
+          ) : (
+            <Fragment></Fragment>
+          )}
         </Fragment>
       ) : (
         <StyledFirebaseAuth uiConfig={uiConfig} firebaseAuth={firebase.auth()} />
