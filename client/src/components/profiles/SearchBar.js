@@ -35,9 +35,11 @@ const SearchBar = ({ handleFilter }) => {
           handleFilter(onChangeCriteria);
         }}
       >
+        <span className="search-area">
         <input
           type="text"
-          placeholder="Quick search by name"
+          className="searchInput"
+          placeholder=" Quick search by name"
           onChange={e => setOnChangeCriteria({ name: e.target.value })}
         />
         <span
@@ -47,6 +49,7 @@ const SearchBar = ({ handleFilter }) => {
           }}
         >
           <i className="fas fa-search my-1" />
+        </span>
         </span>
         <div className="filter-search-container" ref={node}>
           <i className="fas fa-filter my-1" onClick={e => openFilterWindow(!filterWindow)} />
