@@ -43,6 +43,8 @@ export default function (state = initialState, action) {
     case REGISTER_SUCCESS:
     case RESEND_CONFIRMATION:
     case SEND_PASSWORD_LINK_SUCCESS:
+    case RESET_PASSWORD_SUCCESS:
+    case RESET_PASSWORD_FAIL:
       return {
         ...state,
         payload,
@@ -75,7 +77,6 @@ export default function (state = initialState, action) {
         active: false,
       }
     case ACCOUNT_VERIFIED:
-    case RESET_PASSWORD_SUCCESS:
     case CHECK_PASS_TOKEN_SUCCESS:
       return {
         ...state,
@@ -85,7 +86,6 @@ export default function (state = initialState, action) {
         active: true,
       }
     case ACCOUNT_NOT_VERIFIED:
-    case RESET_PASSWORD_FAIL:
     case CHECK_PASS_TOKEN_FAIL:
       return {
         ...state,

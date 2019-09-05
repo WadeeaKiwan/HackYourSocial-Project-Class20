@@ -100,7 +100,7 @@ const ResetPassword = ({
               <input
                 type='email'
                 placeholder='Email Address'
-                name='emailForgetPassword'
+                name='emailForgotPassword'
                 value={emailForgotPassword}
                 onChange={e => onChange(e)}
                 required
