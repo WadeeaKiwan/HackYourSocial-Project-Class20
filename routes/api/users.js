@@ -1,14 +1,14 @@
-const express = require('express')
-const router = express.Router()
-const gravatar = require('gravatar')
-const bcrypt = require('bcryptjs')
-const auth = require('../../middleware/auth')
-const jwt = require('jsonwebtoken')
-const config = require('config')
-const { check, validationResult } = require('express-validator/check')
-const { sendEmail } = require('../../middleware/mailer')
+const express = require('express');
+const router = express.Router();
+const gravatar = require('gravatar');
+const bcrypt = require('bcryptjs');
+const auth = require('../../middleware/auth');
+const jwt = require('jsonwebtoken');
+const config = require('config');
+const { check, validationResult } = require('express-validator/check');
+const { sendEmail } = require('../../middleware/mailer');
 
-const User = require('../../models/User')
+const User = require('../../models/User');
 
 // @route    POST api/users
 // @desc     Register user
@@ -23,50 +23,50 @@ router.post(
     check('password', 'Please enter a password with 6 or more characters').isLength({ min: 6 }),
   ],
   async (req, res) => {
-    const errors = validationResult(req)
+    const errors = validationResult(req);
     if (!errors.isEmpty()) {
-      return res.status(400).json({ errors: errors.array() })
+      return res.status(400).json({ errors: errors.array() });
     }
 
-    const { name, email, password } = req.body
+    const { name, email, password } = req.body;
 
     try {
-      let user = await User.findOne({ email })
+      let user = await User.findOne({ email });
 
       if (user) {
-        return res.status(400).json({ errors: [{ msg: 'User already exists' }] })
+        return res.status(400).json({ errors: [{ msg: 'User already exists' }] });
       }
 
       const avatar = gravatar.url(email, {
         s: '200',
         r: 'pg',
         d: 'mm',
-      })
+      });
 
       user = new User({
         name,
         email,
         avatar,
         password,
-      })
+      });
 
-      const salt = await bcrypt.genSalt(10)
+      const salt = await bcrypt.genSalt(10);
 
-      user.password = await bcrypt.hash(password, salt)
+      user.password = await bcrypt.hash(password, salt);
 
-      await user.save()
+      await user.save();
 
       const payload = {
         user: {
           id: user.id,
         },
-      }
+      };
 
-      const token = await jwt.sign(payload, config.get('jwtSecret'), { expiresIn: '1h' })
+      const token = await jwt.sign(payload, config.get('jwtSecret'), { expiresIn: '1h' });
 
       // Check if not token
       if (!token) {
-        return res.status(401).json({ msg: 'No token, authorization denied' })
+        return res.status(401).json({ msg: 'No token, authorization denied' });
       }
 
       // Email body
@@ -113,7 +113,7 @@ router.post(
               Thanks, Hack Your Social Team
             </p>
           </body>
-          `
+          `;
 
       // Send the email
       await sendEmail(
@@ -121,35 +121,35 @@ router.post(
         email,
         'Please verify your account',
         html,
-      )
+      );
 
       res
         .status(200)
-        .json({ msg: 'You are registered! Please, visit your email to confirm your account' })
+        .json({ msg: 'You are registered! Please, visit your email to confirm your account' });
     } catch (err) {
-      console.error(err.message)
-      res.status(500).send('Server error')
+      console.error(err.message);
+      res.status(500).send('Server error');
     }
   },
-)
+);
 
 // @route    POST api/users/verify/:token
 // @desc     Email Confirmation
 // @access   Public
 router.post('/verify/:token', async (req, res) => {
-  const { token } = req.params
+  const { token } = req.params;
 
   try {
-    const verifyToken = await jwt.verify(token, config.get('jwtSecret'))
+    const verifyToken = await jwt.verify(token, config.get('jwtSecret'));
 
-    let user = await User.findById({ _id: verifyToken.user.id }).select('-password')
+    let user = await User.findById({ _id: verifyToken.user.id }).select('-password');
 
     if (!user) {
-      return res.status(400).json({ errors: [{ msg: 'Activation link has expired!' }] })
+      return res.status(400).json({ errors: [{ msg: 'Activation link has expired!' }] });
     }
 
-    user.active = true
-    await user.save()
+    user.active = true;
+    await user.save();
 
     // Email body
     const html = `
@@ -190,7 +190,7 @@ router.post('/verify/:token', async (req, res) => {
             Thanks, Hack Your Social Team
           </p>
         </body>
-        `
+        `;
 
     // Send the email
     await sendEmail(
@@ -198,20 +198,20 @@ router.post('/verify/:token', async (req, res) => {
       user.email,
       'Account confirmed!',
       html,
-    )
+    );
 
-    res.status(200).json({ msg: 'Your account has been confirmed!' })
+    res.status(200).json({ msg: 'Your account has been confirmed!' });
   } catch (err) {
-    console.error(err.message)
+    console.error(err.message);
     if (err.kind === 'ObjectId') {
-      return res.status(404).json({ msg: 'User not found' })
+      return res.status(404).json({ msg: 'User not found' });
     }
     if (err.name === 'TokenExpiredError') {
       return res.status(404).json({ msg: 'Activation link has expired!' });
     }
-    res.status(500).send('Server error')
+    res.status(500).send('Server error');
   }
-})
+});
 
 // @route    PUT api/users/verify/resend
 // @desc     Resend Email Confirmation
@@ -220,18 +220,18 @@ router.put(
   '/verify/resend',
   [check('email', 'Please include a valid email').isEmail()],
   async (req, res) => {
-    const errors = validationResult(req)
+    const errors = validationResult(req);
     if (!errors.isEmpty()) {
-      return res.status(400).json({ errors: errors.array() })
+      return res.status(400).json({ errors: errors.array() });
     }
 
-    const { email } = req.body
+    const { email } = req.body;
 
     try {
-      let user = await User.findOne({ email })
+      let user = await User.findOne({ email });
 
       if (!user) {
-        return res.status(400).json({ errors: [{ msg: 'User not found' }] })
+        return res.status(400).json({ errors: [{ msg: 'User not found' }] });
       }
 
       if (user.active) {
@@ -244,13 +244,13 @@ router.put(
         user: {
           id: user.id,
         },
-      }
+      };
 
-      const token = await jwt.sign(payload, config.get('jwtSecret'), { expiresIn: '1h' })
+      const token = await jwt.sign(payload, config.get('jwtSecret'), { expiresIn: '1h' });
 
       // Check if not token
       if (!token) {
-        return res.status(401).json({ msg: 'No token, authorization denied' })
+        return res.status(401).json({ msg: 'No token, authorization denied' });
       }
 
       // Email body
@@ -294,7 +294,7 @@ router.put(
               Thanks, Hack Your Social Team
             </p>
           </body>
-          `
+          `;
 
       // Send the email
       await sendEmail(
@@ -302,18 +302,20 @@ router.put(
         email,
         'Please verify your account',
         html,
-      )
+      );
 
-      res.status(200).json({ msg: 'A new confirmation link has been sent. Please, check your email' });
+      res
+        .status(200)
+        .json({ msg: 'A new confirmation link has been sent. Please, check your email' });
     } catch (err) {
-      console.error(err.message)
+      console.error(err.message);
       if (err.kind === 'ObjectId') {
-        return res.status(404).json({ msg: 'User not found' })
+        return res.status(404).json({ msg: 'User not found' });
       }
-      res.status(500).send('Server error')
+      res.status(500).send('Server error');
     }
   },
-)
+);
 
 // @route    POST api/users/forgotpassword
 // @desc     Forgotten password email
@@ -322,37 +324,35 @@ router.post(
   '/forgotpassword',
   [check('email', 'Please include a valid email').isEmail()],
   async (req, res) => {
-    const errors = validationResult(req)
+    const errors = validationResult(req);
     if (!errors.isEmpty()) {
-      return res.status(400).json({ errors: errors.array() })
+      return res.status(400).json({ errors: errors.array() });
     }
 
-    const { email } = req.body
+    const { email } = req.body;
 
     try {
-      let user = await User.findOne({ email })
+      let user = await User.findOne({ email });
 
       if (!user) {
-        return res.status(400).json({ errors: [{ msg: 'User not found' }] })
+        return res.status(400).json({ errors: [{ msg: 'User not found' }] });
       }
 
       if (!user.active) {
-        return res
-          .status(400)
-          .json({ errors: [{ msg: 'Please verify your account first!' }] });
+        return res.status(400).json({ errors: [{ msg: 'Please verify your account first!' }] });
       }
 
       const payload = {
         user: {
           id: user.id,
         },
-      }
+      };
 
-      const forgotPassToken = await jwt.sign(payload, config.get('jwtSecret'), { expiresIn: '1h' })
+      const forgotPassToken = await jwt.sign(payload, config.get('jwtSecret'), { expiresIn: '1h' });
 
       // Check if not token
       if (!forgotPassToken) {
-        return res.status(401).json({ msg: 'No token, authorization denied' })
+        return res.status(401).json({ msg: 'No token, authorization denied' });
       }
 
       // Email body
@@ -397,7 +397,7 @@ router.post(
               Thanks, Hack Your Social Team
             </p>
           </body>
-          `
+          `;
 
       // Send the email
       await sendEmail(
@@ -405,18 +405,18 @@ router.post(
         email,
         'Reset your forgotten password',
         html,
-      )
+      );
 
       res.status(200).json({ msg: 'Reset password link has been sent. Please, check your email' });
     } catch (err) {
-      console.error(err.message)
+      console.error(err.message);
       if (err.kind === 'ObjectId') {
-        return res.status(404).json({ msg: 'User not found' })
+        return res.status(404).json({ msg: 'User not found' });
       }
-      res.status(500).send('Server error')
+      res.status(500).send('Server error');
     }
   },
-)
+);
 
 // @route    PUT api/users/resetpassword/:forgotpasstoken
 // @desc     Reset password
@@ -425,33 +425,31 @@ router.put(
   '/resetpassword/:forgotPassToken',
   [check('password', 'Please enter a password with 6 or more characters').isLength({ min: 6 })],
   async (req, res) => {
-    const errors = validationResult(req)
+    const errors = validationResult(req);
     if (!errors.isEmpty()) {
-      return res.status(400).json({ errors: errors.array() })
+      return res.status(400).json({ errors: errors.array() });
     }
 
-    const { forgotPassToken } = req.params
-    const { password } = req.body
+    const { forgotPassToken } = req.params;
+    const { password } = req.body;
 
     try {
-      const decoded = await jwt.verify(forgotPassToken, config.get('jwtSecret'))
+      const decoded = await jwt.verify(forgotPassToken, config.get('jwtSecret'));
 
-      let user = await User.findById({ _id: decoded.user.id }).select('-password')
+      let user = await User.findById({ _id: decoded.user.id }).select('-password');
 
       if (!user) {
-        return res.status(400).json({ errors: [{ msg: 'Reset password link has expired!' }] })
+        return res.status(400).json({ errors: [{ msg: 'Reset password link has expired!' }] });
       }
 
       if (!user.active) {
-        return res
-          .status(400)
-          .json({ errors: [{ msg: 'Please verify your account first!' }] });
+        return res.status(400).json({ errors: [{ msg: 'Please verify your account first!' }] });
       }
 
-      const salt = await bcrypt.genSalt(10)
+      const salt = await bcrypt.genSalt(10);
 
-      user.password = await bcrypt.hash(password, salt)
-      await user.save()
+      user.password = await bcrypt.hash(password, salt);
+      await user.save();
 
       // Email body
       const html = `
@@ -493,7 +491,7 @@ router.put(
               Thanks, Hack Your Social Team
             </p>
           </body>
-          `
+          `;
 
       // Send the email
       await sendEmail(
@@ -501,21 +499,21 @@ router.put(
         user.email,
         'Password Reset Complete',
         html,
-      )
+      );
 
       res.status(200).json({ msg: 'Your password has been reset successfully' });
     } catch (err) {
-      console.error(err.message)
+      console.error(err.message);
       if (err.kind === 'ObjectId') {
-        return res.status(404).json({ msg: 'User not found' })
+        return res.status(404).json({ msg: 'User not found' });
       }
       if (err.name === 'TokenExpiredError') {
         return res.status(404).json({ msg: 'Reset password link has expired!' });
       }
-      res.status(500).send('Server error')
+      res.status(500).send('Server error');
     }
   },
-)
+);
 
 // @route    GET api/users/checkpasstoken/:forgotPassToken
 // @desc     Check Token Validity
@@ -562,44 +560,44 @@ router.put(
     auth,
     [
       check('password', 'Please enter a password with 6 or more characters').isLength({ min: 6 }),
-      check('newPassword', 'Please enter a password with 6 or more characters').isLength({ min: 6 })
+      check('newPassword', 'Please enter a password with 6 or more characters').isLength({
+        min: 6,
+      }),
     ],
   ],
   async (req, res) => {
-    const errors = validationResult(req)
+    const errors = validationResult(req);
     if (!errors.isEmpty()) {
-      return res.status(400).json({ errors: errors.array() })
+      return res.status(400).json({ errors: errors.array() });
     }
 
-    const { password, newPassword } = req.body
+    const { password, newPassword } = req.body;
 
     try {
-      let user = await User.findById(req.user.id)
+      let user = await User.findById(req.user.id);
 
       if (!user) {
-        return res.status(400).json({ errors: [{ msg: 'User not found!' }] })
+        return res.status(400).json({ errors: [{ msg: 'User not found!' }] });
       }
 
       const isMatch = await bcrypt.compare(password, user.password);
 
       if (!isMatch) {
-        return res
-          .status(400)
-          .json({ errors: [{ msg: 'Your current password is not correct' }] });
+        return res.status(400).json({ errors: [{ msg: 'Your current password is not correct' }] });
       }
 
       const isMatchNew = await bcrypt.compare(newPassword, user.password);
 
       if (isMatchNew) {
-        return res
-          .status(400)
-          .json({ errors: [{ msg: 'You cannot use your current password. Please, use a new one' }] });
+        return res.status(400).json({
+          errors: [{ msg: 'You cannot use your current password. Please, use a new one' }],
+        });
       }
 
-      const salt = await bcrypt.genSalt(10)
+      const salt = await bcrypt.genSalt(10);
 
-      user.password = await bcrypt.hash(newPassword, salt)
-      await user.save()
+      user.password = await bcrypt.hash(newPassword, salt);
+      await user.save();
 
       // Email body
       const html = `
@@ -638,7 +636,7 @@ router.put(
               Thanks, Hack Your Social Team
             </p>
           </body>
-          `
+          `;
 
       // Send the email
       await sendEmail(
@@ -646,17 +644,17 @@ router.put(
         user.email,
         'Password Change Complete',
         html,
-      )
+      );
 
       res.status(200).json({ msg: 'Your password has been changed successfully' });
     } catch (err) {
-      console.error(err.message)
+      console.error(err.message);
       if (err.kind === 'ObjectId') {
-        return res.status(404).json({ msg: 'User not found' })
+        return res.status(404).json({ msg: 'User not found' });
       }
-      res.status(500).send('Server error')
+      res.status(500).send('Server error');
     }
   },
-)
+);
 
 module.exports = router;

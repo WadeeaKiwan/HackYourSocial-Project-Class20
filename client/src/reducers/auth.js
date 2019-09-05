@@ -17,7 +17,9 @@ import {
   RESET_PASSWORD_FAIL,
   CHECK_PASS_TOKEN_SUCCESS,
   CHECK_PASS_TOKEN_FAIL,
-} from '../actions/types'
+  CHANGE_PASSWORD,
+  CHANGE_PASSWORD_FAIL,
+} from '../actions/types';
 
 const initialState = {
   token: localStorage.getItem('token'),
@@ -26,10 +28,11 @@ const initialState = {
   user: null,
   active: false,
   verification: { msg: null, verify: null },
-}
+  passwordChange: false,
+};
 
-export default function (state = initialState, action) {
-  const { type, payload } = action
+export default function(state = initialState, action) {
+  const { type, payload } = action;
 
   switch (type) {
     case USER_LOADED:
@@ -39,7 +42,7 @@ export default function (state = initialState, action) {
         isAuthenticated: true,
         loading: false,
         user: payload,
-      }
+      };
     case REGISTER_SUCCESS:
     case RESEND_CONFIRMATION:
     case SEND_PASSWORD_LINK_SUCCESS:
@@ -51,16 +54,16 @@ export default function (state = initialState, action) {
         isAuthenticated: false,
         loading: false,
         active: false,
-      }
+      };
     case LOGIN_SUCCESS:
-      localStorage.setItem('token', payload.token)
+      localStorage.setItem('token', payload.token);
       return {
         ...state,
         ...payload,
         isAuthenticated: true,
         loading: false,
         active: true,
-      }
+      };
     case REGISTER_FAIL:
     case AUTH_ERROR:
     case LOGIN_FAIL:
@@ -68,14 +71,14 @@ export default function (state = initialState, action) {
     case ACCOUNT_DELETED:
     case RESEND_CONFIRMATION_FAIL:
     case SEND_PASSWORD_LINK_FAIL:
-      localStorage.removeItem('token')
+      localStorage.removeItem('token');
       return {
         ...state,
         token: null,
         isAuthenticated: false,
         loading: false,
         active: false,
-      }
+      };
     case ACCOUNT_VERIFIED:
     case CHECK_PASS_TOKEN_SUCCESS:
       return {
@@ -84,7 +87,7 @@ export default function (state = initialState, action) {
         isAuthenticated: false,
         loading: false,
         active: true,
-      }
+      };
     case ACCOUNT_NOT_VERIFIED:
     case CHECK_PASS_TOKEN_FAIL:
       return {
@@ -93,8 +96,23 @@ export default function (state = initialState, action) {
         isAuthenticated: false,
         loading: false,
         active: false,
-      }
+      };
+    case CHANGE_PASSWORD:
+      return {
+        ...state,
+        payload,
+        isAuthenticated: true,
+        loading: false,
+        active: true,
+      };
+    case CHANGE_PASSWORD_FAIL:
+      return {
+        ...state,
+        isAuthenticated: true,
+        active: true,
+        loading: false,
+      };
     default:
-      return state
+      return state;
   }
 }

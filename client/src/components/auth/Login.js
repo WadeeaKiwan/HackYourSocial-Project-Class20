@@ -1,55 +1,55 @@
-import React, { Fragment, useState } from 'react'
-import { Link, Redirect } from 'react-router-dom'
-import { connect } from 'react-redux'
-import PropTypes from 'prop-types'
-import { login, resendEmail, forgotPassword } from '../../actions/auth'
-import SocialMediaLogin from './SocialMediaLogin'
+import React, { Fragment, useState } from 'react';
+import { Link, Redirect } from 'react-router-dom';
+import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
+import { login, resendEmail, forgotPassword } from '../../actions/auth';
+import SocialMediaLogin from './SocialMediaLogin';
 
 const Login = ({ login, auth: { active, isAuthenticated }, resendEmail, forgotPassword }) => {
   // add to state toggle button
-  const [displayResend, toggleResend] = useState(false)
-  const [displaySendPassword, toggleSendPassword] = useState(false)
-  const [log, changeLogin] = useState(false)
+  const [displayResend, toggleResend] = useState(false);
+  const [displaySendPassword, toggleSendPassword] = useState(false);
+  const [log, changeLogin] = useState(false);
 
   const [formData, setFormData] = useState({
     email: '',
     emailResend: '',
     emailPassword: '',
     password: '',
-  })
+  });
 
   const buttonStyle = {
     marginTop: '7px',
-  }
+  };
 
   // Switch between regular and social account
   const changeSignIn = () => {
-    changeLogin(!log)
-  }
+    changeLogin(!log);
+  };
 
-  const { email, emailResend, emailPassword, password } = formData
+  const { email, emailResend, emailPassword, password } = formData;
 
-  const onChange = e => setFormData({ ...formData, [e.target.name]: e.target.value })
+  const onChange = e => setFormData({ ...formData, [e.target.name]: e.target.value });
 
   const onSubmit = async e => {
-    e.preventDefault()
-    login(email, password)
-  }
+    e.preventDefault();
+    login(email, password);
+  };
 
   const resendEmailSubmit = e => {
-    e.preventDefault()
-    resendEmail(emailResend)
-    setFormData({ ...formData, emailResend: '' })
-  }
+    e.preventDefault();
+    resendEmail(emailResend);
+    setFormData({ ...formData, emailResend: '' });
+  };
 
   const forgotPasswordSubmit = e => {
-    e.preventDefault()
-    forgotPassword(emailPassword)
-    setFormData({ ...formData, emailPassword: '' })
-  }
+    e.preventDefault();
+    forgotPassword(emailPassword);
+    setFormData({ ...formData, emailPassword: '' });
+  };
 
   if (active && isAuthenticated) {
-    return <Redirect to="/dashboard" />
+    return <Redirect to="/dashboard" />;
   }
 
   return (
@@ -84,8 +84,8 @@ const Login = ({ login, auth: { active, isAuthenticated }, resendEmail, forgotPa
           <input type="submit" className="btn btn-primary" value="Login" />
         </form>
       ) : (
-          <SocialMediaLogin />
-        )}
+        <SocialMediaLogin />
+      )}
 
       <button style={buttonStyle} onClick={changeSignIn} className="btn btn-danger">
         {log ? 'Back to SignIn with your account' : 'SignIn With Social Networks'}
@@ -143,21 +143,21 @@ const Login = ({ login, auth: { active, isAuthenticated }, resendEmail, forgotPa
         </form>
       )}
     </Fragment>
-  )
-}
+  );
+};
 
 Login.propTypes = {
   login: PropTypes.func.isRequired,
   auth: PropTypes.object.isRequired,
   resendEmail: PropTypes.func.isRequired,
   forgotPassword: PropTypes.func.isRequired,
-}
+};
 
 const mapStateToProps = state => ({
   auth: state.auth,
-})
+});
 
 export default connect(
   mapStateToProps,
   { login, resendEmail, forgotPassword },
-)(Login)
+)(Login);
