@@ -19,9 +19,8 @@ const Navbar = ({ auth: { isAuthenticated, loading } }) => {
         </Link>
       </li>
       <li>
-        <Link to="/changepassword">
-          {' '}
-          <span className="hide-sm">Change password</span>
+        <Link to='/changepassword'>
+          <i className='fas fa-lock' /> <span className='hide-sm'> Change Password</span>
         </Link>
       </li>
       <li>

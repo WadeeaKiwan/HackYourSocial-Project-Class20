@@ -28,10 +28,9 @@ const initialState = {
   user: null,
   active: false,
   verification: { msg: null, verify: null },
-  passwordChange: false,
 };
 
-export default function(state = initialState, action) {
+export default function (state = initialState, action) {
   const { type, payload } = action;
 
   switch (type) {
@@ -98,19 +97,13 @@ export default function(state = initialState, action) {
         active: false,
       };
     case CHANGE_PASSWORD:
+    case CHANGE_PASSWORD_FAIL:
       return {
         ...state,
         payload,
         isAuthenticated: true,
         loading: false,
         active: true,
-      };
-    case CHANGE_PASSWORD_FAIL:
-      return {
-        ...state,
-        isAuthenticated: true,
-        active: true,
-        loading: false,
       };
     default:
       return state;

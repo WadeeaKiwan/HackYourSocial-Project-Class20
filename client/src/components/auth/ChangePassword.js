@@ -1,86 +1,85 @@
 import React, { Fragment, useState } from 'react';
+import { connect } from 'react-redux';
+import { Link } from 'react-router-dom';
+import PropTypes from 'prop-types';
 import { setAlert } from '../../actions/alert';
 import { changePassword } from '../../actions/auth';
-import { connect } from 'react-redux';
-import PropTypes from 'prop-types';
 
 const ChangePassword = ({ changePassword, setAlert }) => {
-	const [formData, setFormData] = useState({
-		password: '',
-		newPassword: '',
-		repeatNewPassword: '',
-	});
+  const [formData, setFormData] = useState({
+    password: '',
+    newPassword: '',
+    newPassword2: '',
+  });
 
-	const { password, newPassword, repeatNewPassword } = formData;
-	const onSubmit = async e => {
-		e.preventDefault();
+  const { password, newPassword, newPassword2 } = formData;
 
-		if (newPassword !== repeatNewPassword) {
-			setAlert('Passwords do not match', 'danger');
-		} else if (password === newPassword) {
-			setAlert('You cannot use your current password. Please, use a new one');
-		} else {
-			changePassword({ password, newPassword });
-			setAlert('your password has been changed', 'primary');
-		}
-	};
-	const onChange = e => setFormData({ ...formData, [e.target.name]: e.target.value });
-	return (
-		<Fragment>
-			<form className="form" onSubmit={e => onSubmit(e)}>
-				<div className="form-group">
-					<label>Current password</label>
-					<input
-						type="password"
-						placeholder="Password"
-						name="password"
-						value={password}
-						onChange={e => onChange(e)}
-					/>
-				</div>
-				<div className="form-group">
-					<label>New password</label>
-					<input
-						type="password"
-						placeholder="Password"
-						name="newPassword"
-						value={newPassword}
-						onChange={e => onChange(e)}
-					/>
-				</div>
+  const onChange = e => setFormData({ ...formData, [e.target.name]: e.target.value });
 
-				<div className="form-group">
-					<label>Confirm new password</label>
-					<input
-						type="password"
-						placeholder="password"
-						name="repeatNewPassword"
-						value={repeatNewPassword}
-						onChange={e => onChange(e)}
-					/>
-				</div>
+  const onSubmit = async e => {
+    e.preventDefault();
+    if (newPassword !== newPassword2) {
+      setAlert('Passwords do not match', 'danger');
+    } else {
+      await changePassword({ password, newPassword });
+      setFormData({ ...formData, password: '', newPassword: '', newPassword2: '' });
+    }
+  };
 
-				<input
-					type="submit"
-					className="btn btn-primary"
-					value="Change Password"
-					onSubmit={e => onSubmit(e)}
-				/>
-			</form>
-		</Fragment>
-	);
+  return (
+    <Fragment>
+      <h1 className='large text-primary'>Change Password</h1>
+      <p className='lead'>
+        <i className='fas fa-lock' /> Here you can change your current password
+      </p>
+      <form className="form" onSubmit={e => onSubmit(e)}>
+        <div className="form-group">
+          <input
+            type="password"
+            placeholder="Current Password"
+            name="password"
+            value={password}
+            onChange={e => onChange(e)}
+          />
+        </div>
+        <div className="form-group">
+          <input
+            type="password"
+            placeholder="New Password"
+            name="newPassword"
+            value={newPassword}
+            onChange={e => onChange(e)}
+          />
+        </div>
+        <div className="form-group">
+          <input
+            type="password"
+            placeholder="Confirm New Password"
+            name="newPassword2"
+            value={newPassword2}
+            onChange={e => onChange(e)}
+          />
+        </div>
+        <input
+          type="submit"
+          className="btn btn-primary"
+          value="Confirm"
+          onSubmit={e => onSubmit(e)}
+        />
+        <Link to='/dashboard' className='btn btn-light'>
+          Back To Dashboard
+        </Link>
+      </form>
+    </Fragment>
+  );
 };
 
 ChangePassword.propTypes = {
-	setAlert: PropTypes.func.isRequired,
-	changePassword: PropTypes.func.isRequired,
-	auth: PropTypes.object.isRequired,
+  setAlert: PropTypes.func.isRequired,
+  changePassword: PropTypes.func.isRequired,
 };
-const mapStateToProps = state => ({
-	auth: state.auth,
-});
 
 export default connect(
-	mapStateToProps,
-	{ changePassword, setAlert },
+  null,
+  { changePassword, setAlert },
 )(ChangePassword);

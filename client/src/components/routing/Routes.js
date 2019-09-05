@@ -32,13 +32,13 @@ const Routes = () => {
         <Route exact path="/resetpassword/:forgotPassToken" component={ResetPassword} />
         <PrivateRoute exact path="/logout" component={LogOut} />
         <PrivateRoute exact path="/dashboard" component={Dashboard} />
+        <PrivateRoute exact path="/changepassword" component={ChangePassword} />
         <PrivateRoute exact path="/create-profile" component={CreateProfile} />
         <PrivateRoute exact path="/edit-profile" component={EditProfile} />
         <PrivateRoute exact path="/add-experience" component={AddExperience} />
         <PrivateRoute exact path="/add-education" component={AddEducation} />
         <PrivateRoute exact path="/posts" component={Posts} />
         <PrivateRoute exact path="/posts/:id" component={Post} />
-        <PrivateRoute exact path="/changepassword" component={ChangePassword} />
         <Route component={NotFound} />
       </Switch>
     </section>
