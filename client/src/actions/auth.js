@@ -17,6 +17,8 @@ import {
   SEND_PASSWORD_LINK_FAIL,
   RESET_PASSWORD_SUCCESS,
   RESET_PASSWORD_FAIL,
+  CHECK_PASS_TOKEN_SUCCESS,
+  CHECK_PASS_TOKEN_FAIL,
 } from './types'
 import setAuthToken from '../utils/setAuthToken'
 
@@ -260,5 +262,24 @@ export const resetPassword = (password, forgotPassToken) => async dispatch => {
     if (err.response.data.msg) {
       dispatch(setAlert(err.response.data.msg, 'danger'))
     }
+  }
+}
+
+// Check Password Reset Token
+export const checkPassToken = forgotPassToken => async dispatch => {
+  try {
+    const res = await axios.get(`/api/users/checkpasstoken/${forgotPassToken}`)
+
+    dispatch({
+      type: CHECK_PASS_TOKEN_SUCCESS,
+      payload: res.data.msg,
+    })
+  } catch (err) {
+    console.error(err);
+
+    dispatch({
+      type: CHECK_PASS_TOKEN_FAIL,
+      payload: err.response.data.msg,
+    })
   }
 }

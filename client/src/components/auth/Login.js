@@ -84,8 +84,8 @@ const Login = ({ login, auth: { active, isAuthenticated }, resendEmail, forgotPa
           <input type="submit" className="btn btn-primary" value="Login" />
         </form>
       ) : (
-        <SocialMediaLogin />
-      )}
+          <SocialMediaLogin />
+        )}
 
       <button style={buttonStyle} onClick={changeSignIn} className="btn btn-danger">
         {log ? 'Back to SignIn with your account' : 'SignIn With Social Networks'}
@@ -95,11 +95,9 @@ const Login = ({ login, auth: { active, isAuthenticated }, resendEmail, forgotPa
         Don't have an account? <Link to="/register">Sign Up</Link>
       </p>
       <p className="my-1">
-        {!displaySendPassword && (
-          <a href="#!" onClick={() => toggleSendPassword(!displaySendPassword)}>
-            Forgot your password?
-          </a>
-        )}
+        <a href="#!" onClick={() => toggleSendPassword(true)}>
+          Forgot your password?
+        </a>
       </p>
 
       {displaySendPassword && (

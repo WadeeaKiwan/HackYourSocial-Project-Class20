@@ -517,6 +517,42 @@ router.put(
   },
 )
 
+// @route    GET api/users/checkpasstoken/:forgotPassToken
+// @desc     Check Token Validity
+// @access   Public
+router.get(
+  '/checkpasstoken/:forgotPassToken',
+  async (req, res) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ errors: errors.array() });
+    }
+
+    const { forgotPassToken } = req.params;
+
+    try {
+      const decoded = await jwt.verify(forgotPassToken, config.get('jwtSecret'));
+
+      let user = await User.findById({ _id: decoded.user.id }).select('-password');
+
+      if (!user) {
+        return res.status(400).json({ errors: [{ msg: 'Reset password link has expired!' }] });
+      }
+
+      res.status(200).json({ msg: 'Reset password link is still valid!' });
+    } catch (err) {
+      console.error(err.message);
+      if (err.kind === 'ObjectId') {
+        return res.status(404).json({ msg: 'User not found' });
+      }
+      if (err.name === 'TokenExpiredError') {
+        return res.status(404).json({ msg: 'Reset password link has expired!' });
+      }
+      res.status(500).send('Server error');
+    }
+  }
+)
+
 // @route    PUT api/users/changepassword
 // @desc     Change Password
 // @access   Private

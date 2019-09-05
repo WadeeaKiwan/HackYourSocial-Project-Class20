@@ -15,6 +15,8 @@ import {
   SEND_PASSWORD_LINK_FAIL,
   RESET_PASSWORD_SUCCESS,
   RESET_PASSWORD_FAIL,
+  CHECK_PASS_TOKEN_SUCCESS,
+  CHECK_PASS_TOKEN_FAIL,
 } from '../actions/types'
 
 const initialState = {
@@ -26,7 +28,7 @@ const initialState = {
   verification: { msg: null, verify: null },
 }
 
-export default function(state = initialState, action) {
+export default function (state = initialState, action) {
   const { type, payload } = action
 
   switch (type) {
@@ -74,6 +76,7 @@ export default function(state = initialState, action) {
       }
     case ACCOUNT_VERIFIED:
     case RESET_PASSWORD_SUCCESS:
+    case CHECK_PASS_TOKEN_SUCCESS:
       return {
         ...state,
         verification: { msg: payload, verify: true },
@@ -83,6 +86,7 @@ export default function(state = initialState, action) {
       }
     case ACCOUNT_NOT_VERIFIED:
     case RESET_PASSWORD_FAIL:
+    case CHECK_PASS_TOKEN_FAIL:
       return {
         ...state,
         verification: { msg: payload, verify: false },
