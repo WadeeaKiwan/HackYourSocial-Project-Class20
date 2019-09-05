@@ -57,9 +57,9 @@ const ResetPassword = ({
     <Fragment>
       <h1 className='large text-primary'>Reset Password</h1>
       <p className='lead'>
-        <span class="fa-passwd-reset fa-stack">
-          <i class="fa fa-undo fa-stack-2x"></i>
-          <i class="fa fa-lock fa-stack-1x"></i>
+        <span className="fa-passwd-reset fa-stack">
+          <i className="fa fa-undo fa-stack-2x"></i>
+          <i className="fa fa-lock fa-stack-1x"></i>
         </span> Here you can reset your password
       </p>
       <form className="form" onSubmit={e => onResetPasswordSubmit(e)}>

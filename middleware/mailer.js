@@ -12,6 +12,9 @@ let transporter = nodemailer.createTransport({
     user: gmailEmail,
     pass: gmailPassword,
   },
+  tls: {
+    rejectUnauthorized: false,
+  },
 });
 
 module.exports = {
