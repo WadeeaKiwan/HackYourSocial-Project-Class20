@@ -242,6 +242,5 @@ export const deleteAccount = () => async dispatch => {
 
 // Filter Criterias
 export const handleFilter = criteria => dispatch => {
-  console.log(criteria);
   dispatch({ type: SET_FILTER, payload: criteria });
 };

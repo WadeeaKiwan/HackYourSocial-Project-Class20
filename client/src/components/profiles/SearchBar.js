@@ -5,6 +5,7 @@ import { handleFilter } from '../../actions/profile';
 
 const SearchBar = ({ handleFilter }) => {
   const [onChangeCriteria, setOnChangeCriteria] = useState(null);
+  const [onChangeName, setOnChangeName] = useState('');
 
   const [filterWindow, openFilterWindow] = useState(false);
 
@@ -28,29 +29,30 @@ const SearchBar = ({ handleFilter }) => {
 
   return (
     <Fragment>
-      <form
-        className="search-bar"
-        onSubmit={e => {
-          e.preventDefault();
-          handleFilter(onChangeCriteria);
-        }}
-      >
-        <span className="search-area">
-        <input
-          type="text"
-          className="searchInput"
-          placeholder=" Quick search by name"
-          onChange={e => setOnChangeCriteria({ name: e.target.value })}
-        />
-        <span
-          onClick={e => {
+      <div className="search-bar">
+        <form
+          className="search-area"
+          onSubmit={e => {
             e.preventDefault();
-            handleFilter(onChangeCriteria);
+            handleFilter({ name: onChangeName });
           }}
         >
-          <i className="fas fa-search my-1" />
-        </span>
-        </span>
+          <input
+            type="text"
+            className="searchInput"
+            placeholder=" Quick search by name"
+            value={onChangeName}
+            onChange={e => setOnChangeName(e.target.value)}
+          />
+          <span
+            onClick={e => {
+              e.preventDefault();
+              handleFilter({ name: onChangeName });
+            }}
+          >
+            <i className="fas fa-search my-1" />
+          </span>
+        </form>
         <div className="filter-search-container" ref={node}>
           <i className="fas fa-filter my-1" onClick={e => openFilterWindow(!filterWindow)} />
           {filterWindow && (
@@ -134,6 +136,7 @@ const SearchBar = ({ handleFilter }) => {
                 onClick={e => {
                   e.preventDefault();
                   handleFilter(onChangeCriteria);
+                  setOnChangeCriteria(null);
                   openFilterWindow(false);
                 }}
               >
@@ -153,7 +156,7 @@ const SearchBar = ({ handleFilter }) => {
             </form>
           )}
         </div>
-      </form>
+      </div>
     </Fragment>
   );
 };
