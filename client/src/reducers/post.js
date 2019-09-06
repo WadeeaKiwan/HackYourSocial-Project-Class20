@@ -11,6 +11,8 @@ import {
   SET_EDIT_POST,
   UPDATE_COMMENT,
   SET_EDIT_COMMENT,
+  UPLOAD_IMAGE,
+  UPLOAD_IMAGE_ERROR,
 } from '../actions/types';
 
 const initialState = {
@@ -19,14 +21,11 @@ const initialState = {
   loading: true,
   error: {},
   editedPost: null,
-  editedComment: null
+  editedComment: null,
 };
 
-export default function (state = initialState, action) {
-  const {
-    type,
-    payload
-  } = action;
+export default function(state = initialState, action) {
+  const { type, payload } = action;
 
   switch (type) {
     case GET_POSTS:
@@ -34,61 +33,71 @@ export default function (state = initialState, action) {
       return {
         ...state,
         posts: payload,
-          loading: false,
+        loading: false,
       };
     case GET_POST:
     case UPDATE_COMMENT:
       return {
         ...state,
         post: payload,
-          loading: false,
+        loading: false,
+      };
+    case UPLOAD_IMAGE:
+      return {
+        ...state,
+        posts: [payload, ...state.posts],
+        loading: false,
+        result: payload,
       };
     case ADD_POST:
       return {
         ...state,
         posts: [payload, ...state.posts],
-          loading: false,
+        loading: false,
       };
     case DELETE_POST:
       return {
         ...state,
         posts: state.posts.filter(post => post._id !== payload),
-          loading: false,
+        loading: false,
       };
+    case UPLOAD_IMAGE_ERROR:
     case POST_ERROR:
       return {
         ...state,
         error: payload,
-          loading: false,
+        loading: false,
       };
     case UPDATE_LIKES:
       return {
         ...state,
         posts: state.posts.map(post =>
-            post._id === payload.id ? {
-              ...post,
-              likes: payload.likes
-            } : post,
-          ),
-          loading: false,
+          post._id === payload.id
+            ? {
+                ...post,
+                likes: payload.likes,
+              }
+            : post,
+        ),
+        loading: false,
       };
     case ADD_COMMENT:
       return {
         ...state,
         post: {
-            ...state.post,
-            comments: payload
-          },
-          loading: false,
+          ...state.post,
+          comments: payload,
+        },
+        loading: false,
       };
     case REMOVE_COMMENT:
       return {
         ...state,
         post: {
-            ...state.post,
-            comments: state.post.comments.filter(comment => comment._id !== payload),
-          },
-          loading: false,
+          ...state.post,
+          comments: state.post.comments.filter(comment => comment._id !== payload),
+        },
+        loading: false,
       };
     case SET_EDIT_POST:
       return {
@@ -99,8 +108,8 @@ export default function (state = initialState, action) {
       return {
         ...state,
         editedComment: payload,
-      }
-      default:
-        return state;
+      };
+    default:
+      return state;
   }
 }
