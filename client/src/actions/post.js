@@ -211,7 +211,11 @@ export const addComment = (postId, formData) => async dispatch => {
   };
 
   try {
-    const res = await axios.post(`/api/posts/comment/${postId}`, formData, config);
+    const res = await axios.post(
+      `/api/posts/comment/${postId}`,
+      formData,
+      config,
+    );
 
     dispatch({
       type: ADD_COMMENT,
@@ -296,7 +300,7 @@ export const deletePhoto = id => async dispatch => {
       },
     };
 
-    res = await axios.post(`api/posts/delete/photo/${id}`, '', config);
+    res = await axios.delete(`api/posts/delete/photo/${id}`, '', config);
 
     dispatch({
       type: UPDATE_POST,
