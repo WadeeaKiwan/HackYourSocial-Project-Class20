@@ -7,6 +7,60 @@ const Post = require('../../models/Post');
 const Profile = require('../../models/Profile');
 const User = require('../../models/User');
 
+router.post('/upload', auth, async (request, response) => {
+  const errors = validationResult(request);
+  if (!errors.isEmpty()) {
+    return response.status(404).json({ errors: errors.array() });
+  }
+  const file = request.files.file;
+  const path = `/uploads/`;
+  try {
+    const user = await User.findById(request.user.id).select('-password');
+    const newPost = new Post({
+      text: '',
+      name: user.name,
+      avatar: user.avatar,
+      user: request.user.id,
+      image: path + file.name,
+    });
+    const post = await newPost.save();
+    file.mv(`./uploads/${file.name}`, err => {
+      if (err) {
+        console.error(err);
+        return response.status(500).send(err);
+      }
+      response.json(post);
+    });
+  } catch (err) {
+    return response.status(500).send(err);
+  }
+});
+
+// @route           PUT api/posts/id
+// @description     Edit post
+// @access          Private
+
+router.put('/:id', auth, async (request, response) => {
+  // find post from data base
+  const post = await Post.findById(request.params.id);
+  // check authorized
+  if (post.user.toString() !== request.user.id) {
+    return response.status(401).json({ msg: 'User not authorized' });
+  }
+  try {
+    // update post
+    post.text = request.body.text;
+    // save in database
+    await post.save();
+    // return result to deal with frontEnd
+    response.json(post);
+  } catch (error) {
+    if (error.kind == 'ObjectId') {
+      return response.status(400).json({ msg: 'Post not found' });
+    }
+    response.send(error);
+  }
+});   
 // @route    POST api/posts
 // @desc     Create a post
 // @access   Private
