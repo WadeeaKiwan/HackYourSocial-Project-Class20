@@ -247,8 +247,9 @@ export const resetPassword = (password, forgotPassToken) => async dispatch => {
     dispatch({
       type: RESET_PASSWORD_SUCCESS,
       payload: res.data.msg,
-    });
-    dispatch(setAlert(res.data.msg, 'success'));
+    })
+
+    dispatch(setAlert(res.data.msg, 'success'))
   } catch (err) {
     const errors = err.response.data.errors;
     if (errors) {
@@ -276,7 +277,7 @@ export const checkPassToken = forgotPassToken => async dispatch => {
       payload: res.data.msg,
     });
   } catch (err) {
-    console.error(err);
+    console.error(err)
 
     dispatch({
       type: CHECK_PASS_TOKEN_FAIL,
