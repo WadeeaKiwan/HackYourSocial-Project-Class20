@@ -38,6 +38,7 @@ const Profiles = ({ getProfiles, profile: { profiles, loading, filter }, handleF
         satisfyFilter('company', profile) &&
         satisfyFilter('status', profile) && <ProfileItem key={profile._id} profile={profile} />,
     );
+
     return filtered.filter(e => typeof e === 'object').length ? (
       filtered
     ) : (
@@ -71,7 +72,7 @@ const Profiles = ({ getProfiles, profile: { profiles, loading, filter }, handleF
           {filter && (
             <ul className="filter-criteria-list">
               {Object.keys(filter).map(elem => (
-                <li key={elem}>
+                <li key={elem} className="filterCriteriaListForPadding">
                   {elem}: <b> {filter[elem]}</b>
                   <i
                     className="fa fa-times"
