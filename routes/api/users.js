@@ -62,10 +62,10 @@ router.post(
         },
       };
 
-      const token = await jwt.sign(payload, config.get('jwtSecret'), { expiresIn: '1h' });
+      const confirmationToken = await jwt.sign(payload, config.get('ConfirmationSecret'), { expiresIn: '1h' });
 
       // Check if not token
-      if (!token) {
+      if (!confirmationToken) {
         return res.status(401).json({ msg: 'No token, authorization denied' });
       }
 
@@ -105,7 +105,7 @@ router.post(
               Thanks for your registration!
             </p>
             <p class="p lead">Please verify your account by clicking: 
-              <a href="http://localhost:3000/verify/${token}">
+              <a href="http://localhost:3000/verify/${confirmationToken}">
                 Here
               </a>
             </p>
@@ -133,16 +133,16 @@ router.post(
   },
 );
 
-// @route    POST api/users/verify/:token
+// @route    POST api/users/verify/:confirmationToken
 // @desc     Email Confirmation
 // @access   Public
-router.post('/verify/:token', async (req, res) => {
-  const { token } = req.params;
+router.post('/verify/:confirmationToken', async (req, res) => {
+  const { confirmationToken } = req.params;
 
   try {
-    const verifyToken = await jwt.verify(token, config.get('jwtSecret'));
+    const decoded = await jwt.verify(confirmationToken, config.get('ConfirmationSecret'));
 
-    let user = await User.findById({ _id: verifyToken.user.id }).select('-password');
+    let user = await User.findById({ _id: decoded.user.id }).select('-password');
 
     if (!user) {
       return res.status(400).json({ errors: [{ msg: 'Activation link has expired!' }] });
@@ -246,10 +246,10 @@ router.put(
         },
       };
 
-      const token = await jwt.sign(payload, config.get('jwtSecret'), { expiresIn: '1h' });
+      const confirmationToken = await jwt.sign(payload, config.get('ConfirmationSecret'), { expiresIn: '1h' });
 
       // Check if not token
-      if (!token) {
+      if (!confirmationToken) {
         return res.status(401).json({ msg: 'No token, authorization denied' });
       }
 
@@ -286,7 +286,7 @@ router.put(
               Hi ${user.name},
             </h1>
             <p class="p lead">Please verify your account by clicking: 
-              <a href="http://localhost:3000/verify/${token}">
+              <a href="http://localhost:3000/verify/${confirmationToken}">
                 Here
               </a>
             </p>
@@ -348,7 +348,7 @@ router.post(
         },
       };
 
-      const forgotPassToken = await jwt.sign(payload, config.get('jwtSecret'), { expiresIn: '1h' });
+      const forgotPassToken = await jwt.sign(payload, config.get('PasswordSecret'), { expiresIn: '1h' });
 
       // Check if not token
       if (!forgotPassToken) {
@@ -434,7 +434,7 @@ router.put(
     const { password } = req.body;
 
     try {
-      const decoded = await jwt.verify(forgotPassToken, config.get('jwtSecret'));
+      const decoded = await jwt.verify(forgotPassToken, config.get('PasswordSecret'));
 
       let user = await User.findById({ _id: decoded.user.id }).select('-password');
 
@@ -529,7 +529,7 @@ router.get(
     const { forgotPassToken } = req.params;
 
     try {
-      const decoded = await jwt.verify(forgotPassToken, config.get('jwtSecret'));
+      const decoded = await jwt.verify(forgotPassToken, config.get('PasswordSecret'));
 
       let user = await User.findById({ _id: decoded.user.id }).select('-password');
 
@@ -583,7 +583,7 @@ router.put(
       const isMatch = await bcrypt.compare(password, user.password);
 
       if (!isMatch) {
-        return res.status(400).json({ errors: [{ msg: 'Your current password is not correct' }] });
+        return res.status(400).json({ errors: [{ msg: 'Your current password is not correct. Please, try again!' }] });
       }
 
       const isMatchNew = await bcrypt.compare(newPassword, user.password);

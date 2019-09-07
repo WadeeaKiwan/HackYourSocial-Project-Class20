@@ -141,27 +141,23 @@ export const logout = () => dispatch => {
 };
 
 // Verifying user account
-export const verifyAccount = verifyToken => async dispatch => {
+export const verifyAccount = confirmationToken => async dispatch => {
   const config = {
     headers: {
       'Content-Type': 'application/json',
     },
   };
-  const body = JSON.stringify({ verifyToken });
+  const body = JSON.stringify({ confirmationToken });
 
   try {
-    const res = await axios.post(`/api/users/verify/${verifyToken}`, body, config);
+    const res = await axios.post(`/api/users/verify/${confirmationToken}`, body, config);
 
     dispatch({
       type: ACCOUNT_VERIFIED,
       payload: res.data.msg,
     });
   } catch (err) {
-    // const errors = err.response.data.errors
     console.error(err);
-    // if (errors) {
-    //   errors.forEach(error => dispatch(setAlert(error.msg, 'danger')))
-    // }
 
     dispatch({
       type: ACCOUNT_NOT_VERIFIED,
