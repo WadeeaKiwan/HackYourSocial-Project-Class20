@@ -12,31 +12,31 @@ import {
   ACCOUNT_VERIFIED,
   ACCOUNT_NOT_VERIFIED,
   RESEND_CONFIRMATION,
-  RESEND_CONFIRMATION_FAIL
+  RESEND_CONFIRMATION_FAIL,
+  SEND_PASSWORD_LINK_SUCCESS,
+  SEND_PASSWORD_LINK_FAIL,
+  RESET_PASSWORD_SUCCESS,
+  RESET_PASSWORD_FAIL,
+  CHECK_PASS_TOKEN_SUCCESS,
+  CHECK_PASS_TOKEN_FAIL,
+  CHANGE_PASSWORD,
+  CHANGE_PASSWORD_FAIL,
 } from './types';
 import setAuthToken from '../utils/setAuthToken';
 
 // Register with social network
-export const registerWithSocialMedia = ({
-  name,
-  email,
-  avatar
-}) => async dispatch => {
+export const registerWithSocialMedia = ({ name, email, avatar }) => async dispatch => {
   const config = {
     headers: {
-      'Content-Type': 'application/json'
-    }
+      'Content-Type': 'application/json',
+    },
   };
   const body = JSON.stringify({ name, email, avatar });
   try {
-    const res = await axios.post(
-      `/api/auth/registerWithSocialMedia`,
-      body,
-      config
-    );
+    const res = await axios.post(`/api/auth/registerWithSocialMedia`, body, config);
     dispatch({
       type: REGISTER_SUCCESS,
-      payload: res.data // expect a user token from database
+      payload: res.data, // expect a user token from database
     });
     dispatch(loadUser());
   } catch (err) {
@@ -45,7 +45,7 @@ export const registerWithSocialMedia = ({
       errors.forEach(error => dispatch(setAlert(error.msg, 'danger')));
     }
     dispatch({
-      type: REGISTER_FAIL
+      type: REGISTER_FAIL,
     });
   }
 };
@@ -61,11 +61,11 @@ export const loadUser = () => async dispatch => {
 
     dispatch({
       type: USER_LOADED,
-      payload: res.data
+      payload: res.data,
     });
   } catch (err) {
     dispatch({
-      type: AUTH_ERROR
+      type: AUTH_ERROR,
     });
   }
 };
@@ -74,8 +74,8 @@ export const loadUser = () => async dispatch => {
 export const register = ({ name, email, password }) => async dispatch => {
   const config = {
     headers: {
-      'Content-Type': 'application/json'
-    }
+      'Content-Type': 'application/json',
+    },
   };
 
   const body = JSON.stringify({ name, email, password });
@@ -85,7 +85,7 @@ export const register = ({ name, email, password }) => async dispatch => {
 
     dispatch({
       type: REGISTER_SUCCESS,
-      payload: res.data
+      payload: res.data,
     });
 
     dispatch(setAlert(res.data.msg, 'success'));
@@ -97,7 +97,7 @@ export const register = ({ name, email, password }) => async dispatch => {
     }
 
     dispatch({
-      type: REGISTER_FAIL
+      type: REGISTER_FAIL,
     });
   }
 };
@@ -106,8 +106,8 @@ export const register = ({ name, email, password }) => async dispatch => {
 export const login = (email, password) => async dispatch => {
   const config = {
     headers: {
-      'Content-Type': 'application/json'
-    }
+      'Content-Type': 'application/json',
+    },
   };
 
   const body = JSON.stringify({ email, password });
@@ -117,7 +117,7 @@ export const login = (email, password) => async dispatch => {
 
     dispatch({
       type: LOGIN_SUCCESS,
-      payload: res.data
+      payload: res.data,
     });
 
     dispatch(loadUser());
@@ -129,7 +129,7 @@ export const login = (email, password) => async dispatch => {
     }
 
     dispatch({
-      type: LOGIN_FAIL
+      type: LOGIN_FAIL,
     });
   }
 };
@@ -141,35 +141,27 @@ export const logout = () => dispatch => {
 };
 
 // Verifying user account
-export const verifyAccount = verifyToken => async dispatch => {
+export const verifyAccount = confirmationToken => async dispatch => {
   const config = {
     headers: {
-      'Content-Type': 'application/json'
-    }
+      'Content-Type': 'application/json',
+    },
   };
-  const body = JSON.stringify({ verifyToken });
+  const body = JSON.stringify({ confirmationToken });
 
   try {
-    const res = await axios.post(
-      `/api/users/verify/${verifyToken}`,
-      body,
-      config
-    );
+    const res = await axios.post(`/api/users/verify/${confirmationToken}`, body, config);
 
     dispatch({
       type: ACCOUNT_VERIFIED,
-      payload: res.data.msg
+      payload: res.data.msg,
     });
   } catch (err) {
-    // const errors = err.response.data.errors
     console.error(err);
-    // if (errors) {
-    //   errors.forEach(error => dispatch(setAlert(error.msg, 'danger')))
-    // }
 
     dispatch({
       type: ACCOUNT_NOT_VERIFIED,
-      payload: err.response.data.msg
+      payload: err.response.data.msg,
     });
   }
 };
@@ -178,8 +170,8 @@ export const verifyAccount = verifyToken => async dispatch => {
 export const resendEmail = email => async dispatch => {
   const config = {
     headers: {
-      'Content-Type': 'application/json'
-    }
+      'Content-Type': 'application/json',
+    },
   };
   const body = JSON.stringify({ email });
 
@@ -188,7 +180,7 @@ export const resendEmail = email => async dispatch => {
 
     dispatch({
       type: RESEND_CONFIRMATION,
-      payload: res.data
+      payload: res.data,
     });
 
     dispatch(setAlert(res.data.msg, 'success'));
@@ -200,7 +192,124 @@ export const resendEmail = email => async dispatch => {
     }
 
     dispatch({
-      type: RESEND_CONFIRMATION_FAIL
+      type: RESEND_CONFIRMATION_FAIL,
+    });
+  }
+};
+
+//Send forgot password email
+export const forgotPassword = email => async dispatch => {
+  const config = {
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  };
+  const body = JSON.stringify({ email });
+
+  try {
+    const res = await axios.post(`/api/users/forgotpassword`, body, config);
+
+    dispatch({
+      type: SEND_PASSWORD_LINK_SUCCESS,
+      payload: res.data,
+    });
+    dispatch(setAlert(res.data.msg, 'success'));
+  } catch (err) {
+    const errors = err.response.data.errors;
+
+    if (errors) {
+      errors.forEach(error => dispatch(setAlert(error.msg, 'danger')));
+    }
+
+    dispatch({
+      type: SEND_PASSWORD_LINK_FAIL,
+      payload: err.response.data.msg,
+    });
+  }
+};
+
+// Reset Password
+export const resetPassword = (password, forgotPassToken) => async dispatch => {
+  const config = {
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  };
+  const body = JSON.stringify({ password });
+
+  try {
+    const res = await axios.put(`/api/users/resetpassword/${forgotPassToken}`, body, config);
+
+    dispatch({
+      type: RESET_PASSWORD_SUCCESS,
+      payload: res.data.msg,
+    })
+
+    dispatch(setAlert(res.data.msg, 'success'))
+  } catch (err) {
+    const errors = err.response.data.errors;
+    if (errors) {
+      errors.forEach(error => dispatch(setAlert(error.msg, 'danger')));
+    }
+
+    dispatch({
+      type: RESET_PASSWORD_FAIL,
+      payload: err.response.data.msg,
+    });
+
+    if (err.response.data.msg) {
+      dispatch(setAlert(err.response.data.msg, 'danger'));
+    }
+  }
+};
+
+// Check Password Reset Token
+export const checkPassToken = forgotPassToken => async dispatch => {
+  try {
+    const res = await axios.get(`/api/users/checkpasstoken/${forgotPassToken}`);
+
+    dispatch({
+      type: CHECK_PASS_TOKEN_SUCCESS,
+      payload: res.data.msg,
+    });
+  } catch (err) {
+    console.error(err)
+
+    dispatch({
+      type: CHECK_PASS_TOKEN_FAIL,
+      payload: err.response.data.msg,
+    });
+  }
+};
+
+// Change Password
+export const changePassword = ({ password, newPassword }) => async dispatch => {
+  const config = {
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  };
+
+  const body = JSON.stringify({ password, newPassword });
+
+  try {
+    const res = await axios.put('/api/users/changepassword', body, config);
+
+    dispatch({
+      type: CHANGE_PASSWORD,
+      payload: res.data,
+    });
+
+    dispatch(setAlert(res.data.msg, 'success'));
+  } catch (err) {
+    const errors = err.response.data.errors;
+
+    if (errors) {
+      errors.forEach(error => dispatch(setAlert(error.msg, 'danger')));
+    }
+
+    dispatch({
+      type: CHANGE_PASSWORD_FAIL,
     });
   }
 };
