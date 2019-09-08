@@ -1,9 +1,10 @@
-import React, { Fragment, useState } from 'react'
-import { connect } from 'react-redux'
-import { Link } from 'react-router-dom'
-import { setAlert } from '../../actions/alert'
-import { register } from '../../actions/auth'
-import PropTypes from 'prop-types'
+import React, { Fragment, useState } from 'react';
+import { connect } from 'react-redux';
+import { Link } from 'react-router-dom';
+import { setAlert } from '../../actions/alert';
+import { register } from '../../actions/auth';
+import PropTypes from 'prop-types';
+import zxcvbn from 'zxcvbn';
 
 const Register = ({ setAlert, register }) => {
   const [formData, setFormData] = useState({
@@ -11,20 +12,24 @@ const Register = ({ setAlert, register }) => {
     email: '',
     password: '',
     password2: '',
-  })
+    evaluation: '',
+  });
 
-  const { name, email, password, password2 } = formData
+  const { name, email, password, password2, evaluation } = formData;
 
-  const onChange = e => setFormData({ ...formData, [e.target.name]: e.target.value })
+  const onChange = e => {
+    const evaluation = zxcvbn(password, [name, email]);
+    setFormData({ ...formData, [e.target.name]: e.target.value, evaluation });
+  };
 
   const onSubmit = async e => {
-    e.preventDefault()
+    e.preventDefault();
     if (password !== password2) {
-      setAlert('Passwords do not match', 'danger')
+      setAlert('Passwords do not match', 'danger');
     } else {
-      register({ name, email, password })
+      register({ name, email, password });
     }
-  }
+  };
 
   return (
     <Fragment>
@@ -72,21 +77,38 @@ const Register = ({ setAlert, register }) => {
             onChange={e => onChange(e)}
           />
         </div>
+        {password && (
+          <Fragment>
+            <progress className="form-group" value={evaluation.score / 4} />
+            <br />
+            <span>
+              {evaluation.score === 2
+                ? 'Medium '
+                : evaluation.score === 3
+                ? 'Good '
+                : evaluation.score === 4
+                ? 'Strong '
+                : 'Weak '}
+              password {evaluation && `... ${evaluation.feedback.warning}`}
+            </span>
+          </Fragment>
+        )}
+        <br />
         <input type="submit" className="btn btn-primary" value="Register" />
       </form>
       <p className="my-1">
         Already have an account? <Link to="/login">Sign In</Link>
       </p>
     </Fragment>
-  )
-}
+  );
+};
 
 Register.propTypes = {
   setAlert: PropTypes.func.isRequired,
   register: PropTypes.func.isRequired,
-}
+};
 
 export default connect(
   null,
   { setAlert, register },
-)(Register)
+)(Register);
