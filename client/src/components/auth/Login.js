@@ -3,29 +3,18 @@ import { Link, Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { login, resendEmail, forgotPassword } from '../../actions/auth';
-import SocialMediaLogin from './SocialMediaLogin';
 
 const Login = ({ login, auth: { active, isAuthenticated }, resendEmail, forgotPassword }) => {
   // add to state toggle button
   const [displayResend, toggleResend] = useState(false);
   const [displaySendPassword, toggleSendPassword] = useState(false);
-  const [log, changeLogin] = useState(false);
 
   const [formData, setFormData] = useState({
     email: '',
+    password: '',
     emailResend: '',
     emailPassword: '',
-    password: '',
   });
-
-  const buttonStyle = {
-    marginTop: '7px',
-  };
-
-  // Switch between regular and social account
-  const changeSignIn = () => {
-    changeLogin(!log);
-  };
 
   const { email, emailResend, emailPassword, password } = formData;
 
@@ -56,40 +45,33 @@ const Login = ({ login, auth: { active, isAuthenticated }, resendEmail, forgotPa
     <Fragment>
       <h1 className="large text-primary">Sign In</h1>
       <p className="lead">
-        <i className="fas fa-user" />{' '}
-        {log ? 'Sign In into your account' : 'Sign In With Your Social Account'}
+        <i className="fas fa-user" />
+        Sign In into your account
       </p>
-      {!log ? (
-        <form className="form" onSubmit={e => onSubmit(e)}>
-          <div className="form-group">
-            <input
-              type="email"
-              placeholder="Email Address"
-              name="email"
-              value={email}
-              onChange={e => onChange(e)}
-              required
-            />
-          </div>
-          <div className="form-group">
-            <input
-              type="password"
-              placeholder="Password"
-              name="password"
-              value={password}
-              onChange={e => onChange(e)}
-              minLength="6"
-            />
-          </div>
-          <input type="submit" className="btn btn-primary" value="Login" />
-        </form>
-      ) : (
-        <SocialMediaLogin />
-      )}
 
-      <button style={buttonStyle} onClick={changeSignIn} className="btn btn-danger">
-        {log ? 'Back to SignIn with your account' : 'SignIn With Social Networks'}
-      </button>
+      <form className="form" onSubmit={e => onSubmit(e)}>
+        <div className="form-group">
+          <input
+            type="email"
+            placeholder="Email Address"
+            name="email"
+            value={email}
+            onChange={e => onChange(e)}
+            required
+          />
+        </div>
+        <div className="form-group">
+          <input
+            type="password"
+            placeholder="Password"
+            name="password"
+            value={password}
+            onChange={e => onChange(e)}
+            minLength="6"
+          />
+        </div>
+        <input type="submit" className="btn btn-primary" value="Login" />
+      </form>
 
       <p className="my-1">
         Don't have an account? <Link to="/register">Sign Up</Link>
@@ -100,22 +82,24 @@ const Login = ({ login, auth: { active, isAuthenticated }, resendEmail, forgotPa
         </a>
       </p>
 
-      {displaySendPassword && (
-        <form className="form my-1" onSubmit={e => forgotPasswordSubmit(e)}>
-          <input
-            type="email"
-            placeholder="Email Address"
-            name="emailPassword"
-            value={emailPassword}
-            onChange={e => onChange(e)}
-            required
-          />
-          <input type="submit" className="btn btn-primary my-1" value="Send" />
-          <button onClick={() => toggleSendPassword(false)} className="btn btn-light my-1">
-            Cancel
+      {
+        displaySendPassword && (
+          <form className="form my-1" onSubmit={e => forgotPasswordSubmit(e)}>
+            <input
+              type="email"
+              placeholder="Email Address"
+              name="emailPassword"
+              value={emailPassword}
+              onChange={e => onChange(e)}
+              required
+            />
+            <input type="submit" className="btn btn-primary my-1" value="Send" />
+            <button onClick={() => toggleSendPassword(false)} className="btn btn-light my-1">
+              Cancel
           </button>
-        </form>
-      )}
+          </form>
+        )
+      }
 
       <p className="my-1">
         Didn't receive a confirmation link?{' '}
@@ -126,24 +110,26 @@ const Login = ({ login, auth: { active, isAuthenticated }, resendEmail, forgotPa
         )}
       </p>
 
-      {displayResend && (
-        <form className="form my-1" onSubmit={e => resendEmailSubmit(e)}>
-          <input
-            type="email"
-            placeholder="Email Address"
-            name="emailResend"
-            value={emailResend}
-            onChange={e => onChange(e)}
-            required
-          />
-          <input type="submit" className="btn btn-primary my-1" value="Resend" />
-          <button onClick={() => toggleResend(false)} className="btn btn-light my-1">
-            Cancel
+      {
+        displayResend && (
+          <form className="form my-1" onSubmit={e => resendEmailSubmit(e)}>
+            <input
+              type="email"
+              placeholder="Email Address"
+              name="emailResend"
+              value={emailResend}
+              onChange={e => onChange(e)}
+              required
+            />
+            <input type="submit" className="btn btn-primary my-1" value="Resend" />
+            <button onClick={() => toggleResend(false)} className="btn btn-light my-1">
+              Cancel
           </button>
-        </form>
-      )}
-    </Fragment>
-  );
+          </form>
+        )
+      }
+    </Fragment >
+  )
 };
 
 Login.propTypes = {

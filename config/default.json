@@ -5,8 +5,6 @@
   "PasswordSecret": "HYSForgotPasswordSecretToken",
   "githubClientId": "26e42be2c45eb7db86b7",
   "githubSecret": "4a818bc6348a10d6c3c876465b9fb38bd5341289",
-  "apiKey": "AIzaSyBzJx-uHixKqIsA8h8Dp91OS4Fasjdi8kk",
-  "authDomain": "class20-b4669.firebaseapp.com",
   "gmailEmail": "hys.class20@gmail.com",
   "gmailPassword": "HackYourSocial20"
 }

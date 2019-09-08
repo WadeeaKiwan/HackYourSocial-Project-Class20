@@ -1,0 +1,17 @@
+.firebaseui-idp-button {
+  background-color: #636363 !important;
+  padding: 10px !important;
+  border-radius: 5px !important;
+  transition: all 0.1s ease-in-out !important;
+}
+
+.firebaseui-idp-button:hover {
+  opacity: 0.5 !important;
+  transition: opacity 0.4s !important;
+  transform: scale(1.03) !important;
+  transition: all 0.1s ease-in-out !important;
+}
+
+.firebaseui-idp-text {
+  color: white !important;
+}
