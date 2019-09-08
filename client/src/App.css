@@ -71,6 +71,10 @@ img {
   color: var(--primary-color);
 }
 
+.text-danger {
+  color: var(--danger-color);
+}
+
 .text-dark {
   color: var(--dark-color);
 }
@@ -559,6 +563,13 @@ button {
   align-items: center;
 }
 
+.edit-post-position {
+  box-shadow: -8px 8px 20px 0px rgba(63, 63, 53, 0.5);
+}
+.cancel-button {
+  line-height: inherit;
+}
+
 .post > div:first-child {
   text-align: center;
 }
@@ -579,6 +590,11 @@ button {
   color: #aaa;
   font-size: 0.8rem;
   margin-bottom: 0.5rem;
+}
+
+.editedText {
+  color: rgb(134, 134, 134);
+  font-size: 13px;
 }
 
 /* Mobile Styles */
