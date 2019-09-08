@@ -6,8 +6,6 @@ import './SearchBar.css';
 const SearchPost = ({ setIsMyPost, searchPost, setCheckbox, isMyPost }) => {
   const [text, setText] = useState('');
 
-  // close the edit window when you click outside of the edit window
-
   return (
     <div className="search-bar posts-search">
       <form
@@ -39,6 +37,7 @@ const SearchPost = ({ setIsMyPost, searchPost, setCheckbox, isMyPost }) => {
           <input
             onChange={() => {
               setCheckbox();
+              setText('');
             }}
             type="checkbox"
             id="switcher-1"

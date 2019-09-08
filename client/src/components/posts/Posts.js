@@ -12,8 +12,6 @@ const Posts = ({ getPosts, post: { posts, loading }, auth: { user } }) => {
   const [searchText, setSearchText] = useState(null);
   const [checked, setChecked] = useState(false);
 
-  console.log(searchText, checked, isMyPost);
-
   useEffect(() => {
     getPosts();
   }, [getPosts]);
@@ -52,7 +50,6 @@ const Posts = ({ getPosts, post: { posts, loading }, auth: { user } }) => {
           setIsMyPost(true);
         }}
         setCheckbox={() => {
-          setSearchText(null);
           setChecked(!checked);
         }}
         isMyPost={isMyPost}
