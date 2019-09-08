@@ -11,7 +11,7 @@ const LogOut = ({ logout }) => {
       firebase.auth().signOut();
       logout();
     });
-  }, []);
+  }, [logout]);
 
   return (
     <Fragment>

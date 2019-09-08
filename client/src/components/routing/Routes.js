@@ -16,6 +16,8 @@ import NotFound from '../layout/NotFound';
 import PrivateRoute from '../routing/PrivateRoute';
 import AccountVerification from '../auth/AccountVerification';
 import LogOut from '../auth/LogOut';
+import ChangePassword from '../auth/ChangePassword';
+import ResetPassword from '../auth/ResetPassword';
 
 const Routes = () => {
   return (
@@ -26,9 +28,11 @@ const Routes = () => {
         <Route exact path="/login" component={Login} />
         <Route exact path="/profiles" component={Profiles} />
         <Route exact path="/profile/:id" component={Profile} />
-        <Route exact path="/verify/:token" component={AccountVerification} />
+        <Route exact path="/verify/:confirmationToken" component={AccountVerification} />
+        <Route exact path="/resetpassword/:forgotPassToken" component={ResetPassword} />
         <PrivateRoute exact path="/logout" component={LogOut} />
         <PrivateRoute exact path="/dashboard" component={Dashboard} />
+        <PrivateRoute exact path="/changepassword" component={ChangePassword} />
         <PrivateRoute exact path="/create-profile" component={CreateProfile} />
         <PrivateRoute exact path="/edit-profile" component={EditProfile} />
         <PrivateRoute exact path="/add-experience" component={AddExperience} />

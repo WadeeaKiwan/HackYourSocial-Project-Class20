@@ -15,7 +15,58 @@ import {
   SET_EDIT_POST,
   UPDATE_COMMENT,
   SET_EDIT_COMMENT,
+  UPLOAD_IMAGE,
+  UPLOAD_IMAGE_ERROR,
 } from './types';
+
+// Add post With Image
+export const addPostWithImage = (formData, text) => async dispatch => {
+  let res;
+  try {
+    if (formData) {
+      res = await axios.post('/api/posts/upload', formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
+    } else {
+      res = await axios.post('/api/posts/upload', '', {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
+    }
+
+    if (text) {
+      await axios.put(
+        `/api/posts/${res.data._id}`,
+        { text },
+        {
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        },
+      );
+      res.data.text = text;
+    }
+
+    dispatch({
+      type: UPLOAD_IMAGE,
+      payload: res.data,
+    });
+
+    dispatch(setAlert('File Uploaded', 'success'));
+  } catch (err) {
+    if (err.response.status === 500) {
+      dispatch(setAlert('Something went wrong with the server', 'danger'));
+    } else {
+      dispatch({
+        type: UPLOAD_IMAGE_ERROR,
+      });
+      dispatch(setAlert('err.response.data.msg', 'danger'));
+    }
+  }
+};
 
 // Get posts
 export const getPosts = () => async dispatch => {
@@ -162,7 +213,11 @@ export const addComment = (postId, formData) => async dispatch => {
   };
 
   try {
-    const res = await axios.post(`/api/posts/comment/${postId}`, formData, config);
+    const res = await axios.post(
+      `/api/posts/comment/${postId}`,
+      formData,
+      config,
+    );
 
     dispatch({
       type: ADD_COMMENT,
@@ -204,7 +259,42 @@ export const deleteComment = (postId, commentId) => async dispatch => {
 };
 
 // Update Post
-export const updatePost = (id, newText) => async dispatch => {
+export const updatePost = (id, formData, { newText }) => async dispatch => {
+  let res;
+  try {
+    if (newText || newText === '') {
+      const config = {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      };
+
+      res = await axios.post(`api/posts/update/${id}`, { newText }, config);
+    }
+    if (formData) {
+      const config = {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      };
+
+      res = await axios.post(`api/posts/update/${id}`, formData, config);
+    }
+    dispatch({
+      type: UPDATE_POST,
+      payload: res.data,
+    });
+  } catch (err) {
+    const errors = err.response.data.errors;
+
+    if (errors) {
+      errors.forEach(error => dispatch(setAlert(error.msg, 'danger')));
+    }
+  }
+};
+
+export const deletePhoto = id => async dispatch => {
+  let res;
   try {
     const config = {
       headers: {
@@ -212,7 +302,8 @@ export const updatePost = (id, newText) => async dispatch => {
       },
     };
 
-    const res = await axios.post(`api/posts/update/${id}`, newText, config);
+    res = await axios.delete(`api/posts/delete/photo/${id}`, '', config);
+
     dispatch({
       type: UPDATE_POST,
       payload: res.data,
