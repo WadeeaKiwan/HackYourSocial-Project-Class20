@@ -55,6 +55,7 @@ const Posts = ({ getPosts, post: { posts, loading }, auth: { user } }) => {
           setChecked(!checked);
         }}
         isMyPost={isMyPost}
+        searchText={searchText}
       />
       <div className="posts">
         {isMyPost && !searchText

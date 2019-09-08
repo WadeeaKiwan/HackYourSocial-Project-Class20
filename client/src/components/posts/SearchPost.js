@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import './SearchBar.css';
 
-const SearchPost = ({ setIsMyPost, searchPost, setCheckbox, isMyPost }) => {
+const SearchPost = ({ setIsMyPost, searchPost, setCheckbox, isMyPost, searchText }) => {
   const [text, setText] = useState('');
 
   return (
@@ -53,7 +53,7 @@ const SearchPost = ({ setIsMyPost, searchPost, setCheckbox, isMyPost }) => {
           setText('');
         }}
       >
-        {!isMyPost && text === '' ? 'My Posts' : 'All Posts'}
+        {!isMyPost && !searchText ? 'My Posts' : 'All Posts'}
       </button>
     </div>
   );
