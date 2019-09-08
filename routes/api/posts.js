@@ -60,7 +60,7 @@ router.put('/:id', auth, async (request, response) => {
     }
     response.send(error);
   }
-});   
+});
 // @route    POST api/posts
 // @desc     Create a post
 // @access   Private
@@ -186,9 +186,7 @@ router.put('/like/:id', auth, async (req, res) => {
     const post = await Post.findById(req.params.id);
 
     // Check if the post has already been liked
-    if (
-      post.likes.filter(like => like.user.toString() === req.user.id).length > 0
-    ) {
+    if (post.likes.filter(like => like.user.toString() === req.user.id).length > 0) {
       return res.status(400).json({
         msg: 'Post already liked',
       });
@@ -215,19 +213,14 @@ router.put('/unlike/:id', auth, async (req, res) => {
     const post = await Post.findById(req.params.id);
 
     // Check if the post has already been liked
-    if (
-      post.likes.filter(like => like.user.toString() === req.user.id).length ===
-      0
-    ) {
+    if (post.likes.filter(like => like.user.toString() === req.user.id).length === 0) {
       return res.status(400).json({
         msg: 'Post has not yet been liked',
       });
     }
 
     // Get remove index
-    const removeIndex = post.likes
-      .map(like => like.user.toString())
-      .indexOf(req.user.id);
+    const removeIndex = post.likes.map(like => like.user.toString()).indexOf(req.user.id);
 
     post.likes.splice(removeIndex, 1);
 
@@ -292,9 +285,7 @@ router.delete('/comment/:id/:comment_id', auth, async (req, res) => {
     const post = await Post.findById(req.params.id);
 
     // Pull out comment
-    const comment = post.comments.find(
-      comment => comment.id === req.params.comment_id,
-    );
+    const comment = post.comments.find(comment => comment.id === req.params.comment_id);
 
     // Make sure comment exists
     if (!comment) {
@@ -311,9 +302,7 @@ router.delete('/comment/:id/:comment_id', auth, async (req, res) => {
     }
 
     // Get remove index
-    const removeIndex = post.comments
-      .map(comment => comment.id)
-      .indexOf(req.params.comment_id);
+    const removeIndex = post.comments.map(comment => comment.id).indexOf(req.params.comment_id);
 
     post.comments.splice(removeIndex, 1);
 
@@ -327,7 +316,7 @@ router.delete('/comment/:id/:comment_id', auth, async (req, res) => {
 });
 
 // @route   POST api/posts/update:id
-// @desc    Update a post/photo
+// @desc    Update a post
 // @access  Private
 
 router.post('/update/:id', auth, async (req, res) => {
@@ -339,7 +328,7 @@ router.post('/update/:id', auth, async (req, res) => {
         msg: 'User not authorized.',
       });
     }
-​
+
     if (req.body.newText || req.body.newText === '') {
       post.text = req.body.newText;
       post.edited = true;
@@ -349,7 +338,7 @@ router.post('/update/:id', auth, async (req, res) => {
       });
       return res.json(posts);
     }
-​
+
     if (req.files) {
       const file = req.files.file;
       const path = `/uploads/`;
@@ -372,7 +361,6 @@ router.post('/update/:id', auth, async (req, res) => {
   }
 });
 
-​
 // @route   DELETE api/posts/delete/photo:id
 // @desc    Update "remove" photo from post
 // @access  Private
@@ -385,10 +373,8 @@ router.delete('/delete/photo/:id', auth, async (req, res) => {
         msg: 'User not authorized.',
       });
     }
-​
     post.image = '';
     await post.save();
-​
     const posts = await Post.find().sort({
       date: -1,
     });
@@ -422,9 +408,7 @@ router.post(
     }
     try {
       const post = await Post.findById(req.params.id);
-      const comment = post.comments.find(
-        comment => comment.id === req.params.comment_id,
-      );
+      const comment = post.comments.find(comment => comment.id === req.params.comment_id);
       // Check if comment exists
       if (!comment) {
         return res.status(404).json({

@@ -41,7 +41,6 @@ const EditPost = ({
 
   const removePhoto = () => {
     setFile('');
-    deletePhoto(_id);
     setImageStyle({
       display: 'none',
     });
@@ -69,7 +68,12 @@ const EditPost = ({
       } else if (file) {
         let formData = new FormData();
         formData.append('file', file);
-        updatePost(_id, formData, { newText });
+        updatePost(_id, formData, null);
+        setEditPost(null);
+        setFile('');
+      } else if (!file && newText) {
+        updatePost(_id, null, { newText });
+        deletePhoto(_id);
         setEditPost(null);
         setFile('');
       } else if (!file && !newText) {
