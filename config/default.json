@@ -1,6 +1,8 @@
 {
   "mongoURI": "mongodb+srv://hyfclass20:HackYourFuture!@cluster0-jpbm0.mongodb.net/test?retryWrites=true&w=majority",
   "jwtSecret": "mysecrettoken",
+  "ConfirmationSecret": "HYSEmailConfirmationSecretToken",
+  "PasswordSecret": "HYSForgotPasswordSecretToken",
   "githubClientId": "26e42be2c45eb7db86b7",
   "githubSecret": "4a818bc6348a10d6c3c876465b9fb38bd5341289",
   "apiKey": "AIzaSyBzJx-uHixKqIsA8h8Dp91OS4Fasjdi8kk",

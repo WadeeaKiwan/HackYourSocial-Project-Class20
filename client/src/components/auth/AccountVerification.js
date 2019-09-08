@@ -7,8 +7,8 @@ import Spinner from '../layout/Spinner'
 
 const AccountVerification = ({ verifyAccount, resendEmail, match, auth: { loading, verification: { msg, verify } } }) => {
   useEffect(() => {
-    verifyAccount(match.params.token)
-  }, [match.params.token, verifyAccount])
+    verifyAccount(match.params.confirmationToken)
+  }, [match.params.confirmationToken, verifyAccount])
 
   const [displayResend, toggleResend] = useState(false)
 

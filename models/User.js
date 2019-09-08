@@ -19,7 +19,7 @@ const UserSchema = new mongoose.Schema({
   },
   active: {
     type: Boolean,
-    default: false
+    default: false,
   },
   date: {
     type: Date,
