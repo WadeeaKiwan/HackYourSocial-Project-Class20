@@ -1,5 +1,7 @@
 import axios from 'axios';
-import { setAlert } from './alert';
+import {
+  setAlert
+} from './alert';
 import {
   GET_POSTS,
   POST_ERROR,
@@ -215,6 +217,7 @@ export const updatePost = (id, newText) => async dispatch => {
       type: UPDATE_POST,
       payload: res.data,
     });
+    dispatch(setAlert('Post Updated', 'success'));
   } catch (err) {
     const errors = err.response.data.errors;
 
@@ -252,7 +255,7 @@ export const updateComment = (postId, commentId, newText) => async dispatch => {
       type: UPDATE_COMMENT,
       payload: res.data,
     });
-    dispatch(setAlert('Comment Updated', 'Success'));
+    dispatch(setAlert('Comment Updated', 'success'));
   } catch (err) {
     const errors = err.response.data.errors;
 
