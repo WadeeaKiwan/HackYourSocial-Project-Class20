@@ -42,6 +42,7 @@ img {
   padding: 0 2rem;
   margin-top: 6rem;
   margin-bottom: 3rem;
+  min-height: 500px;
 }
 
 /* Text Styles*/
@@ -364,6 +365,98 @@ button {
   margin-bottom: 1rem;
 }
 
+.search-bar-container {
+  display: flex;
+  justify-content: space-between;
+}
+
+.search-bar input,
+.search-bar select {
+  padding: 5px;
+  margin: 5px;
+  height: 40px;
+}
+.search-bar {
+  display: flex;
+  font-family: Georgia, 'Times New Roman', Times, serif;
+}
+
+.filter-criteria-list {
+  margin: 5px;
+  display: flex;
+  flex-wrap: wrap;
+}
+.filter-criteria-list button {
+  margin: 0;
+  padding: 2px 5px;
+  border-radius: 5px;
+}
+.filterCriteriaListForPadding {
+  padding-left: 5px;
+}
+
+.filter-criteria-list li {
+  margin: 0px 3px;
+  background: var(--light-color);
+  border-radius: 5px;
+  box-shadow: -3px -3px 5px 2px rgba(63, 63, 53, 0.5);
+}
+
+.search-bar i,
+.filter-criteria-list i {
+  padding: 0 10px 0 10px;
+  cursor: pointer;
+}
+
+.filter-search {
+  background-color: #515761ee;
+  color: rgb(238, 238, 238);
+  position: absolute;
+  top: 55px;
+  right: 0;
+  border-radius: 4px 0 4px 4px;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.3);
+  transform-origin: top right;
+  padding: 16px;
+  animation: scale-in-top 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
+}
+@keyframes scale-in-top {
+  0% {
+    transform: scaleX(0);
+    transform-origin: 100% 0%;
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1);
+    transform-origin: 100% 0%;
+    opacity: 1;
+  }
+}
+.filter-search th {
+  text-align: right;
+  padding-right: 10px;
+}
+
+.filter-search table td input[type='text'],
+.filter-search table td select {
+  font-size: 14px;
+  width: 250px;
+}
+.filter-search button,
+.filter-search > input {
+  color: white;
+  padding: 8px 16px;
+  margin: 10px;
+  border: none;
+  border-radius: 3px;
+  float: right;
+  cursor: pointer;
+}
+
+.filter-search-container {
+  position: relative;
+}
+
 /* Profile Page */
 .profile-grid {
   display: grid;
@@ -505,6 +598,14 @@ button {
 }
 
 /* Mobile Styles */
+@media (max-width: 800px) {
+  .search-bar > input,
+  .search-bar > span,
+  .filter-search table th {
+    display: none;
+  }
+}
+
 @media (max-width: 700px) {
   .container {
     margin-top: 8rem;
@@ -589,5 +690,32 @@ button {
   .post a,
   .post button {
     padding: 0.3rem 0.4rem;
+  }
+}
+
+.search-area:hover > .searchInput {
+  width: 240px;
+  padding: 0 12px;
+  background: #515761;
+  border-radius: 40px;
+}
+
+.searchInput {
+  border: none;
+  background: none;
+  outline: none;
+  float: left;
+  padding: 0;
+  color: white;
+  font-size: 16px;
+  transition: 0.4s;
+  line-height: 40px;
+  width: 0px;
+}
+
+@media screen and (max-width: 620px) {
+  .search-area:hover > .searchInput {
+    width: 150px;
+    padding: 0 6px;
   }
 }
