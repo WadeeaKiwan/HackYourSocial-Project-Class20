@@ -4,13 +4,14 @@ import { Link } from 'react-router-dom';
 import Moment from 'react-moment';
 import { connect } from 'react-redux';
 import { addLike, removeLike, deletePost, setEditPost } from '../../actions/post';
+import './edit_post.css';
 
 const PostItem = ({
   addLike,
   removeLike,
   deletePost,
   auth,
-  post: { _id, text, name, avatar, user, likes, comments, date, edited },
+  post: { _id, text, name, avatar, user, likes, comments, date, edited, image },
   showActions,
   setEditPost,
 }) => (
@@ -29,11 +30,12 @@ const PostItem = ({
       <p className="post-date">
         Posted on <Moment format="YYYY/MM/DD">{date}</Moment>
       </p>
+      {image && <img src={image} alt={'photo_post'} className="post_image" />}
       {showActions && (
         <Fragment>
           <button onClick={() => addLike(_id)} type="button" className="btn btn-light">
             <i className="fas fa-thumbs-up" />
-            <span> {likes.length > 0 && <span> {likes.length} </span>}</span>
+            <span> {likes && <span> {likes.length} </span>}</span>
           </button>
           <button onClick={() => removeLike(_id)} type="button" className="btn btn-light">
             <i className="fas fa-thumbs-down" />
