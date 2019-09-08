@@ -22,13 +22,14 @@ const Posts = ({ getPosts, post: { posts, loading, editedPost } }) => {
       </p>
       <PostForm />
       <div className="posts">
-        {posts.map(post =>
-          editedPost === post._id ? (
-            <EditPost post={post} key={post._id} />
-          ) : (
-            <PostItem key={post._id} post={post} />
-          ),
-        )}
+        {posts &&
+          posts.map(post =>
+            editedPost === post._id ? (
+              <EditPost post={post} key={post._id} />
+            ) : (
+              <PostItem key={post._id} post={post} />
+            ),
+          )}
       </div>
     </Fragment>
   );
