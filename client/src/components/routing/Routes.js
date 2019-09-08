@@ -28,7 +28,7 @@ const Routes = () => {
         <Route exact path="/login" component={Login} />
         <Route exact path="/profiles" component={Profiles} />
         <Route exact path="/profile/:id" component={Profile} />
-        <Route exact path="/verify/:token" component={AccountVerification} />
+        <Route exact path="/verify/:confirmationToken" component={AccountVerification} />
         <Route exact path="/resetpassword/:forgotPassToken" component={ResetPassword} />
         <PrivateRoute exact path="/logout" component={LogOut} />
         <PrivateRoute exact path="/dashboard" component={Dashboard} />
