@@ -50,6 +50,8 @@ const Posts = ({ getPosts, post: { posts, loading }, auth: { user } }) => {
           setIsMyPost(true);
         }}
         setCheckbox={() => {
+          setSearchText(null);
+          setIsMyPost(false);
           setChecked(!checked);
         }}
         isMyPost={isMyPost}
