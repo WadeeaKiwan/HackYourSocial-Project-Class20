@@ -378,7 +378,7 @@ button {
 }
 .search-bar {
   display: flex;
-  font-family: Georgia, 'Times New Roman', Times, serif;
+  font-family: 'Raleway', sans-serif;
 }
 
 .filter-criteria-list {
@@ -702,9 +702,7 @@ button {
 
 .searchInput {
   border: none;
-  background: none;
   outline: none;
-  float: left;
   padding: 0;
   color: white;
   font-size: 16px;

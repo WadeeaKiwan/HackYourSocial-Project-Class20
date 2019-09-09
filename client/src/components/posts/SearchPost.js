@@ -9,7 +9,7 @@ const SearchPost = ({ setIsMyPost, searchPost, setCheckbox, isMyPost, searchText
   return (
     <div className="search-bar posts-search">
       <form
-        className="search-area"
+        className="search-area search-area-responsive"
         onSubmit={e => {
           e.preventDefault();
           searchPost(text);
@@ -64,6 +64,7 @@ SearchPost.prototype = {
   searchPost: PropTypes.func.isRequired,
   setCheckbox: PropTypes.func.isRequired,
   isMyPost: PropTypes.bool.isRequired,
+  searchText: PropTypes.bool.isRequired,
 };
 
 export default connect(null)(SearchPost);
