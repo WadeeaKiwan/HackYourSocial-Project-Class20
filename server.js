@@ -1,7 +1,7 @@
 const express = require('express');
 const connectDB = require('./config/db');
 const path = require('path');
-const fileUpload = require('express-fileupload');
+// const fileUpload = require('express-fileupload');
 
 const app = express();
 
@@ -28,8 +28,8 @@ if (process.env.NODE_ENV === 'production') {
   });
 }
 
-app.use(fileUpload());
-app.use('/uploads', express.static('uploads'));
+// app.use(fileUpload());
+// app.use('/uploads', express.static('uploads'));
 
 const PORT = process.env.PORT || 5000;
 
