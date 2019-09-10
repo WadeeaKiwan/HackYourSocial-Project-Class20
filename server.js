@@ -9,8 +9,6 @@ const app = express();
 connectDB();
 
 // Init Middleware
-app.use(fileUpload());
-app.use('/uploads', express.static('uploads'));
 app.use(express.json({ extended: false }));
 app.use(express.static('./client/public'));
 
@@ -29,6 +27,9 @@ if (process.env.NODE_ENV === 'production') {
     res.sendFile(path.resolve(__dirname, 'client', 'build', 'index.html'));
   });
 }
+
+app.use(fileUpload());
+app.use('/uploads', express.static('uploads'));
 
 const PORT = process.env.PORT || 5000;
 
