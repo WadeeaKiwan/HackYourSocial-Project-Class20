@@ -21,6 +21,8 @@ import {
   CHECK_PASS_TOKEN_FAIL,
   CHANGE_PASSWORD,
   CHANGE_PASSWORD_FAIL,
+  LOGIN_SOCIAL_MEDIA_SUCCESS,
+  LOGIN_SOCIAL_MEDIA_FAIL,
 } from './types';
 import setAuthToken from '../utils/setAuthToken';
 
@@ -35,7 +37,7 @@ export const registerWithSocialMedia = ({ name, email, avatar }) => async dispat
   try {
     const res = await axios.post(`/api/auth/registerWithSocialMedia`, body, config);
     dispatch({
-      type: LOGIN_SUCCESS,
+      type: LOGIN_SOCIAL_MEDIA_SUCCESS,
       payload: res.data,
     });
     dispatch(loadUser());
@@ -45,7 +47,7 @@ export const registerWithSocialMedia = ({ name, email, avatar }) => async dispat
       errors.forEach(error => dispatch(setAlert(error.msg, 'danger')));
     }
     dispatch({
-      type: LOGIN_FAIL,
+      type: LOGIN_SOCIAL_MEDIA_FAIL,
     });
   }
 };
@@ -243,9 +245,9 @@ export const resetPassword = (password, forgotPassToken) => async dispatch => {
     dispatch({
       type: RESET_PASSWORD_SUCCESS,
       payload: res.data.msg,
-    })
+    });
 
-    dispatch(setAlert(res.data.msg, 'success'))
+    dispatch(setAlert(res.data.msg, 'success'));
   } catch (err) {
     const errors = err.response.data.errors;
     if (errors) {
@@ -273,7 +275,7 @@ export const checkPassToken = forgotPassToken => async dispatch => {
       payload: res.data.msg,
     });
   } catch (err) {
-    console.error(err)
+    console.error(err);
 
     dispatch({
       type: CHECK_PASS_TOKEN_FAIL,

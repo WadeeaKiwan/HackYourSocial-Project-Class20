@@ -24,8 +24,7 @@ const PostItem = ({
     </div>
     <div>
       <p className="my-1">
-        {' '}
-        {text} {edited ? <i className="editedText">(edited)</i> : null}{' '}
+        {text && text} {edited ? <i className="editedText">(edited)</i> : null}
       </p>
       <p className="post-date">
         Posted on <Moment format="YYYY/MM/DD">{date}</Moment>
