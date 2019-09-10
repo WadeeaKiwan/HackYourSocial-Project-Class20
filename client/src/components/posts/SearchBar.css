@@ -109,15 +109,6 @@
 
 .posts-search {
   display: flex;
-  flex-wrap: wrap-reverse;
+  flex-wrap: wrap;
   justify-content: flex-end;
 }
-
-.search-area-responsive input {
-  flex: 0 0 200px;
-}
-
-@media (max-width: 530px) {
-}
-
-/*  try hover none in media query */
