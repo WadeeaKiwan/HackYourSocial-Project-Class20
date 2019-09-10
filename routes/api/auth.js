@@ -5,8 +5,75 @@ const auth = require('../../middleware/auth');
 const jwt = require('jsonwebtoken');
 const config = require('config');
 const { check, validationResult } = require('express-validator/check');
+const generator = require('generate-password');
 
 const User = require('../../models/User');
+
+// @route    POST api/auth/registerWithSocialMedia
+// @desc     Login SocialMedia
+// @access   Public
+router.post(
+  '/registerWithSocialMedia',
+
+  async (request, response) => {
+    // comes from the body
+
+    const { name, email, avatar } = request.body;
+
+    // generate password
+    let password = generator.generate({
+      length: 10,
+      numbers: true,
+      uppercase: true,
+      symbols: true,
+    });
+
+    try {
+      // check if the user exists
+      let user = await User.findOne({ email });
+
+      if (!user) {
+        // create instance
+        user = new User({
+          name,
+          email,
+          avatar,
+          password,
+          socialMediaAccount: true,
+        });
+
+        const salt = await bcrypt.genSalt(10);
+        user.password = await bcrypt.hash(password, salt);
+
+        // set User SocialMedia to active
+        user.active = true;
+        await user.save();
+      }
+
+      // keep up to date with social accounts
+      user.name = name;
+      user.avatar = avatar;
+      user.password = password;
+      await user.save();
+
+      // Return jsonwebtoken
+
+      const payload = {
+        user: {
+          id: user.id,
+        },
+      };
+
+      jwt.sign(payload, config.get('jwtSecret'), { expiresIn: 360000 }, (err, token) => {
+        if (err) throw error;
+        response.status(200).send({ token });
+      });
+    } catch (error) {
+      console.log(error);
+      response.status(404).json({ error });
+    }
+  },
+);
 
 // @route    GET api/auth
 // @desc     Test route
@@ -28,7 +95,7 @@ router.post(
   '/',
   [
     check('email', 'Please include a valid email').isEmail(),
-    check('password', 'Password is required').exists()
+    check('password', 'Password is required').exists(),
   ],
   async (req, res) => {
     const errors = validationResult(req);
@@ -42,39 +109,34 @@ router.post(
       let user = await User.findOne({ email });
 
       if (!user) {
-        return res
-          .status(400)
-          .json({ errors: [{ msg: 'Invalid Credentials' }] });
+        return res.status(400).json({ errors: [{ msg: 'Invalid Credentials' }] });
+      }
+
+      if (!user.active) {
+        return res.status(400).json({ errors: [{ msg: 'Please, Verify your account' }] });
       }
 
       const isMatch = await bcrypt.compare(password, user.password);
 
       if (!isMatch) {
-        return res
-          .status(400)
-          .json({ errors: [{ msg: 'Invalid Credentials' }] });
+        return res.status(400).json({ errors: [{ msg: 'Invalid Credentials' }] });
       }
 
       const payload = {
         user: {
-          id: user.id
-        }
+          id: user.id,
+        },
       };
 
-      jwt.sign(
-        payload,
-        config.get('jwtSecret'),
-        { expiresIn: 360000 },
-        (err, token) => {
-          if (err) throw err;
-          res.json({ token });
-        }
-      );
+      jwt.sign(payload, config.get('jwtSecret'), { expiresIn: 360000 }, (err, token) => {
+        if (err) throw err;
+        res.json({ token });
+      });
     } catch (err) {
       console.error(err.message);
       res.status(500).send('Server error');
     }
-  }
+  },
 );
 
 module.exports = router;

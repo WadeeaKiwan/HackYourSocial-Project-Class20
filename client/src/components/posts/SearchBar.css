@@ -1,0 +1,123 @@
+.switcher-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+.switcher-container span.switcher {
+  position: relative;
+  width: 140px;
+  height: 25px;
+  border-radius: 25px;
+  margin-top: 3px;
+}
+.switcher-container span.switcher input {
+  appearance: none;
+  position: relative;
+  width: 130px;
+  border-radius: 25px;
+  background-color: #1e1e1e;
+  outline: none;
+  height: 15px;
+  cursor: pointer;
+}
+.switcher-container span.switcher input:before,
+.switcher-container span.switcher input:after {
+  z-index: 2;
+  position: absolute;
+  transform: translateY(-40%);
+  color: #ffffff;
+}
+.switcher-container span.switcher input:before {
+  content: 'User';
+  left: 20px;
+}
+.switcher-container span.switcher input:after {
+  content: 'Context';
+  right: 20px;
+}
+.switcher-container span.switcher label {
+  z-index: 1;
+  position: absolute;
+  top: 1px;
+  bottom: 1px;
+  border-radius: 20px;
+}
+
+.switcher-container span.switcher.switcher-1 input:checked {
+  background-color: #ffffff;
+}
+.switcher-container span.switcher.switcher-1 input:checked:before {
+  color: #ffffff;
+  transition: color 0.5s 0.2s;
+}
+.switcher-container span.switcher.switcher-1 input:checked:after {
+  color: #cccccc;
+  transition: color 0.5s;
+}
+.switcher-container span.switcher.switcher-1 input:checked + label {
+  left: 15px;
+  right: 78px;
+  background: var(--dark-color);
+  transition: left 0.5s, right 0.4s 0.2s;
+}
+.switcher-container span.switcher.switcher-1 input:not(:checked) {
+  background: #ffffff;
+  transition: background 0.5s -0.1s;
+}
+.switcher-container span.switcher.switcher-1 input:not(:checked):before {
+  color: #cccccc;
+  transition: color 0.5s;
+}
+.switcher-container span.switcher.switcher-1 input:not(:checked):after {
+  color: #cccccc;
+  transition: color 0.5s 0.2s;
+}
+.switcher-container span.switcher.switcher-1 input:not(:checked) + label {
+  left: 60px;
+  right: 15px;
+  background: var(--dark-color);
+  transition: left 0.4s 0.2s, right 0.5s, background 0.35s -0.1s;
+}
+
+.switcher-container label {
+  border-bottom: 1px solid grey;
+  font-size: 11px;
+  line-height: 1.2em;
+  font-weight: 600;
+}
+
+.my-posts-button {
+  color: #ffffff !important;
+  text-decoration: none;
+  background: var(--primary-color);
+  padding: 0.1rem 1rem;
+  /* border: 2px solid var(--dark-color) !important; */
+  display: inline-block;
+  transition: all 0.4s ease 0s;
+  margin: 4px;
+  border-radius: 10px;
+  cursor: pointer;
+  outline: none;
+}
+
+.my-posts-button:hover {
+  color: #ffffff !important;
+  background: #1e1e1e;
+  transition: all 0.4s ease 0s;
+}
+
+.posts-search {
+  display: flex;
+  flex-wrap: wrap-reverse;
+  justify-content: flex-end;
+}
+
+.search-area-responsive input {
+  flex: 0 0 200px;
+}
+
+@media (max-width: 530px) {
+}
+
+/*  try hover none in media query */
