@@ -78,56 +78,24 @@ export const getPosts = () => async dispatch => {
   } catch (err) {
     dispatch({
       type: POST_ERROR,
-      payload: {
-        msg: err.response.statusText,
-        status: err.response.status,
-      },
+      payload: { msg: err.response.statusText, status: err.response.status },
     });
   }
 };
 
 // Add like
-export const addLike = id => async dispatch => {
+export const addOrRemoveLike = id => async dispatch => {
   try {
     const res = await axios.put(`/api/posts/like/${id}`);
 
     dispatch({
       type: UPDATE_LIKES,
-      payload: {
-        id,
-        likes: res.data,
-      },
+      payload: { id, likes: res.data },
     });
   } catch (err) {
     dispatch({
       type: POST_ERROR,
-      payload: {
-        msg: err.response.statusText,
-        status: err.response.status,
-      },
-    });
-  }
-};
-
-// Remove like
-export const removeLike = id => async dispatch => {
-  try {
-    const res = await axios.put(`/api/posts/unlike/${id}`);
-
-    dispatch({
-      type: UPDATE_LIKES,
-      payload: {
-        id,
-        likes: res.data,
-      },
-    });
-  } catch (err) {
-    dispatch({
-      type: POST_ERROR,
-      payload: {
-        msg: err.response.statusText,
-        status: err.response.status,
-      },
+      payload: { msg: err.response.statusText, status: err.response.status },
     });
   }
 };
@@ -146,10 +114,7 @@ export const deletePost = id => async dispatch => {
   } catch (err) {
     dispatch({
       type: POST_ERROR,
-      payload: {
-        msg: err.response.statusText,
-        status: err.response.status,
-      },
+      payload: { msg: err.response.statusText, status: err.response.status },
     });
   }
 };
@@ -174,10 +139,7 @@ export const addPost = formData => async dispatch => {
   } catch (err) {
     dispatch({
       type: POST_ERROR,
-      payload: {
-        msg: err.response.statusText,
-        status: err.response.status,
-      },
+      payload: { msg: err.response.statusText, status: err.response.status },
     });
   }
 };
@@ -194,10 +156,7 @@ export const getPost = id => async dispatch => {
   } catch (err) {
     dispatch({
       type: POST_ERROR,
-      payload: {
-        msg: err.response.statusText,
-        status: err.response.status,
-      },
+      payload: { msg: err.response.statusText, status: err.response.status },
     });
   }
 };
@@ -222,10 +181,7 @@ export const addComment = (postId, formData) => async dispatch => {
   } catch (err) {
     dispatch({
       type: POST_ERROR,
-      payload: {
-        msg: err.response.statusText,
-        status: err.response.status,
-      },
+      payload: { msg: err.response.statusText, status: err.response.status },
     });
   }
 };
