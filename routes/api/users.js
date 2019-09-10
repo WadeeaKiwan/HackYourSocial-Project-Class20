@@ -10,6 +10,8 @@ const { sendEmail } = require('../../middleware/mailer');
 
 const User = require('../../models/User');
 
+const herokuUrl = 'https://development-hys.herokuapp.com';
+
 // @route    POST api/users
 // @desc     Register user
 // @access   Public
@@ -105,7 +107,7 @@ router.post(
               Thanks for your registration!
             </p>
             <p class="p lead">Please verify your account by clicking: 
-              <a href="http://localhost:3000/verify/${confirmationToken}">
+              <a href="${herokuUrl}/verify/${confirmationToken}">
                 Here
               </a>
             </p>
@@ -286,7 +288,7 @@ router.put(
               Hi ${user.name},
             </h1>
             <p class="p lead">Please verify your account by clicking: 
-              <a href="http://localhost:3000/verify/${confirmationToken}">
+              <a href="${herokuUrl}/verify/${confirmationToken}">
                 Here
               </a>
             </p>
@@ -389,7 +391,7 @@ router.post(
             </h1>
             <p class="p large">Forgot your password?</p>
             <p class="p lead">To reset your password you can click: 
-              <a href="http://localhost:3000/resetpassword/${forgotPassToken}">
+              <a href="${herokuUrl}/resetpassword/${forgotPassToken}">
                 Here
               </a>
             </p>
