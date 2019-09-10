@@ -4,17 +4,22 @@ import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { setAlert } from '../../actions/alert';
 import { changePassword } from '../../actions/auth';
+import zxcvbn from 'zxcvbn';
 
 const ChangePassword = ({ changePassword, setAlert }) => {
   const [formData, setFormData] = useState({
     password: '',
     newPassword: '',
     newPassword2: '',
+    evaluation: '',
   });
 
-  const { password, newPassword, newPassword2 } = formData;
+  const { password, newPassword, newPassword2, evaluation } = formData;
 
-  const onChange = e => setFormData({ ...formData, [e.target.name]: e.target.value });
+  const onChange = e => {
+    const evaluation = zxcvbn(newPassword);
+    setFormData({ ...formData, [e.target.name]: e.target.value, evaluation });
+  }
 
   const onSubmit = async e => {
     e.preventDefault();
@@ -51,6 +56,22 @@ const ChangePassword = ({ changePassword, setAlert }) => {
             onChange={e => onChange(e)}
           />
         </div>
+        {newPassword && (
+          <Fragment>
+            <progress value={evaluation.score / 4} />
+            <br />
+            <span>
+              {evaluation.score === 2
+                ? 'Medium '
+                : evaluation.score === 3
+                  ? 'Good '
+                  : evaluation.score === 4
+                    ? 'Strong '
+                    : 'Weak '}
+              New Password {evaluation && `... ${evaluation.feedback.warning}`}
+            </span>
+          </Fragment>
+        )}
         <div className="form-group">
           <input
             type="password"
