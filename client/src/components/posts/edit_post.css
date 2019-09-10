@@ -23,7 +23,9 @@
 }
 
 .post_image {
-  width: 75% !important ;
-  margin: 5% auto !important;
+  width: 75% !important;
+  margin: 5% 3% !important;
   display: block !important;
+  border-radius: 5px !important;
+  border: 1px solid #bdbdbd !important;
 }

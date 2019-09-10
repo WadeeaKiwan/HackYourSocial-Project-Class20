@@ -19,7 +19,9 @@ import {
   CHECK_PASS_TOKEN_FAIL,
   CHANGE_PASSWORD,
   CHANGE_PASSWORD_FAIL,
-} from '../actions/types'
+  LOGIN_SOCIAL_MEDIA_SUCCESS,
+  LOGIN_SOCIAL_MEDIA_FAIL,
+} from '../actions/types';
 
 const initialState = {
   token: localStorage.getItem('token'),
@@ -28,9 +30,10 @@ const initialState = {
   user: null,
   active: false,
   verification: { msg: null, verify: null },
+  socialMediaAccount: false,
 };
 
-export default function (state = initialState, action) {
+export default function(state = initialState, action) {
   const { type, payload } = action;
 
   switch (type) {
@@ -55,6 +58,17 @@ export default function (state = initialState, action) {
         isAuthenticated: false,
         loading: false,
         active: false,
+        socialMediaAccount: false,
+      };
+    case LOGIN_SOCIAL_MEDIA_SUCCESS:
+      localStorage.setItem('token', payload.token);
+      return {
+        ...state,
+        ...payload,
+        isAuthenticated: true,
+        loading: false,
+        active: true,
+        socialMediaAccount: true,
       };
     case LOGIN_SUCCESS:
       localStorage.setItem('token', payload.token);
@@ -64,7 +78,9 @@ export default function (state = initialState, action) {
         isAuthenticated: true,
         loading: false,
         active: true,
+        socialMediaAccount: false,
       };
+    case LOGIN_SOCIAL_MEDIA_FAIL:
     case REGISTER_FAIL:
     case AUTH_ERROR:
     case LOGIN_FAIL:
@@ -95,7 +111,7 @@ export default function (state = initialState, action) {
         isAuthenticated: false,
         loading: false,
         active: false,
-      }
+      };
     case CHANGE_PASSWORD:
     case CHANGE_PASSWORD_FAIL:
       return {
@@ -104,7 +120,7 @@ export default function (state = initialState, action) {
         isAuthenticated: true,
         loading: false,
         active: true,
-      }
+      };
     default:
       return state;
   }
