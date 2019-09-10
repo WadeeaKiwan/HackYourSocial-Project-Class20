@@ -23,59 +23,60 @@ const Posts = ({ getPosts, post: { posts, loading, editedPost }, auth: { user } 
       const isSatisfy = checked
         ? post.name.toUpperCase().includes(searchText.toUpperCase())
         : post.text.toUpperCase().includes(searchText.toUpperCase());
-      return isSatisfy && <PostItem key={post._id} post={post} />;
+      return isSatisfy && returnSinglePost(post);
     });
 
     return filteredPost.filter(e => typeof e === 'object').length ? (
       filteredPost
     ) : (
-      <h4>No post found...</h4>
-    );
+        <h4>No post found...</h4>
+      );
+  };
+
+  const returnSinglePost = post => {
+    return editedPost === post._id ? (
+      <EditPost post={post} key={post._id} />
+    ) : (
+        <PostItem key={post._id} post={post} />
+      );
   };
 
   return loading ? (
     <Spinner />
   ) : (
-    <Fragment>
-      <h1 className="large text-primary">Posts</h1>
-      <p className="lead">
-        <i className="fas fa-user" /> Welcome to the community
+      <Fragment>
+        <h1 className="large text-primary">Posts</h1>
+        <p className="lead">
+          <i className="fas fa-user" /> Welcome to the community
       </p>
-      <PostForm />
-      <SearchPost
-        setIsMyPost={() => {
-          setSearchText(null);
-          setIsMyPost(!isMyPost);
-        }}
-        searchPost={text => {
-          setSearchText(text);
-          setIsMyPost(true);
-        }}
-        setCheckbox={() => {
-          setSearchText(null);
-          setIsMyPost(false);
-          setChecked(!checked);
-        }}
-        isMyPost={isMyPost}
-        searchText={searchText}
-      />
+        <PostForm />
+        <SearchPost
+          setIsMyPost={() => {
+            setSearchText(null);
+            setIsMyPost(!isMyPost);
+          }}
+          searchPost={text => {
+            setSearchText(text);
+            setIsMyPost(true);
+          }}
+          setCheckbox={() => {
+            setSearchText(null);
+            setIsMyPost(false);
+            setChecked(!checked);
+          }}
+          isMyPost={isMyPost}
+          searchText={searchText}
+        />
 
-      <div className="posts">
-        {posts &&
-          posts.map(post =>
-            editedPost === post._id ? (
-              <EditPost post={post} key={post._id} />
-            ) : isMyPost && !searchText ? (
-              posts.map(post => user._id === post.user && <PostItem key={post._id} post={post} />)
-            ) : searchText ? (
-              filteredPosts(posts)
-            ) : (
-              posts.map(post => <PostItem key={post._id} post={post} />)
-            ),
-          )}
-      </div>
-    </Fragment>
-  );
+        <div className="posts">
+          {isMyPost && !searchText
+            ? posts.map(post => user._id === post.user && returnSinglePost(post))
+            : searchText
+              ? filteredPosts(posts)
+              : posts && posts.map(post => returnSinglePost(post))}
+        </div>
+      </Fragment>
+    );
 };
 
 Posts.propTypes = {

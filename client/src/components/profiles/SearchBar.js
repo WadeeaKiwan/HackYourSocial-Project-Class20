@@ -34,7 +34,7 @@ const SearchBar = ({ handleFilter }) => {
           className="search-area"
           onSubmit={e => {
             e.preventDefault();
-            handleFilter({ name: onChangeName });
+            onChangeName !== '' && handleFilter({ name: onChangeName });
           }}
         >
           <input
@@ -47,7 +47,7 @@ const SearchBar = ({ handleFilter }) => {
           <span
             onClick={e => {
               e.preventDefault();
-              handleFilter({ name: onChangeName });
+              onChangeName !== '' && handleFilter({ name: onChangeName });
             }}
           >
             <i className="fas fa-search my-1" />

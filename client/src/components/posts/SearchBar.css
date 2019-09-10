@@ -7,7 +7,7 @@
 .switcher-container span.switcher {
   position: relative;
   width: 140px;
-  height: 20px;
+  height: 25px;
   border-radius: 25px;
   margin-top: 3px;
 }
@@ -18,15 +18,14 @@
   border-radius: 25px;
   background-color: #1e1e1e;
   outline: none;
-  font-family: 'Oswald', sans-serif;
+  height: 15px;
   cursor: pointer;
 }
 .switcher-container span.switcher input:before,
 .switcher-container span.switcher input:after {
   z-index: 2;
   position: absolute;
-  top: 13%;
-  transform: translateY(-50%);
+  transform: translateY(-40%);
   color: #ffffff;
 }
 .switcher-container span.switcher input:before {
@@ -44,9 +43,7 @@
   bottom: 1px;
   border-radius: 20px;
 }
-.switcher-container span.switcher.switcher-1 input {
-  transition: 0.25s -0.1s;
-}
+
 .switcher-container span.switcher.switcher-1 input:checked {
   background-color: #ffffff;
 }
@@ -61,7 +58,7 @@
 .switcher-container span.switcher.switcher-1 input:checked + label {
   left: 15px;
   right: 78px;
-  background: #1e1e1e;
+  background: var(--dark-color);
   transition: left 0.5s, right 0.4s 0.2s;
 }
 .switcher-container span.switcher.switcher-1 input:not(:checked) {
@@ -79,23 +76,23 @@
 .switcher-container span.switcher.switcher-1 input:not(:checked) + label {
   left: 60px;
   right: 15px;
-  background: #1e1e1e;
+  background: var(--dark-color);
   transition: left 0.4s 0.2s, right 0.5s, background 0.35s -0.1s;
 }
 
 .switcher-container label {
   border-bottom: 1px solid grey;
-  font-size: 13px;
+  font-size: 11px;
   line-height: 1.2em;
+  font-weight: 600;
 }
 
 .my-posts-button {
-  color: var(--dark-color) !important;
-  text-transform: uppercase;
+  color: #ffffff !important;
   text-decoration: none;
-  background: #ffffff;
-  padding: 0.4rem 1.3rem;
-  border: 2px solid var(--dark-color) !important;
+  background: var(--primary-color);
+  padding: 0.1rem 1rem;
+  /* border: 2px solid var(--dark-color) !important; */
   display: inline-block;
   transition: all 0.4s ease 0s;
   margin: 4px;
@@ -112,5 +109,15 @@
 
 .posts-search {
   display: flex;
+  flex-wrap: wrap-reverse;
   justify-content: flex-end;
 }
+
+.search-area-responsive input {
+  flex: 0 0 200px;
+}
+
+@media (max-width: 530px) {
+}
+
+/*  try hover none in media query */
