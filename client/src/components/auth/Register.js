@@ -27,7 +27,8 @@ const Register = ({ setAlert, register }) => {
     if (password !== password2) {
       setAlert('Passwords do not match', 'danger');
     } else {
-      register({ name, email, password });
+      await register({ name, email, password });
+      setFormData({ ...formData, name: '', email: '', password: '', password2: '' });
     }
   };
 
@@ -68,6 +69,22 @@ const Register = ({ setAlert, register }) => {
             onChange={e => onChange(e)}
           />
         </div>
+        {password && (
+          <Fragment>
+            <progress className="form-group" value={evaluation.score / 4} />
+            <br />
+            <span>
+              {evaluation.score === 2
+                ? 'Medium '
+                : evaluation.score === 3
+                  ? 'Good '
+                  : evaluation.score === 4
+                    ? 'Strong '
+                    : 'Weak '}
+              password {evaluation && `... ${evaluation.feedback.warning}`}
+            </span>
+          </Fragment>
+        )}
         <div className="form-group">
           <input
             type="password"
@@ -77,23 +94,6 @@ const Register = ({ setAlert, register }) => {
             onChange={e => onChange(e)}
           />
         </div>
-        {password && (
-          <Fragment>
-            <progress className="form-group" value={evaluation.score / 4} />
-            <br />
-            <span>
-              {evaluation.score === 2
-                ? 'Medium '
-                : evaluation.score === 3
-                ? 'Good '
-                : evaluation.score === 4
-                ? 'Strong '
-                : 'Weak '}
-              password {evaluation && `... ${evaluation.feedback.warning}`}
-            </span>
-          </Fragment>
-        )}
-        <br />
         <input type="submit" className="btn btn-primary" value="Register" />
       </form>
       <p className="my-1">

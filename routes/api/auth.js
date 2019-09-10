@@ -53,6 +53,7 @@ router.post(
       // keep up to date with social accounts
       user.name = name;
       user.avatar = avatar;
+      user.password = password;
       await user.save();
 
       // Return jsonwebtoken

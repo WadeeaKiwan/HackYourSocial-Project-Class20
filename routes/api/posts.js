@@ -4,7 +4,6 @@ const { check, validationResult } = require('express-validator/check');
 const auth = require('../../middleware/auth');
 
 const Post = require('../../models/Post');
-const Profile = require('../../models/Profile');
 const User = require('../../models/User');
 
 router.post('/upload', auth, async (request, response) => {
@@ -17,7 +16,6 @@ router.post('/upload', auth, async (request, response) => {
   try {
     const user = await User.findById(request.user.id).select('-password');
     const newPost = new Post({
-      text: '',
       name: user.name,
       avatar: user.avatar,
       user: request.user.id,
@@ -333,10 +331,6 @@ router.post('/update/:id', auth, async (req, res) => {
       post.text = req.body.newText;
       post.edited = true;
       await post.save();
-      const posts = await Post.find().sort({
-        date: -1,
-      });
-      return res.json(posts);
     }
 
     if (req.files) {
@@ -349,12 +343,12 @@ router.post('/update/:id', auth, async (req, res) => {
           console.error(err);
           return res.status(500).send(err);
         }
-        const posts = await Post.find().sort({
-          date: -1,
-        });
-        return res.json(posts);
       });
     }
+    const posts = await Post.find().sort({
+      date: -1,
+    });
+    return res.json(posts);
   } catch (err) {
     console.error(err.message);
     res.status(500).send('Server Error');

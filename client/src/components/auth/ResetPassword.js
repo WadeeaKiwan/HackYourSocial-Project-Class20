@@ -5,6 +5,7 @@ import PropTypes from 'prop-types'
 import Spinner from '../layout/Spinner'
 import { forgotPassword, resetPassword, checkPassToken } from '../../actions/auth'
 import { setAlert } from '../../actions/alert'
+import zxcvbn from 'zxcvbn'
 
 const ResetPassword = ({
   forgotPassword,
@@ -27,13 +28,17 @@ const ResetPassword = ({
     password: '',
     password2: '',
     emailForgotPassword: '',
+    evaluation: '',
   })
 
-  const { password, password2, emailForgotPassword } = formData
+  const { password, password2, emailForgotPassword, evaluation } = formData
 
   const forgotPassToken = match.params.forgotPassToken
 
-  const onChange = e => setFormData({ ...formData, [e.target.name]: e.target.value })
+  const onChange = e => {
+    const evaluation = zxcvbn(password);
+    setFormData({ ...formData, [e.target.name]: e.target.value, evaluation })
+  }
 
   const onForgotPasswordSubmit = e => {
     e.preventDefault()
@@ -72,6 +77,22 @@ const ResetPassword = ({
             onChange={e => onChange(e)}
           />
         </div>
+        {password && (
+          <Fragment>
+            <progress className="form-group" value={evaluation.score / 4} />
+            <br />
+            <span>
+              {evaluation.score === 2
+                ? 'Medium '
+                : evaluation.score === 3
+                  ? 'Good '
+                  : evaluation.score === 4
+                    ? 'Strong '
+                    : 'Weak '}
+              password {evaluation && `... ${evaluation.feedback.warning}`}
+            </span>
+          </Fragment>
+        )}
         <div className="form-group">
           <input
             type="password"

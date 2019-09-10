@@ -1,7 +1,5 @@
 import axios from 'axios';
-import {
-  setAlert
-} from './alert';
+import { setAlert } from './alert';
 import {
   GET_POSTS,
   POST_ERROR,
@@ -30,7 +28,7 @@ export const addPostWithImage = (formData, text) => async dispatch => {
         },
       });
     } else {
-      res = await axios.post('/api/posts/upload', '', {
+      res = await axios.post('/api/posts/upload', null, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
@@ -213,11 +211,7 @@ export const addComment = (postId, formData) => async dispatch => {
   };
 
   try {
-    const res = await axios.post(
-      `/api/posts/comment/${postId}`,
-      formData,
-      config,
-    );
+    const res = await axios.post(`/api/posts/comment/${postId}`, formData, config);
 
     dispatch({
       type: ADD_COMMENT,
@@ -302,7 +296,7 @@ export const deletePhoto = id => async dispatch => {
       },
     };
 
-    res = await axios.delete(`api/posts/delete/photo/${id}`, '', config);
+    res = await axios.delete(`api/posts/delete/photo/${id}`, null, config);
 
     dispatch({
       type: UPDATE_POST,

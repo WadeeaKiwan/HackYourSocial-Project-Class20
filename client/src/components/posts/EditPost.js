@@ -12,7 +12,7 @@ const EditPost = ({
   post: { _id, text, name, avatar, user, image },
 }) => {
   const [newText, setText] = useState(text);
-  const [file, setFile] = useState('');
+  const [file, setFile] = useState(image);
   const [DisplayUploadForm, setDisplayUploadForm] = useState(false);
   const [imageStyle, setImageStyle] = useState({
     display: 'block',
@@ -65,26 +65,23 @@ const EditPost = ({
         setEditPost(null);
         setFile('');
         setText('');
-      } else if (file) {
+      } else if (!file && !newText) {
+        alert('no text, no photo');
+      } else if (!newText) {
         let formData = new FormData();
         formData.append('file', file);
-        updatePost(_id, formData, null);
+        updatePost(_id, formData, { newText });
         setEditPost(null);
         setFile('');
-      } else if (!file && newText) {
+        setText('');
+      } else {
         updatePost(_id, null, { newText });
         deletePhoto(_id);
-        setEditPost(null);
-        setFile('');
-      } else if (!file && !newText) {
-        alert('text or photo is required');
-      } else {
-        updatePost(_id, file, { newText });
         setText('');
         setEditPost(null);
       }
     } catch (error) {
-      console.log('error edit post');
+      console.log('Error Edit Post');
     }
   };
 
@@ -101,8 +98,7 @@ const EditPost = ({
           <h3>Edit Your Post...</h3>
         </div>
         <div className="p">
-          <h5>The current post</h5>
-          <p>{text}</p>
+          {image && <p>Current photo</p>}
           <div className="imageContainer">
             <div className="layer2" onClick={removePhoto}>
               Remove

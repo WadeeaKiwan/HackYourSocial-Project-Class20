@@ -19,11 +19,6 @@ const Navbar = ({ auth: { isAuthenticated, loading } }) => {
         </Link>
       </li>
       <li>
-        <Link to='/changepassword'>
-          <i className='fas fa-lock' /> <span className='hide-sm'> Change Password</span>
-        </Link>
-      </li>
-      <li>
         <Link to="/logout">
           <i className="fas fa-sign-out-alt" /> <span className="hide-sm">Logout</span>
         </Link>
@@ -49,7 +44,7 @@ const Navbar = ({ auth: { isAuthenticated, loading } }) => {
     <nav className="navbar bg-dark">
       <h1>
         <Link to="/">
-          <i className="fas fa-code" /> DevConnector
+          <i className="fas fa-code" /> HackYourSocial
         </Link>
       </h1>
       {!loading && <Fragment>{isAuthenticated ? authLinks : guestLinks}</Fragment>}

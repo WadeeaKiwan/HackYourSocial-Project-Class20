@@ -9,7 +9,7 @@ const PostForm = ({ addPost, addPostWithImage }) => {
   const [DisplayUploadForm, setDisplayUploadForm] = useState(false);
 
   const upload = e => {
-    setFile(e.target.files[0]); 
+    setFile(e.target.files[0]);
   };
 
   const clearUpload = () => {
@@ -52,15 +52,9 @@ const PostForm = ({ addPost, addPostWithImage }) => {
           placeholder="Create a post"
           value={text}
           onChange={e => setText(e.target.value)}
-        
         />
         {DisplayUploadForm && (
-          <input
-            type="file"
-            onChange={upload}
-            name="file"
-            className="btn btn-white my-1"
-          />
+          <input type="file" onChange={upload} name="file" className="btn btn-white my-1" />
         )}
       </form>
       <button onClick={showUploadForm} className="btn btn-white my-1">
