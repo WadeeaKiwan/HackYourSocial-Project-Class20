@@ -71,19 +71,22 @@ const Profiles = ({ getProfiles, profile: { profiles, loading, filter }, handleF
           </div>
           {filter && (
             <ul className="filter-criteria-list">
-              {Object.keys(filter).map(elem => (
-                <li key={elem} className="filterCriteriaListForPadding">
-                  {elem}: <b> {filter[elem]}</b>
-                  <i
-                    className="fa fa-times"
-                    aria-hidden="true"
-                    onClick={e => {
-                      e.preventDefault();
-                      removeFilterCriteria(elem);
-                    }}
-                  ></i>
-                </li>
-              ))}
+              {Object.keys(filter).map(
+                elem =>
+                  filter[elem] !== '' && (
+                    <li key={elem} className="filterCriteriaListForPadding">
+                      {elem}: <b> {filter[elem]}</b>
+                      <i
+                        className="fa fa-times"
+                        aria-hidden="true"
+                        onClick={e => {
+                          e.preventDefault();
+                          removeFilterCriteria(elem);
+                        }}
+                      ></i>
+                    </li>
+                  ),
+              )}
               <li>
                 <button
                   type="button"
