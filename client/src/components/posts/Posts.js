@@ -44,9 +44,9 @@ const Posts = ({ getPosts, post: { posts, loading, editedPost }, auth: { user } 
     <Spinner />
   ) : (
     <Fragment>
-      <h1 className="large text-primary">Posts</h1>
-      <p className="lead">
-        <i className="fas fa-user" /> Welcome to the community
+      <h1 className='large text-primary'>Posts</h1>
+      <p className='lead'>
+        <i className='fas fa-user' /> Welcome to the community
       </p>
       <PostForm />
       <SearchPost
@@ -67,7 +67,7 @@ const Posts = ({ getPosts, post: { posts, loading, editedPost }, auth: { user } 
         searchText={searchText}
       />
 
-      <div className="posts">
+      <div className='posts'>
         {posts && isMyPost && !searchText
           ? posts.map(post => user._id === post.user && returnSinglePost(post))
           : searchText

@@ -62,7 +62,9 @@ router.post(
         },
       };
 
-      const confirmationToken = await jwt.sign(payload, config.get('ConfirmationSecret'), { expiresIn: '1h' });
+      const confirmationToken = await jwt.sign(payload, config.get('ConfirmationSecret'), {
+        expiresIn: '1h',
+      });
 
       // Check if not token
       if (!confirmationToken) {
@@ -246,7 +248,9 @@ router.put(
         },
       };
 
-      const confirmationToken = await jwt.sign(payload, config.get('ConfirmationSecret'), { expiresIn: '1h' });
+      const confirmationToken = await jwt.sign(payload, config.get('ConfirmationSecret'), {
+        expiresIn: '1h',
+      });
 
       // Check if not token
       if (!confirmationToken) {
@@ -342,13 +346,23 @@ router.post(
         return res.status(400).json({ errors: [{ msg: 'Please verify your account first!' }] });
       }
 
+      if (user.socialMediaAccount) {
+        return res
+          .status(400)
+          .json({
+            errors: [{ msg: 'This is a social media account, you cannot reset the password!' }],
+          });
+      }
+
       const payload = {
         user: {
           id: user.id,
         },
       };
 
-      const forgotPassToken = await jwt.sign(payload, config.get('PasswordSecret'), { expiresIn: '1h' });
+      const forgotPassToken = await jwt.sign(payload, config.get('PasswordSecret'), {
+        expiresIn: '1h',
+      });
 
       // Check if not token
       if (!forgotPassToken) {
@@ -518,38 +532,35 @@ router.put(
 // @route    GET api/users/checkpasstoken/:forgotPassToken
 // @desc     Check Token Validity
 // @access   Public
-router.get(
-  '/checkpasstoken/:forgotPassToken',
-  async (req, res) => {
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-      return res.status(400).json({ errors: errors.array() });
-    }
-
-    const { forgotPassToken } = req.params;
-
-    try {
-      const decoded = await jwt.verify(forgotPassToken, config.get('PasswordSecret'));
-
-      let user = await User.findById({ _id: decoded.user.id }).select('-password');
-
-      if (!user) {
-        return res.status(400).json({ errors: [{ msg: 'Reset password link has expired!' }] });
-      }
-
-      res.status(200).json({ msg: 'Reset password link is still valid!' });
-    } catch (err) {
-      console.error(err.message);
-      if (err.kind === 'ObjectId') {
-        return res.status(404).json({ msg: 'User not found' });
-      }
-      if (err.name === 'TokenExpiredError') {
-        return res.status(404).json({ msg: 'Reset password link has expired!' });
-      }
-      res.status(500).send('Server error');
-    }
+router.get('/checkpasstoken/:forgotPassToken', async (req, res) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(400).json({ errors: errors.array() });
   }
-)
+
+  const { forgotPassToken } = req.params;
+
+  try {
+    const decoded = await jwt.verify(forgotPassToken, config.get('PasswordSecret'));
+
+    let user = await User.findById({ _id: decoded.user.id }).select('-password');
+
+    if (!user) {
+      return res.status(400).json({ errors: [{ msg: 'Reset password link has expired!' }] });
+    }
+
+    res.status(200).json({ msg: 'Reset password link is still valid!' });
+  } catch (err) {
+    console.error(err.message);
+    if (err.kind === 'ObjectId') {
+      return res.status(404).json({ msg: 'User not found' });
+    }
+    if (err.name === 'TokenExpiredError') {
+      return res.status(404).json({ msg: 'Reset password link has expired!' });
+    }
+    res.status(500).send('Server error');
+  }
+});
 
 // @route    PUT api/users/changepassword
 // @desc     Change Password
@@ -583,7 +594,9 @@ router.put(
       const isMatch = await bcrypt.compare(password, user.password);
 
       if (!isMatch) {
-        return res.status(400).json({ errors: [{ msg: 'Your current password is not correct. Please, try again!' }] });
+        return res
+          .status(400)
+          .json({ errors: [{ msg: 'Your current password is not correct. Please, try again!' }] });
       }
 
       const isMatchNew = await bcrypt.compare(newPassword, user.password);

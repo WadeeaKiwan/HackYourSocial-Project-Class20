@@ -1,8 +1,8 @@
-import React, { useEffect, useState, Fragment } from "react";
-import { Link, withRouter, Redirect } from "react-router-dom";
-import PropTypes from "prop-types";
-import { connect } from "react-redux";
-import { createProfile, getCurrentProfile } from "../../actions/profile";
+import React, { useEffect, useState, Fragment } from 'react';
+import { Link, withRouter, Redirect } from 'react-router-dom';
+import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
+import { createProfile, getCurrentProfile } from '../../actions/profile';
 
 const Createprofile = ({
   createProfile,
@@ -11,18 +11,18 @@ const Createprofile = ({
   history,
 }) => {
   const [formData, setFormData] = useState({
-    company: "",
-    website: "",
-    location: "",
-    status: "",
-    skills: "",
-    githubusername: "",
-    bio: "",
-    twitter: "",
-    facebook: "",
-    linkedin: "",
-    youtube: "",
-    instagram: "",
+    company: '',
+    website: '',
+    location: '',
+    status: '',
+    skills: '',
+    githubusername: '',
+    bio: '',
+    twitter: '',
+    facebook: '',
+    linkedin: '',
+    youtube: '',
+    instagram: '',
   });
   const [displaySocialInputs, toggleSocialInputs] = useState(false);
   const {
@@ -39,8 +39,7 @@ const Createprofile = ({
     youtube,
     instagram,
   } = formData;
-  const onChange = e =>
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+  const onChange = e => setFormData({ ...formData, [e.target.name]: e.target.value });
   const onSubmit = e => {
     e.preventDefault();
     createProfile(formData, history);
@@ -55,8 +54,7 @@ const Createprofile = ({
     <Fragment>
       <h1 className='large text-primary'>Create Your Profile</h1>
       <p className='lead'>
-        <i className='fas fa-user' /> Let's get some information to make your
-        profile stand out
+        <i className='fas fa-user' /> Let's get some information to make your profile stand out
       </p>
       <small>* = required field</small>
       <form className='form' onSubmit={e => onSubmit(e)}>
@@ -72,9 +70,7 @@ const Createprofile = ({
             <option value='Intern'>Intern</option>
             <option value='Other'>Other</option>
           </select>
-          <small className='form-text'>
-            Give us an idea of where you are at in your career
-          </small>
+          <small className='form-text'>Give us an idea of where you are at in your career</small>
         </div>
         <div className='form-group'>
           <input
@@ -84,9 +80,7 @@ const Createprofile = ({
             value={company}
             onChange={e => onChange(e)}
           />
-          <small className='form-text'>
-            Could be your own company or one you work for
-          </small>
+          <small className='form-text'>Could be your own company or one you work for</small>
         </div>
         <div className='form-group'>
           <input
@@ -96,9 +90,7 @@ const Createprofile = ({
             value={website}
             onChange={e => onChange(e)}
           />
-          <small className='form-text'>
-            Could be your own or a company website
-          </small>
+          <small className='form-text'>Could be your own or a company website</small>
         </div>
         <div className='form-group'>
           <input
@@ -108,9 +100,7 @@ const Createprofile = ({
             value={location}
             onChange={e => onChange(e)}
           />
-          <small className='form-text'>
-            City & state suggested (eg. Boston, MA)
-          </small>
+          <small className='form-text'>City & state suggested (eg. Boston, MA)</small>
         </div>
         <div className='form-group'>
           <input
@@ -133,8 +123,7 @@ const Createprofile = ({
             onChange={e => onChange(e)}
           />
           <small className='form-text'>
-            If you want your latest repos and a Github link, include your
-            username
+            If you want your latest repos and a Github link, include your username
           </small>
         </div>
         <div className='form-group'>
