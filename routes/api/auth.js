@@ -16,8 +16,6 @@ router.post(
   '/registerWithSocialMedia',
 
   async (request, response) => {
-    // comes from the body
-
     const { name, email, avatar } = request.body;
 
     // generate password
@@ -50,6 +48,11 @@ router.post(
         await user.save();
       }
 
+      // check if the user is already registered as a normal account
+      if (!user.socialMediaAccount) {
+        return response.status(404).json({ error: true });
+      }
+
       // keep up to date with social accounts
       user.name = name;
       user.avatar = avatar;
@@ -57,7 +60,6 @@ router.post(
       await user.save();
 
       // Return jsonwebtoken
-
       const payload = {
         user: {
           id: user.id,

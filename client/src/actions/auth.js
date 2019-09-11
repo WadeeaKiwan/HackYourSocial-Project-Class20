@@ -25,6 +25,13 @@ import {
   LOGIN_SOCIAL_MEDIA_FAIL,
 } from './types';
 import setAuthToken from '../utils/setAuthToken';
+import firebase from 'firebase';
+
+function exit() {
+  firebase.auth().onAuthStateChanged(() => {
+    firebase.auth().signOut();
+  });
+}
 
 // Register with social network
 export const registerWithSocialMedia = ({ name, email, avatar }) => async dispatch => {
@@ -46,9 +53,15 @@ export const registerWithSocialMedia = ({ name, email, avatar }) => async dispat
     if (errors) {
       errors.forEach(error => dispatch(setAlert(error.msg, 'danger')));
     }
+
     dispatch({
       type: LOGIN_SOCIAL_MEDIA_FAIL,
     });
+
+    if (err.response.data.error === true) {
+      alert('This user already exists, Please login with your normal account');
+      exit();
+    }
   }
 };
 

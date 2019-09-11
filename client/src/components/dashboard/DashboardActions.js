@@ -3,22 +3,30 @@ import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 
-const DashboardActions = ({ auth: { socialMediaAccount } }) => {
+const DashboardActions = ({
+  auth: {
+    socialMediaAccount,
+    user: { _id },
+  },
+}) => {
   return (
-    <div className="dash-buttons">
-      <Link to="/edit-profile" className="btn btn-light">
-        <i className="fas fa-user-circle text-primary" /> Edit Profile
+    <div className='dash-buttons'>
+      <Link to={`/profile/${_id}`} className='btn btn-light'>
+        <i className='fas fa-user-circle text-primary' /> My Profile
+      </Link>
+      <Link to='/edit-profile' className='btn btn-light'>
+        <i className='fas fa-edit text-primary' /> Edit Profile
       </Link>
       {!socialMediaAccount && (
-        <Link to="/changepassword" className="btn btn-light">
-          <i className="fas fa-lock text-primary" /> Change Password
+        <Link to='/changepassword' className='btn btn-light'>
+          <i className='fas fa-lock text-primary' /> Change Password
         </Link>
       )}
-      <Link to="/add-experience" className="btn btn-light">
-        <i className="fab fa-black-tie text-primary" /> Add Experience
+      <Link to='/add-experience' className='btn btn-light'>
+        <i className='fab fa-black-tie text-primary' /> Add Experience
       </Link>
-      <Link to="/add-education" className="btn btn-light">
-        <i className="fas fa-graduation-cap text-primary" /> Add Education
+      <Link to='/add-education' className='btn btn-light'>
+        <i className='fas fa-graduation-cap text-primary' /> Add Education
       </Link>
     </div>
   );

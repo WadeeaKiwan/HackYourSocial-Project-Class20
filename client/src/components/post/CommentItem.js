@@ -10,40 +10,39 @@ const CommentItem = ({
   comment: { _id, text, name, avatar, user, date, edited },
   auth,
   deleteComment,
-  showActions,
   setEditComment,
 }) => (
   <div className='post bg-white p-1 my-1'>
     <div>
       <Link to={`/profile/${user}`}>
         <img className='round-img' src={avatar} alt='' />
-        <h4> {name} </h4>{' '}
-      </Link>{' '}
-    </div>{' '}
+        <h4> {name} </h4>
+      </Link>
+    </div>
     <div>
       <p className='my-1'>
-        {text} {edited ? <i className='editedText'> (edited) </i> : null}{' '}
+        {text} {edited ? <i className='editedText'> (edited) </i> : null}
       </p>
       <p className='post-date'>
-        Posted on <Moment format='YYYY/MM/DD'> {date} </Moment>{' '}
+        Posted on <Moment format='YYYY/MM/DD'>{date}</Moment>
       </p>
       <Fragment>
-        {' '}
         {!auth.loading && user === auth.user._id && (
-          <button onClick={() => setEditComment(_id)} type='button' className='btn btn-light'>
-            <i className='fas fa-pencil-alt' />
-          </button>
-        )}{' '}
-        {!auth.loading && user === auth.user._id && (
-          <button
-            onClick={() => deleteComment(postId, _id)}
-            type='button'
-            className='btn btn-danger'>
-            <i className='fas fa-times' />
-          </button>
-        )}{' '}
-      </Fragment>{' '}
-    </div>{' '}
+          <Fragment>
+            <button onClick={() => setEditComment(_id)} type='button' className='btn btn-light'>
+              <i className='fas fa-pencil-alt' />
+            </button>
+            <button
+              onClick={() => deleteComment(postId, _id)}
+              type='button'
+              className='btn btn-danger'
+            >
+              <i className='fas fa-times' />
+            </button>
+          </Fragment>
+        )}
+      </Fragment>
+    </div>
   </div>
 );
 
