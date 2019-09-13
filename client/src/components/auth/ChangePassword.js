@@ -19,7 +19,7 @@ const ChangePassword = ({ changePassword, setAlert }) => {
   const onChange = e => {
     const evaluation = zxcvbn(newPassword);
     setFormData({ ...formData, [e.target.name]: e.target.value, evaluation });
-  }
+  };
 
   const onSubmit = async e => {
     e.preventDefault();
@@ -37,21 +37,21 @@ const ChangePassword = ({ changePassword, setAlert }) => {
       <p className='lead'>
         <i className='fas fa-lock' /> Here you can change your current password
       </p>
-      <form className="form" onSubmit={e => onSubmit(e)}>
-        <div className="form-group">
+      <form className='form' onSubmit={e => onSubmit(e)}>
+        <div className='form-group'>
           <input
-            type="password"
-            placeholder="Current Password"
-            name="password"
+            type='password'
+            placeholder='Current Password'
+            name='password'
             value={password}
             onChange={e => onChange(e)}
           />
         </div>
-        <div className="form-group">
+        <div className='form-group'>
           <input
-            type="password"
-            placeholder="New Password"
-            name="newPassword"
+            type='password'
+            placeholder='New Password'
+            name='newPassword'
             value={newPassword}
             onChange={e => onChange(e)}
           />
@@ -64,27 +64,27 @@ const ChangePassword = ({ changePassword, setAlert }) => {
               {evaluation.score === 2
                 ? 'Medium '
                 : evaluation.score === 3
-                  ? 'Good '
-                  : evaluation.score === 4
-                    ? 'Strong '
-                    : 'Weak '}
+                ? 'Good '
+                : evaluation.score === 4
+                ? 'Strong '
+                : 'Weak '}
               New Password {evaluation && `... ${evaluation.feedback.warning}`}
             </span>
           </Fragment>
         )}
-        <div className="form-group">
+        <div className='form-group'>
           <input
-            type="password"
-            placeholder="Confirm New Password"
-            name="newPassword2"
+            type='password'
+            placeholder='Confirm New Password'
+            name='newPassword2'
             value={newPassword2}
             onChange={e => onChange(e)}
           />
         </div>
         <input
-          type="submit"
-          className="btn btn-primary"
-          value="Confirm"
+          type='submit'
+          className='btn btn-primary'
+          value='Confirm'
           onSubmit={e => onSubmit(e)}
         />
         <Link to='/dashboard' className='btn btn-light'>

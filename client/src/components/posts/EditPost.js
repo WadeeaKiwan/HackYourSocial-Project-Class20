@@ -13,6 +13,7 @@ const EditPost = ({
 }) => {
   const [newText, setText] = useState(text);
   const [file, setFile] = useState(image);
+  const [message, setMessage] = useState('Please, add at least text or photo');
   const [DisplayUploadForm, setDisplayUploadForm] = useState(false);
   const [imageStyle, setImageStyle] = useState({
     display: 'block',
@@ -65,8 +66,9 @@ const EditPost = ({
         setEditPost(null);
         setFile('');
         setText('');
+        setMessage('');
       } else if (!file && !newText) {
-        alert('Please, add text or photo');
+        setEditPost(null);
       } else if (!newText) {
         let formData = new FormData();
         formData.append('file', file);
@@ -74,11 +76,13 @@ const EditPost = ({
         setEditPost(null);
         setFile('');
         setText('');
+        setMessage('');
       } else {
         updatePost(_id, null, { newText });
         deletePhoto(_id);
         setText('');
         setEditPost(null);
+        setMessage('');
       }
     } catch (error) {
       console.log('Error Edit Post');
@@ -96,9 +100,9 @@ const EditPost = ({
       <div ref={node} className=''>
         <div className='p'>
           <h3>Edit Your Post...</h3>
+          {!file && !newText && <div className='alert alert-danger'>{message}</div>}
         </div>
         <div className='p'>
-          {image && <p>Current photo</p>}
           <div className='imageContainer'>
             <div className='layer2' onClick={removePhoto}>
               Remove

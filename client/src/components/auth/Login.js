@@ -38,98 +38,89 @@ const Login = ({ login, auth: { active, isAuthenticated }, resendEmail, forgotPa
   };
 
   if (active && isAuthenticated) {
-    return <Redirect to="/dashboard" />;
+    return <Redirect to='/dashboard' />;
   }
 
   return (
     <Fragment>
-      <h1 className="large text-primary">Sign In</h1>
-      <p className="lead">
-        <i className="fas fa-user" />
-        Sign In into your account
+      <h1 className='large text-primary'>Sign In</h1>
+      <p className='lead'>
+        <i className='fas fa-user' /> Sign In into your account
       </p>
 
-      <form className="form" onSubmit={e => onSubmit(e)}>
-        <div className="form-group">
+      <form className='form' onSubmit={e => onSubmit(e)}>
+        <div className='form-group'>
           <input
-            type="email"
-            placeholder="Email Address"
-            name="email"
+            type='email'
+            placeholder='Email Address'
+            name='email'
             value={email}
             onChange={e => onChange(e)}
-            required
           />
         </div>
-        <div className="form-group">
+        <div className='form-group'>
           <input
-            type="password"
-            placeholder="Password"
-            name="password"
+            type='password'
+            placeholder='Password'
+            name='password'
             value={password}
             onChange={e => onChange(e)}
-            minLength="6"
           />
         </div>
-        <input type="submit" className="btn btn-primary" value="Login" />
+        <input type='submit' className='btn btn-primary' value='Login' />
       </form>
 
-      <p className="my-1">
-        Don't have an account? <Link to="/register">Sign Up</Link>
+      <p className='my-1'>
+        Don't have an account? <Link to='/register'>Sign Up</Link>
       </p>
-      <p className="my-1">
-        <a href="#!" onClick={() => toggleSendPassword(true)}>
+      <p className='my-1'>
+        <a href='#!' onClick={() => toggleSendPassword(true)}>
           Forgot your password?
         </a>
       </p>
 
-      {
-        displaySendPassword && (
-          <form className="form my-1" onSubmit={e => forgotPasswordSubmit(e)}>
-            <input
-              type="email"
-              placeholder="Email Address"
-              name="emailPassword"
-              value={emailPassword}
-              onChange={e => onChange(e)}
-              required
-            />
-            <input type="submit" className="btn btn-primary my-1" value="Send" />
-            <button onClick={() => toggleSendPassword(false)} className="btn btn-light my-1">
-              Cancel
+      {displaySendPassword && (
+        <form className='form my-1' onSubmit={e => forgotPasswordSubmit(e)}>
+          <input
+            type='email'
+            placeholder='Email Address'
+            name='emailPassword'
+            value={emailPassword}
+            onChange={e => onChange(e)}
+          />
+          <input type='submit' className='btn btn-primary my-1' value='Send' />
+          <button onClick={() => toggleSendPassword(false)} className='btn btn-light my-1'>
+            Cancel
           </button>
-          </form>
-        )
-      }
+        </form>
+      )}
 
-      <p className="my-1">
+      <p className='my-1'>
         Didn't receive a confirmation link?{' '}
         {!displayResend && (
-          <a href="#!" onClick={() => toggleResend(!displayResend)}>
+          <a href='#!' onClick={() => toggleResend(!displayResend)}>
             Resend
           </a>
         )}
       </p>
 
-      {
-        displayResend && (
-          <form className="form my-1" onSubmit={e => resendEmailSubmit(e)}>
-            <input
-              type="email"
-              placeholder="Email Address"
-              name="emailResend"
-              value={emailResend}
-              onChange={e => onChange(e)}
-              required
-            />
-            <input type="submit" className="btn btn-primary my-1" value="Resend" />
-            <button onClick={() => toggleResend(false)} className="btn btn-light my-1">
-              Cancel
+      {displayResend && (
+        <form className='form my-1' onSubmit={e => resendEmailSubmit(e)}>
+          <input
+            type='email'
+            placeholder='Email Address'
+            name='emailResend'
+            value={emailResend}
+            onChange={e => onChange(e)}
+          />
+          <input type='submit' className='btn btn-primary my-1' value='Resend' />
+          <button onClick={() => toggleResend(false)} className='btn btn-light my-1'>
+            Cancel
           </button>
-          </form>
-        )
-      }
-    </Fragment >
-  )
+        </form>
+      )}
+    </Fragment>
+  );
 };
 
 Login.propTypes = {

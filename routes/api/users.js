@@ -349,11 +349,9 @@ router.post(
       }
 
       if (user.socialMediaAccount) {
-        return res
-          .status(400)
-          .json({
-            errors: [{ msg: 'This is a social media account, you cannot reset the password!' }],
-          });
+        return res.status(400).json({
+          errors: [{ msg: 'This is a social media account, you cannot reset the password!' }],
+        });
       }
 
       const payload = {
@@ -535,11 +533,6 @@ router.put(
 // @desc     Check Token Validity
 // @access   Public
 router.get('/checkpasstoken/:forgotPassToken', async (req, res) => {
-  const errors = validationResult(req);
-  if (!errors.isEmpty()) {
-    return res.status(400).json({ errors: errors.array() });
-  }
-
   const { forgotPassToken } = req.params;
 
   try {
@@ -572,8 +565,10 @@ router.put(
   [
     auth,
     [
-      check('password', 'Please enter a password with 6 or more characters').isLength({ min: 6 }),
-      check('newPassword', 'Please enter a password with 6 or more characters').isLength({
+      check('password', 'Please enter your current password')
+        .not()
+        .isEmpty(),
+      check('newPassword', 'Please enter a new password with 6 or more characters').isLength({
         min: 6,
       }),
     ],

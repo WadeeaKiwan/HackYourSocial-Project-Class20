@@ -4,7 +4,7 @@
   position: relative;
 }
 .layer2 {
-  width: 100%;
+  width: 16vh;
   height: 100%;
   position: absolute;
   top: 0;
@@ -13,12 +13,10 @@
 }
 .layer2:hover {
   background-color: rgba(255, 55, 48, 0.5);
-  line-height: 4;
-  color: white;
+  color: #dfdfdf;
   font-size: 0.8em;
   cursor: pointer;
   text-align: center;
-  border-radius: 2px;
   border: 3px solid #ff5959;
 }
 
@@ -28,4 +26,22 @@
   display: block !important;
   border-radius: 5px !important;
   border: 1px solid #bdbdbd !important;
+}
+.editedPhoto{
+  width: 16vh !important;
+}
+
+@media only screen and (max-width: 700px) {
+  .layer2 {
+    background-color: rgba(255, 55, 48, 0.5);
+    color: #dfdfdf;
+    font-size: 0.8em;
+    cursor: pointer;
+    text-align: center;
+    /* border: 3px solid #ff5959; */
+  }
+  .post_image {
+    width: 90% !important;
+    margin: 5% auto !important;
+  }
 }

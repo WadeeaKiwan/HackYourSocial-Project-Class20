@@ -21,20 +21,14 @@ import {
 export const addPostWithImage = (formData, text) => async dispatch => {
   let res;
   try {
-    if (formData) {
-      res = await axios.post('/api/posts/upload', formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-      });
-    } else {
-      res = await axios.post('/api/posts/upload', null, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-      });
-    }
+    // create post with empty text
+    res = await axios.post('/api/posts/upload', formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    });
 
+    // modify the text of above post
     if (text) {
       await axios.put(
         `/api/posts/${res.data._id}`,

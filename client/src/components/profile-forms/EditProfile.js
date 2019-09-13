@@ -1,5 +1,5 @@
 import React, { Fragment, useState, useEffect } from 'react';
-import { Link, withRouter } from 'react-router-dom';
+import { withRouter } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { createProfile, getCurrentProfile } from '../../actions/profile';
@@ -8,7 +8,7 @@ const EditProfile = ({
   profile: { profile, loading },
   createProfile,
   getCurrentProfile,
-  history
+  history,
 }) => {
   const [formData, setFormData] = useState({
     company: '',
@@ -22,14 +22,14 @@ const EditProfile = ({
     facebook: '',
     linkedin: '',
     youtube: '',
-    instagram: ''
+    instagram: '',
   });
 
   const [displaySocialInputs, toggleSocialInputs] = useState(false);
 
   useEffect(() => {
     getCurrentProfile();
-  }, [getCurrentProfile])
+  }, [getCurrentProfile]);
 
   useEffect(() => {
     profile &&
@@ -39,14 +39,13 @@ const EditProfile = ({
         location: loading || !profile.location ? '' : profile.location,
         status: loading || !profile.status ? '' : profile.status,
         skills: loading || !profile.skills ? '' : profile.skills.join(','),
-        githubusername:
-          loading || !profile.githubusername ? '' : profile.githubusername,
+        githubusername: loading || !profile.githubusername ? '' : profile.githubusername,
         bio: loading || !profile.bio ? '' : profile.bio,
         twitter: loading || !profile.social ? '' : profile.social.twitter,
         facebook: loading || !profile.social ? '' : profile.social.facebook,
         linkedin: loading || !profile.social ? '' : profile.social.linkedin,
         youtube: loading || !profile.social ? '' : profile.social.youtube,
-        instagram: loading || !profile.social ? '' : profile.social.instagram
+        instagram: loading || !profile.social ? '' : profile.social.instagram,
       });
   }, [
     loading,
@@ -73,11 +72,10 @@ const EditProfile = ({
     facebook,
     linkedin,
     youtube,
-    instagram
+    instagram,
   } = formData;
 
-  const onChange = e =>
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+  const onChange = e => setFormData({ ...formData, [e.target.name]: e.target.value });
 
   const onSubmit = e => {
     e.preventDefault();
@@ -104,9 +102,7 @@ const EditProfile = ({
             <option value='Intern'>Intern</option>
             <option value='Other'>Other</option>
           </select>
-          <small className='form-text'>
-            Give us an idea of where you are at in your career
-          </small>
+          <small className='form-text'>Give us an idea of where you are at in your career</small>
         </div>
         <div className='form-group'>
           <input
@@ -116,9 +112,7 @@ const EditProfile = ({
             value={company}
             onChange={e => onChange(e)}
           />
-          <small className='form-text'>
-            Could be your own company or one you work for
-          </small>
+          <small className='form-text'>Could be your own company or one you work for</small>
         </div>
         <div className='form-group'>
           <input
@@ -128,9 +122,7 @@ const EditProfile = ({
             value={website}
             onChange={e => onChange(e)}
           />
-          <small className='form-text'>
-            Could be your own or a company website
-          </small>
+          <small className='form-text'>Could be your own or a company website</small>
         </div>
         <div className='form-group'>
           <input
@@ -140,9 +132,7 @@ const EditProfile = ({
             value={location}
             onChange={e => onChange(e)}
           />
-          <small className='form-text'>
-            City & state suggested (eg. Boston, MA)
-          </small>
+          <small className='form-text'>City & state suggested (eg. Boston, MA)</small>
         </div>
         <div className='form-group'>
           <input
@@ -165,8 +155,7 @@ const EditProfile = ({
             onChange={e => onChange(e)}
           />
           <small className='form-text'>
-            If you want your latest repos and a Github link, include your
-            username
+            If you want your latest repos and a Github link, include your username
           </small>
         </div>
         <div className='form-group'>
@@ -250,9 +239,9 @@ const EditProfile = ({
         )}
 
         <input type='submit' className='btn btn-primary my-1' />
-        <Link className='btn btn-light my-1' to='/dashboard'>
+        <button type='button' className='btn btn-light my-1' onClick={() => history.goBack()}>
           Go Back
-        </Link>
+        </button>
       </form>
     </Fragment>
   );
@@ -261,14 +250,15 @@ const EditProfile = ({
 EditProfile.propTypes = {
   createProfile: PropTypes.func.isRequired,
   getCurrentProfile: PropTypes.func.isRequired,
-  profile: PropTypes.object.isRequired
+  profile: PropTypes.object.isRequired,
+  history: PropTypes.object.isRequired,
 };
 
 const mapStateToProps = state => ({
-  profile: state.profile
+  profile: state.profile,
 });
 
 export default connect(
   mapStateToProps,
-  { createProfile, getCurrentProfile }
+  { createProfile, getCurrentProfile },
 )(withRouter(EditProfile));
