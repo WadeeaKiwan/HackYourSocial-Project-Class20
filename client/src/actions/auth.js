@@ -54,14 +54,14 @@ export const registerWithSocialMedia = ({ name, email, avatar }) => async dispat
       errors.forEach(error => dispatch(setAlert(error.msg, 'danger')));
     }
 
-    dispatch({
-      type: LOGIN_SOCIAL_MEDIA_FAIL,
-    });
-
     if (err.response.data.error === true) {
       alert('This user already exists, Please login with your normal account');
       exit();
     }
+
+    dispatch({
+      type: LOGIN_SOCIAL_MEDIA_FAIL,
+    });
   }
 };
 
