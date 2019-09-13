@@ -117,7 +117,15 @@ router.post(
       }
 
       if (!user.active) {
-        return res.status(400).json({ errors: [{ msg: 'Please, Verify your account' }] });
+        return res.status(400).json({ errors: [{ msg: 'Please, verify your account!' }] });
+      }
+
+      if (user.socialMediaAccount) {
+        return res.status(400).json({
+          errors: [
+            { msg: 'This is a social media account! You cannot login with it as normal account' },
+          ],
+        });
       }
 
       const isMatch = await bcrypt.compare(password, user.password);

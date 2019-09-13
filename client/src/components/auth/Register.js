@@ -71,7 +71,7 @@ const Register = ({ setAlert, register }) => {
         </div>
         {password && (
           <Fragment>
-            <progress className='form-group' value={evaluation.score / 4} />
+            <progress value={evaluation.score / 4} />
             <br />
             <span>
               {evaluation.score === 2

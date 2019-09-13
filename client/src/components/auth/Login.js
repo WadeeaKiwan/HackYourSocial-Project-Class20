@@ -45,8 +45,7 @@ const Login = ({ login, auth: { active, isAuthenticated }, resendEmail, forgotPa
     <Fragment>
       <h1 className='large text-primary'>Sign In</h1>
       <p className='lead'>
-        <i className='fas fa-user' />
-        Sign In into your account
+        <i className='fas fa-user' /> Sign In into your account
       </p>
 
       <form className='form' onSubmit={e => onSubmit(e)}>

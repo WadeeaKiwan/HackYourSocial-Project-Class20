@@ -13,7 +13,7 @@ const EditPost = ({
 }) => {
   const [newText, setText] = useState(text);
   const [file, setFile] = useState(image);
-  const [message, setMessage] = useState('Please, add text or photo');
+  const [message, setMessage] = useState('Please, add at least text or photo');
   const [DisplayUploadForm, setDisplayUploadForm] = useState(false);
   const [imageStyle, setImageStyle] = useState({
     display: 'block',
@@ -66,7 +66,7 @@ const EditPost = ({
         setEditPost(null);
         setFile('');
         setText('');
-        setMessage('')
+        setMessage('');
       } else if (!file && !newText) {
         setEditPost(null);
       } else if (!newText) {
@@ -76,13 +76,13 @@ const EditPost = ({
         setEditPost(null);
         setFile('');
         setText('');
-        setMessage('')
+        setMessage('');
       } else {
         updatePost(_id, null, { newText });
         deletePhoto(_id);
         setText('');
         setEditPost(null);
-        setMessage('')
+        setMessage('');
       }
     } catch (error) {
       console.log('Error Edit Post');
@@ -100,7 +100,7 @@ const EditPost = ({
       <div ref={node} className=''>
         <div className='p'>
           <h3>Edit Your Post...</h3>
-          {!file && !newText && (<p>{message}</p>)}
+          {!file && !newText && <div className='alert alert-danger'>{message}</div>}
         </div>
         <div className='p'>
           <div className='imageContainer'>
