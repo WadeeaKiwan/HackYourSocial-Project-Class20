@@ -16,8 +16,6 @@ router.post(
   '/registerWithSocialMedia',
 
   async (request, response) => {
-    // comes from the body
-
     const { name, email, avatar } = request.body;
 
     // generate password
@@ -50,6 +48,11 @@ router.post(
         await user.save();
       }
 
+      // check if the user is already registered as a normal account
+      if (!user.socialMediaAccount) {
+        return response.status(404).json({ error: true });
+      }
+
       // keep up to date with social accounts
       user.name = name;
       user.avatar = avatar;
@@ -57,7 +60,6 @@ router.post(
       await user.save();
 
       // Return jsonwebtoken
-
       const payload = {
         user: {
           id: user.id,
@@ -95,7 +97,9 @@ router.post(
   '/',
   [
     check('email', 'Please include a valid email').isEmail(),
-    check('password', 'Password is required').exists(),
+    check('password', 'Password is required')
+      .not()
+      .isEmpty(),
   ],
   async (req, res) => {
     const errors = validationResult(req);
@@ -113,7 +117,15 @@ router.post(
       }
 
       if (!user.active) {
-        return res.status(400).json({ errors: [{ msg: 'Please, Verify your account' }] });
+        return res.status(400).json({ errors: [{ msg: 'Please, verify your account!' }] });
+      }
+
+      if (user.socialMediaAccount) {
+        return res.status(400).json({
+          errors: [
+            { msg: 'This is a social media account! You cannot login with it as normal account' },
+          ],
+        });
       }
 
       const isMatch = await bcrypt.compare(password, user.password);
