@@ -3,34 +3,39 @@ const router = express.Router();
 const { check, validationResult } = require('express-validator/check');
 const auth = require('../../middleware/auth');
 
+const upload = require('../../services/image-upload');
+const singleImageUpload = upload.single('file');
+
 const Post = require('../../models/Post');
 const User = require('../../models/User');
 
-router.post('/upload', auth, async (request, response) => {
-  const errors = validationResult(request);
+// @route           POST api/posts/upload
+// @description     Upload post photo
+// @access          Private
+router.post('/upload', auth, async (req, res) => {
+  const errors = validationResult(req);
   if (!errors.isEmpty()) {
-    return response.status(404).json({ errors: errors.array() });
+    return res.status(404).json({ errors: errors.array() });
   }
-  const file = request.files.file;
-  const path = `/uploads/`;
+
   try {
-    const user = await User.findById(request.user.id).select('-password');
-    const newPost = new Post({
-      name: user.name,
-      avatar: user.avatar,
-      user: request.user.id,
-      image: path + file.name,
-    });
-    const post = await newPost.save();
-    file.mv(`./uploads/${file.name}`, err => {
+    const user = await User.findById(req.user.id).select('-password');
+    await singleImageUpload(req, res, async err => {
       if (err) {
-        console.error(err);
-        return response.status(500).send(err);
+        console.error(err.message);
       }
-      response.json(post);
+      const newPost = new Post({
+        name: user.name,
+        avatar: user.avatar,
+        user: req.user.id,
+        image: req.file.location,
+      });
+      const post = await newPost.save();
+
+      res.json(post);
     });
   } catch (err) {
-    return response.status(500).send(err);
+    return res.status(500).send(err);
   }
 });
 
@@ -38,25 +43,25 @@ router.post('/upload', auth, async (request, response) => {
 // @description     Edit post
 // @access          Private
 
-router.put('/:id', auth, async (request, response) => {
+router.put('/:id', auth, async (req, res) => {
   // find post from data base
-  const post = await Post.findById(request.params.id);
+  const post = await Post.findById(req.params.id);
   // check authorized
-  if (post.user.toString() !== request.user.id) {
-    return response.status(401).json({ msg: 'User not authorized' });
+  if (post.user.toString() !== req.user.id) {
+    return res.status(401).json({ msg: 'User not authorized' });
   }
   try {
     // update post
-    post.text = request.body.text;
+    post.text = req.body.text;
     // save in database
     await post.save();
     // return result to deal with frontEnd
-    response.json(post);
+    res.json(post);
   } catch (error) {
     if (error.kind == 'ObjectId') {
-      return response.status(400).json({ msg: 'Post not found' });
+      return res.status(400).json({ msg: 'Post not found' });
     }
-    response.send(error);
+    res.send(error);
   }
 });
 // @route    POST api/posts
@@ -280,10 +285,9 @@ router.delete('/comment/:id/:comment_id', auth, async (req, res) => {
   }
 });
 
-// @route   POST api/posts/update:id
+// @route   POST api/posts/update/:id
 // @desc    Update a post
 // @access  Private
-
 router.post('/update/:id', auth, async (req, res) => {
   try {
     const post = await Post.findById(req.params.id);
@@ -299,17 +303,19 @@ router.post('/update/:id', auth, async (req, res) => {
       post.edited = true;
       await post.save();
     }
-
+    console.log(req.files);
     if (req.files) {
-      const file = req.files.file;
-      const path = `/uploads/`;
-      post.image = path + file.name;
-      await post.save();
-      file.mv(`./uploads/${file.name}`, async err => {
+      await singleImageUpload(req, res, async err => {
         if (err) {
-          console.error(err);
-          return res.status(500).send(err);
+          console.error(err.message);
         }
+        post.image = req.file.location;
+        await post.save();
+
+        const posts = await Post.find().sort({
+          date: -1,
+        });
+        return res.json(posts);
       });
     }
     const posts = await Post.find().sort({
@@ -346,10 +352,9 @@ router.delete('/delete/photo/:id', auth, async (req, res) => {
   }
 });
 
-// @route POST api/posts/comment/update:id
-// @desc Update a comment
-// @access Private
-
+// @route   POST api/posts/comment/update:id
+// @desc    Update a comment
+// @access  Private
 router.post(
   '/comment/update/:id/:comment_id',
   [
