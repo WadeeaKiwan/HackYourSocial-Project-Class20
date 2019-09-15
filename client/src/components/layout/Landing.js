@@ -2,6 +2,8 @@ import React from 'react';
 import { Link, Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
+import SocialMediaLogin from '../auth/SocialMediaLogin';
+import './Landing.css';
 
 const Landing = ({ isAuthenticated }) => {
   if (isAuthenticated) {
@@ -12,10 +14,9 @@ const Landing = ({ isAuthenticated }) => {
     <section className='landing'>
       <div className='dark-overlay'>
         <div className='landing-inner'>
-          <h1 className='x-large'>Developer Connector</h1>
+          <h1 className='x-large'>HackYourSocial</h1>
           <p className='lead'>
-            Create a developer profile/portfolio, share posts and get help from
-            other developers
+            Create a developer profile/portfolio, share posts and get help from other developers
           </p>
           <div className='buttons'>
             <Link to='/register' className='btn btn-primary'>
@@ -25,6 +26,10 @@ const Landing = ({ isAuthenticated }) => {
               Login
             </Link>
           </div>
+          <div>
+            <span className='or'>OR</span>
+          </div>
+          <SocialMediaLogin />
         </div>
       </div>
     </section>
@@ -32,11 +37,11 @@ const Landing = ({ isAuthenticated }) => {
 };
 
 Landing.propTypes = {
-  isAuthenticated: PropTypes.bool
+  isAuthenticated: PropTypes.bool,
 };
 
 const mapStateToProps = state => ({
-  isAuthenticated: state.auth.isAuthenticated
+  isAuthenticated: state.auth.isAuthenticated,
 });
 
 export default connect(mapStateToProps)(Landing);

@@ -6,14 +6,31 @@ import {
   LOGIN_SUCCESS,
   LOGIN_FAIL,
   LOGOUT,
-  ACCOUNT_DELETED
+  ACCOUNT_DELETED,
+  ACCOUNT_VERIFIED,
+  ACCOUNT_NOT_VERIFIED,
+  RESEND_CONFIRMATION,
+  RESEND_CONFIRMATION_FAIL,
+  SEND_PASSWORD_LINK_SUCCESS,
+  SEND_PASSWORD_LINK_FAIL,
+  RESET_PASSWORD_SUCCESS,
+  RESET_PASSWORD_FAIL,
+  CHECK_PASS_TOKEN_SUCCESS,
+  CHECK_PASS_TOKEN_FAIL,
+  CHANGE_PASSWORD,
+  CHANGE_PASSWORD_FAIL,
+  LOGIN_SOCIAL_MEDIA_SUCCESS,
+  LOGIN_SOCIAL_MEDIA_FAIL,
 } from '../actions/types';
 
 const initialState = {
   token: localStorage.getItem('token'),
   isAuthenticated: null,
   loading: true,
-  user: null
+  user: null,
+  active: false,
+  verification: { msg: null, verify: null },
+  socialMediaAccount: false,
 };
 
 export default function(state = initialState, action) {
@@ -23,19 +40,47 @@ export default function(state = initialState, action) {
     case USER_LOADED:
       return {
         ...state,
+        active: true,
         isAuthenticated: true,
         loading: false,
-        user: payload
+        user: payload,
       };
     case REGISTER_SUCCESS:
+    case RESEND_CONFIRMATION:
+    case RESEND_CONFIRMATION_FAIL:
+    case SEND_PASSWORD_LINK_SUCCESS:
+    case SEND_PASSWORD_LINK_FAIL:
+    case RESET_PASSWORD_SUCCESS:
+    case RESET_PASSWORD_FAIL:
+      return {
+        ...state,
+        payload,
+        isAuthenticated: false,
+        loading: false,
+        active: false,
+        socialMediaAccount: false,
+      };
+    case LOGIN_SOCIAL_MEDIA_SUCCESS:
+      localStorage.setItem('token', payload.token);
+      return {
+        ...state,
+        ...payload,
+        isAuthenticated: true,
+        loading: false,
+        active: true,
+        socialMediaAccount: true,
+      };
     case LOGIN_SUCCESS:
       localStorage.setItem('token', payload.token);
       return {
         ...state,
         ...payload,
         isAuthenticated: true,
-        loading: false
+        loading: false,
+        active: true,
+        socialMediaAccount: false,
       };
+    case LOGIN_SOCIAL_MEDIA_FAIL:
     case REGISTER_FAIL:
     case AUTH_ERROR:
     case LOGIN_FAIL:
@@ -46,7 +91,35 @@ export default function(state = initialState, action) {
         ...state,
         token: null,
         isAuthenticated: false,
-        loading: false
+        loading: false,
+        active: false,
+      };
+    case ACCOUNT_VERIFIED:
+    case CHECK_PASS_TOKEN_SUCCESS:
+      return {
+        ...state,
+        verification: { msg: payload, verify: true },
+        isAuthenticated: false,
+        loading: false,
+        active: true,
+      };
+    case ACCOUNT_NOT_VERIFIED:
+    case CHECK_PASS_TOKEN_FAIL:
+      return {
+        ...state,
+        verification: { msg: payload, verify: false },
+        isAuthenticated: false,
+        loading: false,
+        active: false,
+      };
+    case CHANGE_PASSWORD:
+    case CHANGE_PASSWORD_FAIL:
+      return {
+        ...state,
+        payload,
+        isAuthenticated: true,
+        loading: false,
+        active: true,
       };
     default:
       return state;

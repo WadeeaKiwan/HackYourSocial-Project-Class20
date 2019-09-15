@@ -1,35 +1,36 @@
 import React, { Fragment, useState } from 'react';
 import { connect } from 'react-redux';
-import { Link, Redirect } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { setAlert } from '../../actions/alert';
 import { register } from '../../actions/auth';
 import PropTypes from 'prop-types';
+import zxcvbn from 'zxcvbn';
 
-const Register = ({ setAlert, register, isAuthenticated }) => {
+const Register = ({ setAlert, register }) => {
   const [formData, setFormData] = useState({
     name: '',
     email: '',
     password: '',
-    password2: ''
+    password2: '',
+    evaluation: '',
   });
 
-  const { name, email, password, password2 } = formData;
+  const { name, email, password, password2, evaluation } = formData;
 
-  const onChange = e =>
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+  const onChange = e => {
+    const evaluation = zxcvbn(password, [name, email]);
+    setFormData({ ...formData, [e.target.name]: e.target.value, evaluation });
+  };
 
   const onSubmit = async e => {
     e.preventDefault();
     if (password !== password2) {
       setAlert('Passwords do not match', 'danger');
     } else {
-      register({ name, email, password });
+      await register({ name, email, password });
+      setFormData({ ...formData, name: '', email: '', password: '', password2: '' });
     }
   };
-
-  if (isAuthenticated) {
-    return <Redirect to='/dashboard' />;
-  }
 
   return (
     <Fragment>
@@ -56,8 +57,7 @@ const Register = ({ setAlert, register, isAuthenticated }) => {
             onChange={e => onChange(e)}
           />
           <small className='form-text'>
-            This site uses Gravatar so if you want a profile image, use a
-            Gravatar email
+            This site uses Gravatar so if you want a profile image, use a Gravatar email
           </small>
         </div>
         <div className='form-group'>
@@ -69,6 +69,22 @@ const Register = ({ setAlert, register, isAuthenticated }) => {
             onChange={e => onChange(e)}
           />
         </div>
+        {password && (
+          <Fragment>
+            <progress value={evaluation.score / 4} />
+            <br />
+            <span>
+              {evaluation.score === 2
+                ? 'Medium '
+                : evaluation.score === 3
+                ? 'Good '
+                : evaluation.score === 4
+                ? 'Strong '
+                : 'Weak '}
+              password {evaluation && `... ${evaluation.feedback.warning}`}
+            </span>
+          </Fragment>
+        )}
         <div className='form-group'>
           <input
             type='password'
@@ -90,14 +106,9 @@ const Register = ({ setAlert, register, isAuthenticated }) => {
 Register.propTypes = {
   setAlert: PropTypes.func.isRequired,
   register: PropTypes.func.isRequired,
-  isAuthenticated: PropTypes.bool
 };
 
-const mapStateToProps = state => ({
-  isAuthenticated: state.auth.isAuthenticated
-});
-
 export default connect(
-  mapStateToProps,
-  { setAlert, register }
+  null,
+  { setAlert, register },
 )(Register);

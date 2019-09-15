@@ -14,10 +14,10 @@ const Post = require('../../models/Post');
 // @access   Private
 router.get('/me', auth, async (req, res) => {
   try {
-    const profile = await Profile.findOne({ user: req.user.id }).populate(
-      'user',
-      ['name', 'avatar']
-    );
+    const profile = await Profile.findOne({ user: req.user.id }).populate('user', [
+      'name',
+      'avatar',
+    ]);
 
     if (!profile) {
       return res.status(400).json({ msg: 'There is no profile for this user' });
@@ -43,8 +43,8 @@ router.post(
         .isEmpty(),
       check('skills', 'Skills is required')
         .not()
-        .isEmpty()
-    ]
+        .isEmpty(),
+    ],
   ],
   async (req, res) => {
     const errors = validationResult(req);
@@ -64,7 +64,7 @@ router.post(
       facebook,
       twitter,
       instagram,
-      linkedin
+      linkedin,
     } = req.body;
 
     // Build profile object
@@ -93,14 +93,14 @@ router.post(
       let profile = await Profile.findOneAndUpdate(
         { user: req.user.id },
         { $set: profileFields },
-        { new: true, upsert: true }
+        { new: true, upsert: true },
       );
       res.json(profile);
     } catch (err) {
       console.error(err.message);
       res.status(500).send('Server Error');
     }
-  }
+  },
 );
 
 // @route    GET api/profile
@@ -122,7 +122,7 @@ router.get('/', async (req, res) => {
 router.get('/user/:user_id', async (req, res) => {
   try {
     const profile = await Profile.findOne({
-      user: req.params.user_id
+      user: req.params.user_id,
     }).populate('user', ['name', 'avatar']);
 
     if (!profile) return res.status(400).json({ msg: 'Profile not found' });
@@ -172,8 +172,8 @@ router.put(
         .isEmpty(),
       check('from', 'From date is required')
         .not()
-        .isEmpty()
-    ]
+        .isEmpty(),
+    ],
   ],
   async (req, res) => {
     const errors = validationResult(req);
@@ -181,15 +181,7 @@ router.put(
       return res.status(400).json({ errors: errors.array() });
     }
 
-    const {
-      title,
-      company,
-      location,
-      from,
-      to,
-      current,
-      description
-    } = req.body;
+    const { title, company, location, from, to, current, description } = req.body;
 
     const newExp = {
       title,
@@ -198,7 +190,7 @@ router.put(
       from,
       to,
       current,
-      description
+      description,
     };
 
     try {
@@ -213,31 +205,8 @@ router.put(
       console.error(err.message);
       res.status(500).send('Server Error');
     }
-  }
+  },
 );
-
-// @route    DELETE api/profile/experience/:exp_id
-// @desc     Delete experience from profile
-// @access   Private
-// router.delete('/experience/:exp_id', auth, async (req, res) => {
-//   try {
-//     const profile = await Profile.findOne({ user: req.user.id });
-
-//     // Get remove index
-//     const removeIndex = profile.experience
-//       .map(item => item.id)
-//       .indexOf(req.params.exp_id);
-
-//     profile.experience.splice(removeIndex, 1);
-
-//     await profile.save();
-
-//     res.json(profile);
-//   } catch (err) {
-//     console.error(err.message);
-//     res.status(500).send('Server Error');
-//   }
-// });
 
 router.delete('/experience/:exp_id', auth, async (req, res) => {
   try {
@@ -246,20 +215,15 @@ router.delete('/experience/:exp_id', auth, async (req, res) => {
     // if i dont add .toString() it returns this weird mongoose coreArray and the ids are somehow objects and it still deletes anyway even if you put /experience/5
     const removeIndex = expIds.indexOf(req.params.exp_id);
     if (removeIndex === -1) {
-      return res.status(500).json({ msg: "Server error" });
+      return res.status(500).json({ msg: 'Server error' });
     } else {
-      // theses console logs helped me figure it out
-      console.log("expIds", expIds);
-      console.log("typeof expIds", typeof expIds);
-      console.log("req.params", req.params);
-      console.log("removed", expIds.indexOf(req.params.exp_id));
       foundProfile.experience.splice(removeIndex, 1);
       await foundProfile.save();
       return res.status(200).json(foundProfile);
     }
   } catch (error) {
     console.error(error);
-    return res.status(500).json({ msg: "Server error" });
+    return res.status(500).json({ msg: 'Server error' });
   }
 });
 
@@ -282,8 +246,8 @@ router.put(
         .isEmpty(),
       check('from', 'From date is required')
         .not()
-        .isEmpty()
-    ]
+        .isEmpty(),
+    ],
   ],
   async (req, res) => {
     const errors = validationResult(req);
@@ -291,15 +255,7 @@ router.put(
       return res.status(400).json({ errors: errors.array() });
     }
 
-    const {
-      school,
-      degree,
-      fieldofstudy,
-      from,
-      to,
-      current,
-      description
-    } = req.body;
+    const { school, degree, fieldofstudy, from, to, current, description } = req.body;
 
     const newEdu = {
       school,
@@ -308,7 +264,7 @@ router.put(
       from,
       to,
       current,
-      description
+      description,
     };
 
     try {
@@ -323,48 +279,19 @@ router.put(
       console.error(err.message);
       res.status(500).send('Server Error');
     }
-  }
+  },
 );
 
-// @route    DELETE api/profile/education/:edu_id
-// @desc     Delete education from profile
-// @access   Private
-//router.delete('/education/:edu_id', auth, async (req, res) => {
-  //try {
-    //const profile = await Profile.findOne({ user: req.user.id });
-
-    // Get remove index
-    //const removeIndex = profile.education
-      //.map(item => item.id)
-      //.indexOf(req.params.edu_id);
-/*
-    profile.education.splice(removeIndex, 1);
-
-    await profile.save();
-
-    res.json(profile);
-  } catch (err) {
-    console.error(err.message);
-    res.status(500).send('Server Error');
-  }
-});
-*/
-
-router.delete("/education/:edu_id", auth, async (req, res) => {
+router.delete('/education/:edu_id', auth, async (req, res) => {
   try {
     const foundProfile = await Profile.findOne({ user: req.user.id });
     const eduIds = foundProfile.education.map(edu => edu._id.toString());
     // if i dont add .toString() it returns this weird mongoose coreArray and the ids are somehow objects and it still deletes anyway even if you put /education/5
     const removeIndex = eduIds.indexOf(req.params.edu_id);
     if (removeIndex === -1) {
-      return res.status(500).json({ msg: "Server error" });
+      return res.status(500).json({ msg: 'Server error' });
     } else {
-      // theses console logs helped me figure it out
-      /*   console.log("eduIds", eduIds);
-      console.log("typeof eduIds", typeof eduIds);
-      console.log("req.params", req.params);
-      console.log("removed", eduIds.indexOf(req.params.edu_id));
- */ foundProfile.education.splice(
+      foundProfile.education.splice(
         removeIndex,
         1,
       );
@@ -372,8 +299,7 @@ router.delete("/education/:edu_id", auth, async (req, res) => {
       return res.status(200).json(foundProfile);
     }
   } catch (error) {
-    console.error(error);
-    return res.status(500).json({ msg: "Server error" });
+    return res.status(500).json({ msg: 'Server error' });
   }
 });
 // @route    GET api/profile/github/:username
@@ -384,11 +310,11 @@ router.get('/github/:username', (req, res) => {
     const options = {
       uri: `https://api.github.com/users/${
         req.params.username
-      }/repos?per_page=5&sort=created:asc&client_id=${config.get(
-        'githubClientId'
-      )}&client_secret=${config.get('githubSecret')}`,
+        }/repos?per_page=5&sort=created:asc&client_id=${config.get(
+          'githubClientId',
+        )}&client_secret=${config.get('githubSecret')}`,
       method: 'GET',
-      headers: { 'user-agent': 'node.js' }
+      headers: { 'user-agent': 'node.js' },
     };
 
     request(options, (error, response, body) => {
