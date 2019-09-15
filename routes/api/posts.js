@@ -22,7 +22,7 @@ router.post('/upload', auth, async (req, res) => {
     const user = await User.findById(req.user.id).select('-password');
     await singleImageUpload(req, res, async err => {
       if (err) {
-        console.error(err.message);
+        return res.status(400).json({ errors: [{ msg: err.message }] });
       }
       const newPost = new Post({
         name: user.name,
@@ -303,21 +303,16 @@ router.post('/update/:id', auth, async (req, res) => {
       post.edited = true;
       await post.save();
     }
-    console.log(req.files);
-    if (req.files) {
-      await singleImageUpload(req, res, async err => {
-        if (err) {
-          console.error(err.message);
-        }
-        post.image = req.file.location;
-        await post.save();
 
-        const posts = await Post.find().sort({
-          date: -1,
-        });
-        return res.json(posts);
-      });
-    }
+    // if (req.files) {
+    await singleImageUpload(req, res, async err => {
+      if (err) {
+        return res.status(400).json({ errors: [{ msg: err.message }] });
+      }
+      post.image = req.file.location;
+      await post.save();
+    });
+    // }
     const posts = await Post.find().sort({
       date: -1,
     });
