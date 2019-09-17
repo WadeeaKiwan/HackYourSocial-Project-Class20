@@ -62,7 +62,7 @@ const EditPost = ({
       if (file && newText) {
         let formData = new FormData();
         formData.append('file', file);
-        updatePost(_id, formData, { newText });
+        updatePost(_id, formData, { newText }, true);
         setEditPost(null);
         setFile('');
         setText('');
@@ -72,13 +72,13 @@ const EditPost = ({
       } else if (!newText) {
         let formData = new FormData();
         formData.append('file', file);
-        updatePost(_id, formData, { newText });
+        updatePost(_id, formData, { newText }, true);
         setEditPost(null);
         setFile('');
         setText('');
         setMessage('');
       } else {
-        updatePost(_id, null, { newText });
+        updatePost(_id, null, { newText }, false);
         deletePhoto(_id);
         setText('');
         setEditPost(null);
