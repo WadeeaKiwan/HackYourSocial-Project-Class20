@@ -203,7 +203,7 @@ export const deleteComment = (postId, commentId) => async dispatch => {
 };
 
 // Update Post
-export const updatePost = (id, formData, { newText }) => async dispatch => {
+export const updatePost = (id, formData, { newText }, hasPhoto) => async dispatch => {
   let res;
   try {
     if (newText || newText === '') {
@@ -213,20 +213,20 @@ export const updatePost = (id, formData, { newText }) => async dispatch => {
         },
       };
 
-      res = await axios.post(`api/posts/update/${id}`, { newText }, config);
+      res = await axios.post(`api/posts/update-text/${id}`, { newText }, config);
     }
-    if (formData) {
+    if (hasPhoto) {
       const config = {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
       };
 
-      res = await axios.post(`api/posts/update/${id}`, formData, config);
+      res = await axios.post(`api/posts/update-photo/${id}`, formData, config);
     }
     dispatch({
       type: UPDATE_POST,
-      payload: res.data,
+      payload: await res.data,
     });
   } catch (err) {
     const errors = err.response.data.errors;

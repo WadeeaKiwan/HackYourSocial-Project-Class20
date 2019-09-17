@@ -288,7 +288,7 @@ router.delete('/comment/:id/:comment_id', auth, async (req, res) => {
 // @route   POST api/posts/update/:id
 // @desc    Update a post
 // @access  Private
-router.post('/update/:id', auth, async (req, res) => {
+router.post('/update-text/:id', auth, async (req, res) => {
   try {
     const post = await Post.findById(req.params.id);
     // Check user
@@ -302,26 +302,41 @@ router.post('/update/:id', auth, async (req, res) => {
       post.text = req.body.newText;
       post.edited = true;
       await post.save();
+      const posts = await Post.find().sort({
+        date: -1,
+      });
+      return res.json(posts);
     }
-    console.log(req.files);
-    if (req.files) {
-      await singleImageUpload(req, res, async err => {
-        if (err) {
-          console.error(err.message);
-        }
-        post.image = req.file.location;
-        await post.save();
 
-        const posts = await Post.find().sort({
-          date: -1,
-        });
-        return res.json(posts);
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send('Server Error');
+  }
+});
+
+router.post('/update-photo/:id', auth, async (req, res) => {
+  try {
+    const post = await Post.findById(req.params.id);
+    // Check user
+    if (post.user.toString() !== req.user.id) {
+      return res.status(401).json({
+        msg: 'User not authorized.',
       });
     }
-    const posts = await Post.find().sort({
-      date: -1,
+
+
+    await singleImageUpload(req, res, async err => {
+      if (err) {
+        console.error(err.message);
+      }
+      post.image = req.file.location;
+      await post.save();
+
+      const posts = await Post.find().sort({
+        date: -1,
+      });
+      return res.json(posts);
     });
-    return res.json(posts);
   } catch (err) {
     console.error(err.message);
     res.status(500).send('Server Error');
