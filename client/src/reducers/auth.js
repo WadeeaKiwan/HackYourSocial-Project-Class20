@@ -58,7 +58,6 @@ export default function(state = initialState, action) {
         isAuthenticated: false,
         loading: false,
         active: false,
-        socialMediaAccount: false,
       };
     case LOGIN_SOCIAL_MEDIA_SUCCESS:
       localStorage.setItem('token', payload.token);
@@ -78,7 +77,6 @@ export default function(state = initialState, action) {
         isAuthenticated: true,
         loading: false,
         active: true,
-        socialMediaAccount: false,
       };
     case LOGIN_SOCIAL_MEDIA_FAIL:
     case REGISTER_FAIL:
