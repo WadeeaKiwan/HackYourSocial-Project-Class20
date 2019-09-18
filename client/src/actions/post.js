@@ -212,26 +212,25 @@ export const updatePost = (id, formData, { newText }, hasPhoto) => async dispatc
         },
       };
 
-      let res = await axios.post(`api/posts/update-text/${id}`, { newText }, config);
+      let resText = await axios.post(`api/posts/update-text/${id}`, { newText }, config);
 
       dispatch({
         type: UPDATE_POST,
-        payload: res.data,
+        payload: resText.data,
       });
     }
     if (hasPhoto) {
-      alert('no photo');
       const config = {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
       };
 
-      let res2 = await axios.post(`api/posts/update-photo/${id}`, formData, config);
+      let resPhoto = await axios.post(`api/posts/update-photo/${id}`, formData, config);
 
       dispatch({
         type: UPDATE_POST,
-        payload: res2.data,
+        payload: resPhoto.data,
       });
     }
   } catch (err) {

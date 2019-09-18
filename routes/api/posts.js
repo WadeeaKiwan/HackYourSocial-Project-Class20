@@ -331,10 +331,8 @@ router.post('/update-photo/:id', auth, async (req, res) => {
       if (err) {
         return res.status(400).json({ errors: [{ msg: err.message }] });
       }
-      if (req.file.location) {
-        post.image = req.file.location;
-        await post.save();
-      }
+      post.image = req.file.location;
+      await post.save();
 
       const posts = await Post.find().sort({
         date: -1,
