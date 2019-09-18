@@ -60,6 +60,7 @@ const EditPost = ({
     try {
       e.preventDefault();
       if (file && newText) {
+        alert('text photo');
         let formData = new FormData();
         formData.append('file', file);
         updatePost(_id, formData, { newText }, true);

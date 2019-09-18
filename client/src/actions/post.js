@@ -204,7 +204,6 @@ export const deleteComment = (postId, commentId) => async dispatch => {
 
 // Update Post
 export const updatePost = (id, formData, { newText }, hasPhoto) => async dispatch => {
-  let res;
   try {
     if (newText || newText === '') {
       const config = {
@@ -213,27 +212,42 @@ export const updatePost = (id, formData, { newText }, hasPhoto) => async dispatc
         },
       };
 
-      res = await axios.post(`api/posts/update-text/${id}`, { newText }, config);
+      let res = await axios.post(`api/posts/update-text/${id}`, { newText }, config);
+
+      dispatch({
+        type: UPDATE_POST,
+        payload: res.data,
+      });
     }
     if (hasPhoto) {
+      alert('no photo');
       const config = {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
       };
 
-      res = await axios.post(`api/posts/update-photo/${id}`, formData, config);
+      let res2 = await axios.post(`api/posts/update-photo/${id}`, formData, config);
+
+      dispatch({
+        type: UPDATE_POST,
+        payload: res2.data,
+      });
     }
-    dispatch({
-      type: UPDATE_POST,
-      payload: await res.data,
-    });
   } catch (err) {
     const errors = err.response.data.errors;
 
     if (errors) {
       errors.forEach(error => dispatch(setAlert(error.msg, 'danger')));
     }
+
+    dispatch({
+      type: POST_ERROR,
+      payload: {
+        msg: err.response.statusText,
+        status: err.response.status,
+      },
+    });
   }
 };
 
