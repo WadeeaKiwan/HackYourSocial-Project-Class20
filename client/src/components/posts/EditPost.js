@@ -56,33 +56,40 @@ const EditPost = ({
     setDisplayUploadForm(!DisplayUploadForm);
   };
 
+  const resetState = () => {
+    setEditPost(null);
+    setFile('');
+    setText('');
+    setMessage('');
+  };
+
   const onSubmit = async e => {
     try {
       e.preventDefault();
-      if (file && newText) {
+      if (file === image && newText) {
+        updatePost(_id, null, { newText }, false);
+        resetState();
+      } else if (!newText && file === image) {
         let formData = new FormData();
         formData.append('file', file);
-        updatePost(_id, formData, { newText });
-        setEditPost(null);
-        setFile('');
-        setText('');
-        setMessage('');
+        updatePost(_id, formData, { newText }, false);
+        resetState();
+      } else if (file && newText) {
+        let formData = new FormData();
+        formData.append('file', file);
+        updatePost(_id, formData, { newText }, true);
+        resetState();
       } else if (!file && !newText) {
         setEditPost(null);
-      } else if (!newText) {
+      } else if (!newText && file) {
         let formData = new FormData();
         formData.append('file', file);
-        updatePost(_id, formData, { newText });
-        setEditPost(null);
-        setFile('');
-        setText('');
-        setMessage('');
+        updatePost(_id, formData, { newText }, true);
+        resetState();
       } else {
-        updatePost(_id, null, { newText });
+        updatePost(_id, null, { newText }, false);
         deletePhoto(_id);
-        setText('');
-        setEditPost(null);
-        setMessage('');
+        resetState();
       }
     } catch (error) {
       console.log('Error Edit Post');
