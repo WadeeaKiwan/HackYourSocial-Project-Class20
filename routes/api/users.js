@@ -10,7 +10,7 @@ const { sendEmail } = require('../../middleware/mailer');
 
 const User = require('../../models/User');
 
-const herokuURL = 'http://localhost:3000';
+const herokuURL = 'https://hackyoursocial.herokuapp.com';
 
 // @route    POST api/users
 // @desc     Register user

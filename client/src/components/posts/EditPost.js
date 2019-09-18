@@ -67,7 +67,6 @@ const EditPost = ({
     try {
       e.preventDefault();
       if (file === image && newText) {
-        alert('old photo + text');
         updatePost(_id, null, { newText }, false);
         resetState();
       } else if (!newText && file === image) {
