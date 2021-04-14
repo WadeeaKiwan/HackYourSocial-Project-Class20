@@ -64,7 +64,7 @@ router.post(
         },
       };
 
-      const confirmationToken = await jwt.sign(payload, config.get('ConfirmationSecret'), {
+      const confirmationToken = await jwt.sign(payload, process.env.CONFIRMATION_SECRET || config.get('ConfirmationSecret'), {
         expiresIn: '1h',
       });
 
@@ -144,7 +144,7 @@ router.post('/verify/:confirmationToken', async (req, res) => {
   const { confirmationToken } = req.params;
 
   try {
-    const decoded = await jwt.verify(confirmationToken, config.get('ConfirmationSecret'));
+    const decoded = await jwt.verify(confirmationToken, process.env.CONFIRMATION_SECRET || config.get('ConfirmationSecret'));
 
     let user = await User.findById({ _id: decoded.user.id }).select('-password');
 
@@ -250,7 +250,7 @@ router.put(
         },
       };
 
-      const confirmationToken = await jwt.sign(payload, config.get('ConfirmationSecret'), {
+      const confirmationToken = await jwt.sign(payload, process.env.CONFIRMATION_SECRET || config.get('ConfirmationSecret'), {
         expiresIn: '1h',
       });
 
@@ -360,7 +360,7 @@ router.post(
         },
       };
 
-      const forgotPassToken = await jwt.sign(payload, config.get('PasswordSecret'), {
+      const forgotPassToken = await jwt.sign(payload, process.env.PASSWORD_SECRET || config.get('PasswordSecret'), {
         expiresIn: '1h',
       });
 
@@ -448,7 +448,7 @@ router.put(
     const { password } = req.body;
 
     try {
-      const decoded = await jwt.verify(forgotPassToken, config.get('PasswordSecret'));
+      const decoded = await jwt.verify(forgotPassToken, process.env.PASSWORD_SECRET || config.get('PasswordSecret'));
 
       let user = await User.findById({ _id: decoded.user.id }).select('-password');
 
@@ -536,7 +536,7 @@ router.get('/checkpasstoken/:forgotPassToken', async (req, res) => {
   const { forgotPassToken } = req.params;
 
   try {
-    const decoded = await jwt.verify(forgotPassToken, config.get('PasswordSecret'));
+    const decoded = await jwt.verify(forgotPassToken, process.env.PASSWORD_SECRET || config.get('PasswordSecret'));
 
     let user = await User.findById({ _id: decoded.user.id }).select('-password');
 
