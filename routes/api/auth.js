@@ -3,7 +3,6 @@ const router = express.Router();
 const bcrypt = require('bcryptjs');
 const auth = require('../../middleware/auth');
 const jwt = require('jsonwebtoken');
-const config = require('config');
 const { check, validationResult } = require('express-validator/check');
 const generator = require('generate-password');
 
@@ -66,7 +65,7 @@ router.post(
         },
       };
 
-      jwt.sign(payload, process.env.JWT_SECRET || config.get('jwtSecret'), { expiresIn: 360000 }, (err, token) => {
+      jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: 360000 }, (err, token) => {
         if (err) throw error;
         response.status(200).send({ token });
       });
@@ -140,7 +139,7 @@ router.post(
         },
       };
 
-      jwt.sign(payload, process.env.JWT_SECRET || config.get('jwtSecret'), { expiresIn: 360000 }, (err, token) => {
+      jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: 360000 }, (err, token) => {
         if (err) throw err;
         res.json({ token });
       });
